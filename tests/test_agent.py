@@ -277,7 +277,11 @@ def test_guide_and_evaluation_do_not_replan_by_themselves(tmp_path):
     assert "loaded_skills" not in context
 
 
-@pytest.mark.parametrize("language,code,expected",[("python","print(7)","7"),("bash","printf shell-ok","shell-ok"),("r","cat(6*7)","42")])
+@pytest.mark.parametrize("language,code,expected", [
+    ("python", "print(7)", "7"),
+    ("bash", "printf shell-ok", "shell-ok"),
+    pytest.param("r", "cat(6*7)", "42", marks=pytest.mark.r),
+])
 def test_languages(tmp_path,language,code,expected):
     result = CodeExecutor(ROOT,tmp_path).execute(code,language,"cell")
     assert result["returncode"] == 0, result

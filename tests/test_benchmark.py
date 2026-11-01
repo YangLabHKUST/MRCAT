@@ -210,6 +210,7 @@ def test_real_parallel_agents_and_invalid_route_isolation(tmp_path, local_gatewa
     assert preflight['status'] == 'passed' and preflight['reported_total_tokens'] == 6
 
 
+@pytest.mark.sandbox
 def test_timeout_cleans_separate_execution_group(tmp_path, monkeypatch):
     monkeypatch.setattr('mrcat.preflight.check_model', lambda *a: None)
     directory = prepare(tmp_path)

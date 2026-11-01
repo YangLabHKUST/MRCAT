@@ -308,10 +308,13 @@ def test_deepseek_hosted_search_keeps_citations_and_bounded_uses(monkeypatch):
     assert len(usage)==2
 
 
+@pytest.mark.sandbox
 def test_search_tools_import_and_build_documents_in_existing_sandbox(tmp_path):
     from mrcat import sandbox
     import subprocess
     import sys
+    private_file = tmp_path.with_name(tmp_path.name + '-private.txt')
+    private_file.write_text('Unlisted sibling input')
     command, env, _ = sandbox.prepare_worker(ROOT, tmp_path, [])
     code=f'''
 from pathlib import Path
@@ -324,7 +327,7 @@ out=tools.research_brief(request='Only FinnGen European BMI to CAD', evidence=[]
 assert Path(out['artifact_path']).is_file()
 assert inspection._route(dict(source='opengwas', ancestry='european'))['sources']==['opengwas']
 assert set(providers.build_provider_registry())=={{'deepseek','openai','qwen'}}
-assert not Path({str(ROOT.parent/'MRCAT')!r}).exists()
+assert not Path({str(private_file)!r}).exists()
 print('native-search-sandbox-ok')
 '''
     completed=subprocess.run(command+[sys.executable,'-c',code],env=env,capture_output=True,text=True,timeout=45)

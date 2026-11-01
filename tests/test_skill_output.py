@@ -42,6 +42,7 @@ orchestrator._search_trait_once = search
 
 @pytest.mark.parametrize('cli', [False, True])
 @pytest.mark.parametrize('fail', [False, True])
+@pytest.mark.r
 def test_r_runner_streams_and_cli_json(tmp_path, cli, fail):
     # Exercise every actual runner logger without loading scientific packages.
     scripts = sorted(p for p in (ROOT / 'skills').rglob('*.R')
