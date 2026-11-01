@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="4096" height="4096" viewBox="0 0 96 96"><title>Effect estimates and uncertainty</title><g fill="none" stroke="#155E63" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M15 15v66h67"/>
+<path d="M47 15v58" stroke-dasharray="3 5" stroke-width="1.8"/>
+<path d="M27 25h44 M36 41h44 M24 57h39"/>
+<path d="M27 22v6 M71 22v6 M36 38v6 M80 38v6 M24 54v6 M63 54v6" stroke-width="2"/>
+<rect x="48" y="22" width="6" height="6" fill="#155E63" stroke="none"/>
+<rect x="58" y="38" width="6" height="6" fill="#155E63" stroke="none"/>
+<rect x="38" y="54" width="6" height="6" fill="#155E63" stroke="none"/>
+<path d="M40 72l13-5 13 5-13 5z"/>
+</g></svg>

@@ -1,0 +1,56 @@
+I’ll run `gwas_qc` once against the saved FinnGen gallstones download object, without adding any mapping notes or invented metadata, then print the tool status and a compact QC summary.
+
+```python
+from mrcat.tools import gwas_qc
+
+result = gwas_qc(
+    downloaded_study="$ref:gwas_download_example/gwas_download_result/downloaded_study",
+)
+
+print("SUMMARY:", result.get("summary"))
+print("STATUS:", result.get("outputs", {}).get("status"))
+
+out = result.get("outputs", {}).get("gwas_qc_result", {})
+if result.get("outputs", {}).get("status") == "ok":
+    keys = [
+        "label", "ancestry", "sample_size", "genome_build",
+        "genome_build_reason", "canonical_path", "formatted_path",
+        "risk_notes", "missing_requirements",
+    ]
+    for key in keys:
+        value = out.get(key)
+        if isinstance(value, (list, dict)):
+            print(f"{key}: {value}")
+        else:
+            print(f"{key}: {value!r}")
+    print("ARTIFACTS:", result.get("artifacts", []))
+else:
+    print("DETAILS:", result.get("details", {}))
+```
+
+Wait: result["outputs"] maybe contains status not at top yes. Good. But if result lacks outputs? Use get. After cell we need wait.
+
+```python
+from mrcat.tools import gwas_qc
+
+result = gwas_qc(
+    downloaded_study="$ref:gwas_download_example/gwas_download_result/downloaded_study",
+)
+
+print("SUMMARY:", result.get("summary"))
+print("STATUS:", result.get("outputs", {}).get("status"))
+
+out = result.get("outputs", {}).get("gwas_qc_result", {})
+if result.get("outputs", {}).get("status") == "ok":
+    keys = [
+        "label", "ancestry", "sample_size", "genome_build",
+        "genome_build_reason", "canonical_path", "formatted_path",
+        "risk_notes", "missing_requirements",
+    ]
+    for key in keys:
+        value = out.get(key)
+        print(f"{key}: {value!r}")
+    print("ARTIFACTS:", result.get("artifacts", []))
+else:
+    print("DETAILS:", result.get("details", {}))
+```

@@ -1,0 +1,59 @@
+Q01: I want to investigate whether Vitamin D affects ease of skin tanning. Use UKB as the data source and run MR analysis.
+
+Q02: I want a quick check of whether grip strength affects astigmatism. Use OpenGWAS as the data source and run a simple MR analysis.
+
+Q03: I want to check whether red blood cell count affects appendicitis. Please find data from GWAS Catalog and run an MR analysis.
+
+Q04: I want to study whether gallstones increase the risk of acute pancreatitis. Use FinnGen as the data source and run an MR analysis.
+
+Q05: I want to use MR to analyze whether serum urate has a causal effect on gout.
+
+Q06: Does height cause black hair color? Use UKB data to run MR for me.
+
+Q07: Does systolic blood pressure (SBP) affect CAD? Use OpenGWAS data and run IVW and MR-Egger.
+
+Q08: I want to analyze whether diastolic blood pressure (DBP) affects CAD. Please find the corresponding data from GWAS Catalog and run MR with IVW and MR-Egger.
+
+Q09: Does left-handedness tendency affect cataract risk? Use FinnGen as the data source and run an MR analysis.
+
+Q10: Does regular alcohol drinking cause liver cirrhosis? Use the default data source and run an MR analysis.
+
+Q11: I have an outcome GWAS file at ${MRCAT_BENCH_DATA}/Q11/dataset_1f36c4cb.tsv.bgz , sample size is 411,779. Use Pan-UKB phenotype 21002 as the body weight exposure. I want to check whether body weight causes this outcome, using IVW and MR-APSS.
+
+Q12: I want to check whether platelet count affects myopia. Use OpenGWAS as the data source and run a simple MR analysis.
+
+Q13: I want to explore whether age at menopause affects Dental caries. Please find data from GWAS Catalog and run MR.
+
+Q14: I want to analyze whether atrial fibrillation increases the risk of cardioembolic stroke. Use FinnGen as the data source and run MR.
+
+Q15: Does bone density affect osteoporotic fracture risk? Run MR directly with available data.
+
+Q16: I want to study whether right arm fat percentage affects black hair. The exposure UKB phenotype is 23119, the outcome is black hair, and the MR method is MR-Lasso.
+
+Q17: I want to check whether educational attainment affects otitis media. The exposure GWAS ID is ieu-a-1239, the outcome GWAS ID is finn-b-H8_OTIMEDNAS, and the data source is OpenGWAS. Please run an MR analysis.
+
+Q18: I want to study whether the exposure affects the outcome. Use local data: the exposure file is ${MRCAT_BENCH_DATA}/Q18/dataset_7f3a2c1e.tsv.gz, and the outcome file is ${MRCAT_BENCH_DATA}/Q18/dataset_b9d84e60.tsv.gz. Please compare CAUSE, MR-APSS, and MR-ConMix results.
+
+Q19: I want a quick check of whether COPD affects COPD-related respiratory insufficiency. The exposure ID is finn-b-J10_COPD, the outcome ID is finn-b-COPD_INSUFFICIENCY, and I want a quick MR analysis.
+
+Q20: I want to investigate whether ApoB affects myocardial infarction. The exposure ID is ieu-b-108, the outcome ID is ieu-a-798, and I want an MR analysis.
+
+Q21: I want to study whether Crohn disease affects the outcome. The exposure ID is ebi-a-GCST004132, the outcome file is ${MRCAT_BENCH_DATA}/Q21/dataset_49885698.txt.gz, and the method is cML-MA.
+
+Q22: I want to check whether BMI affects the outcome. Search for data in UKB; the exposure ID is 21001, the outcome file is ${MRCAT_BENCH_DATA}/Q22/dataset_0328e74d.gz, and the method is MR-ConMix.
+
+Q23: I want to analyze whether insomnia affects the outcome. The exposure ID is GCST007387, the outcome file is ${MRCAT_BENCH_DATA}/Q23/dataset_1c1655f0.gz, and the method is DIVW.
+
+Q24: I want to investigate whether the exposure affects Anorexia, using the exposure data inside ${MRCAT_BENCH_DATA}/Q24/dataset_1e0e9c2f.txt.gz and the outcome data with ID GCST008465.
+
+Q25: The exposure is at ${MRCAT_BENCH_DATA}/Q25/dataset_b1394586.txt.gz, and the outcome is at ${MRCAT_BENCH_DATA}/Q25/dataset_85f96c8b.txt.gz. Use MRMix and ivw, and run an MR analysis.
+
+Q26: I have two GWAS files: the exposure is the exposure trait: ${MRCAT_BENCH_DATA}/Q26/dataset_afa88e8a.txt, and the outcome is the outcome trait: ${MRCAT_BENCH_DATA}/Q26/dataset_ce0a4ca2.txt. For the exposure , total sample size = 404291; for the outcome , total sample size = 18988. Please run MR with cML-MA and ivw.
+
+Q27: I have an exposure file ${MRCAT_BENCH_DATA}/Q27/dataset_0e2182ae.tsv.gz and an outcome file ${MRCAT_BENCH_DATA}/Q27/dataset_b9d84e60.tsv.gz. I want to check whether the exposure affects the outcome, using MR-RAPS.
+
+Q28: I want to use local files to analyze whether the exposure affects the outcome. The exposure file is ${MRCAT_BENCH_DATA}/Q28/dataset_91d6e693.txt.gz, and the outcome file is ${MRCAT_BENCH_DATA}/Q28/dataset_77a21037.txt.gz. For the exposure, total sample size = 164610. Please provide ivw, MR-PRESSO, and MR-Robust results.
+
+Q29: I have an exposure GWAS file ${MRCAT_BENCH_DATA}/Q29/dataset_b5686fff.tsv.bgz and an outcome file ${MRCAT_BENCH_DATA}/Q29/dataset_c48c054e.txt. The exposure file already has n_complete_samples; the outcome total sample size is 185000. I want to check whether the exposure affects the outcome, using MRMix and ivw.
+
+Q30: The exposure file is ${MRCAT_BENCH_DATA}/Q30/dataset_89666702.gz, and the outcome file is ${MRCAT_BENCH_DATA}/Q30/dataset_47288f6a.gz. Please analyze the effect of the exposure on the outcome with MR-APSS.

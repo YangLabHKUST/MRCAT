@@ -1,0 +1,14 @@
+llm:
+  gateway:
+    provider: anthropic
+    backend: sdk
+    base_url: https://api.anthropic.com
+    timeout_sec: 1200
+    retry_count: 3
+  models:
+    default: claude-opus-4-6
+    roles:
+      reporter: null
+  temperatures:
+    roles:
+      reporter: 0.0

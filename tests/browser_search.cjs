@@ -1,0 +1,42 @@
+const {chromium} = require('playwright');
+const assert = require('node:assert/strict');
+(async () => {
+  const browser = await chromium.launch({headless:true,args:['--no-sandbox']});
+  try {
+    const page = await browser.newPage({viewport:{width:1440,height:1000}});
+    const errors=[]; page.on('pageerror', e=>errors.push(e.message));
+    const sid=process.env.MRCAT_SEARCH_SESSION || 'session_cd21481727524aaa';
+    await page.goto(process.env.MRCAT_TEST_URL || 'http://127.0.0.1:7869/');
+    await page.waitForFunction(()=>typeof selectSession==='function' && Boolean(state.snapshot));
+    await page.evaluate(async id=>selectSession(id),sid);
+    await page.waitForFunction(id=>state.snapshot?.session_id===id,sid);
+    const panel=page.locator('.notebook-search-results').last();
+    await panel.locator('.gwas-search-shortlist-table').waitFor();
+    const path=await panel.getAttribute('data-path');
+    const expected=await page.evaluate(async path=>(await (await fetch(artifactRawUrl(state.snapshot,path))).json()).candidates,path);
+    assert(expected.length>0);
+    assert.match(await panel.innerText(),new RegExp(`${expected.length} candidates`));
+    const toggle=panel.locator('.data-search-toggle');
+    if(await toggle.count()) await toggle.click();
+    assert.equal(await panel.locator('tbody tr').count(),expected.length);
+    await panel.locator('.data-search-source-filter').filter({hasText:'FinnGen'}).click();
+    const selected=expected.filter(c=>c.source==='finngen');
+    assert.equal(await panel.locator('tbody tr').count(),selected.length);
+    await panel.locator('.data-search-source-filter').filter({hasText:'All sources'}).click();
+    assert.equal(await panel.locator('tbody tr').count(),expected.length);
+    const notebook=page.locator('#notebook-output');
+    await notebook.evaluate(node=>node.scrollTop=0);
+    await page.screenshot({path:'docs/search-list-browser.png',fullPage:true});
+    await page.reload();
+    await page.locator('.notebook-search-results .gwas-search-shortlist-table').first().waitFor();
+    assert.equal(await page.evaluate(()=>state.snapshot.session_id),sid);
+    const xlsx=page.locator('.notebook-file').filter({hasText:'gwas_search_shortlists.xlsx'}).first();
+    await xlsx.locator('summary').click();
+    await xlsx.locator('.spreadsheet-table').waitFor();
+    const markdown=page.locator('.notebook-file').filter({hasText:'bmi_candidates_summary.md'}).first();
+    await markdown.locator('summary').click();
+    await markdown.locator('.notebook-explanation').waitFor();
+    assert.deepEqual(errors,[]);
+    console.log(`PASS: ${expected.length} real candidates, source filters, expand all, reload, Excel and Markdown previews; no JS errors`);
+  } finally {await browser.close();}
+})().catch(error=>{console.error(error);process.exit(1);});

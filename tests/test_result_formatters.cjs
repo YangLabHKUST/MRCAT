@@ -1,0 +1,23 @@
+// Run with node tests/test_result_formatters.cjs.
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const path = require("node:path");
+const vm = require("node:vm");
+
+const source = fs.readFileSync(path.join(__dirname, "../mrcat/web/static/app.js"), "utf8");
+const context = vm.createContext({});
+for (const name of ["text", "formatEstimate", "formatPValue"]) {
+  const match = source.match(new RegExp(`^function ${name}\\([^]*?^\\}`, "m"));
+  assert.ok(match, `${name} must exist`);
+  vm.runInContext(match[0], context);
+}
+
+for (const missing of [null, undefined, ""]) {
+  assert.equal(context.formatPValue(missing), "-");
+  assert.equal(context.formatEstimate(missing), "-");
+}
+assert.equal(context.formatPValue("<0.074"), "<0.074");
+assert.equal(context.formatPValue("<0.001"), "<0.001");
+assert.equal(context.formatPValue(0.05), "0.05");
+assert.equal(context.formatEstimate(0), "0");
+console.log("PASS: missing results remain unavailable and bounded P values retain inequalities.");

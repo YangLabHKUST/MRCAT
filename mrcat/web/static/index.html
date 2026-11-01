@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MRCAT</title>
+    <link rel="stylesheet" href="/static/styles.css?v=0.1.0" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <aside id="sessions-sidebar" class="sidebar">
+        <header class="brand">
+          <h1>MRCAT</h1>
+          <p>Manager · Search · MR · Report</p>
+        </header>
+
+        <section class="sidebar-tools">
+          <button id="new-chat-button" class="primary-button" type="button">New Chat</button>
+          <button id="fork-session-button" type="button" disabled
+            title="Copy this session and its files. Continue independently while preserving the original.">Continue in a copy</button>
+          <label for="provider-select">Model provider</label>
+          <select id="provider-select" aria-label="Model provider">
+            <option value="anthropic">anthropic</option>
+            <option value="openai">openai</option>
+            <option value="deepseek">deepseek</option>
+            <option value="qwen">qwen</option>
+            <option value="glm">glm</option>
+            <option value="grok">grok</option>
+            <option value="custom">custom</option>
+          </select>
+        </section>
+
+        <section class="session-section">
+          <div class="section-head">
+            <h2>Sessions</h2>
+            <button id="refresh-button" type="button">Refresh</button>
+          </div>
+          <label class="session-status-control" for="session-status-toggle">
+            <span>Show session status</span>
+            <input id="session-status-toggle" type="checkbox" role="switch" checked
+              aria-controls="session-list status-chip" />
+          </label>
+          <div id="session-list" class="session-list"></div>
+        </section>
+      </aside>
+
+      <div class="sidebar-resizer" data-sidebar-resizer role="separator" aria-orientation="vertical" aria-label="Resize sessions sidebar">
+        <button
+          id="sessions-sidebar-toggle"
+          class="sessions-sidebar-toggle"
+          type="button"
+          aria-controls="sessions-sidebar"
+          aria-expanded="true"
+          aria-label="Collapse Sessions"
+          title="Collapse Sessions"
+        ><span aria-hidden="true">‹</span></button>
+      </div>
+
+      <section class="workspace study-setup-collapsed">
+        <header class="workspace-head">
+          <div>
+            <h2 id="session-title">No session selected</h2>
+            <p id="session-subtitle">Start a question or select an MRCAT session.</p>
+          </div>
+          <div id="status-chip" class="status-chip">idle</div>
+        </header>
+
+        <article id="study-setup-panel" class="panel study-setup-panel is-collapsed">
+          <div class="panel-head">
+            <div class="study-setup-heading">
+              <h3>Study setup</h3>
+              <span id="study-setup-status" class="muted study-setup-status">Not specified</span>
+            </div>
+            <button
+              id="study-setup-toggle"
+              class="study-setup-toggle"
+              type="button"
+              aria-controls="study-setup-content"
+              aria-expanded="false"
+              aria-label="Expand Study Setup"
+              title="Expand Study Setup"
+            >
+              <span aria-hidden="true">›</span>
+            </button>
+          </div>
+          <div id="study-setup-content" class="study-setup-content"></div>
+        </article>
+
+        <div
+          class="study-setup-resizer"
+          data-study-setup-resizer
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="Resize Study Setup panel"
+          aria-valuemin="240"
+          aria-valuemax="560"
+          aria-valuenow="304"
+        ></div>
+
+        <section id="timeline" class="timeline" aria-label="MRCAT workflow"></section>
+
+        <section class="main-grid">
+          <article class="panel conversation-panel">
+            <div class="panel-head conversation-head">
+              <h3>Conversation</h3>
+              <button id="pending-text" class="pending-text" type="button" hidden
+                aria-controls="conversation-feed" aria-label="View the question awaiting your reply"
+                title="Show the latest question in the conversation">Awaiting your reply</button>
+            </div>
+            <div id="conversation-feed" class="conversation-feed"></div>
+            <section id="session-activity" class="session-activity" aria-label="Current activity" hidden>
+              <strong id="activity-title" role="status" aria-live="polite"></strong>
+              <span id="activity-time" class="activity-time"></span>
+              <p id="activity-detail"></p>
+              <p id="activity-freshness" class="activity-freshness"></p>
+              <button id="activity-execution" type="button" hidden>View latest execution</button>
+            </section>
+            <form id="reply-form" class="reply-form">
+              <textarea id="reply-input" rows="1" placeholder="Enter a research question to start a new conversation"></textarea>
+              <div class="reply-actions">
+                <button id="stop-job-button" class="stop-job-button" type="button" hidden>Stop</button>
+                <button id="reply-button" type="submit">Start</button>
+              </div>
+            </form>
+          </article>
+
+          <div class="layout-resizer layout-resizer-vertical" data-layout-resizer="columns" role="separator" aria-orientation="vertical" aria-label="Resize conversation and result panels"></div>
+
+          <article class="panel notebook-panel" aria-labelledby="notebook-title">
+            <div class="panel-head notebook-head">
+              <div class="notebook-head-main">
+                <h3 id="notebook-title">Execution Notebook</h3>
+                <div class="notebook-view-tabs" role="tablist" aria-label="Execution views">
+                  <button id="notebook-task-tab" class="notebook-view-tab active" type="button" role="tab" aria-selected="true" aria-controls="notebook-task-view">Task</button>
+                  <button id="notebook-builder-tab" class="notebook-view-tab" type="button" role="tab" aria-selected="false" aria-controls="notebook-builder-view" tabindex="-1">
+                    Files
+                    <span id="notebook-builder-tab-status" class="notebook-tab-badge" hidden></span>
+                  </button>
+                </div>
+                <span id="notebook-status" class="muted" role="status"></span>
+              </div>
+              <button id="notebook-latest" type="button">Latest step ↓</button>
+            </div>
+            <div id="notebook-output" class="notebook-output" tabindex="0" aria-label="Analysis steps"></div>
+          </article>
+        </section>
+      </section>
+    </main>
+
+    <script src="/static/primary-scatter.js?v=0.1.0"></script>
+    <script src="/static/replication-forest.js?v=0.1.0"></script>
+    <script src="/static/qc-explorer.js?v=0.1.0"></script>
+    <script src="/static/notebook.js?v=0.1.0"></script>
+    <script src="/static/app.js?v=0.1.0"></script>
+  </body>
+</html>

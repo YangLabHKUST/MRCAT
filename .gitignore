@@ -1,0 +1,38 @@
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+*.pem
+
+# Python and build products
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+.venv/
+
+# Data and execution records
+runtime_artifacts/
+runtime_benchmark/
+runtime_releases/
+data/
+database/
+outputs/
+checkpoints/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+Rplots.pdf
+.Rhistory
+**/execution/
+
+# Local editor and agent state
+.DS_Store
+.vscode/
+.idea/
+.codex/
+.claude/
+AGENTS.md

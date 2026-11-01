@@ -1,0 +1,28 @@
+name: mrcat
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python=3.11
+  - sqlite>=3.51.3
+  - pip
+  - r-base=4.4
+  - r-data.table
+  - r-jsonlite
+  - r-ggplot2
+  - r-glmnet
+  - r-robustbase
+  - r-remotes
+  - r-curl
+  - r-openssl
+  - r-xml2
+  - r-r.utils
+  - c-compiler
+  - cxx-compiler
+  - fortran-compiler
+  - make
+  - cmake
+  - pkg-config
+  - git
+  - pip:
+      - -e .

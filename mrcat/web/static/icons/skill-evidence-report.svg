@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="4096" height="4096" viewBox="0 0 96 96"><title>Traceable evidence report</title><g fill="none" stroke="#155E63" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M65 39V28L50 13H23a6 6 0 0 0-6 6v58a6 6 0 0 0 6 6h30 M50 13v15h15"/>
+<path d="M27 28h12 M27 39h23 M27 51h12 M27 62h17 M27 72h15"/>
+<circle cx="64" cy="60" r="16"/>
+<path d="M76 72l10 12" stroke-width="3.6"/>
+<path d="M56 62h16 M59 56v12 M68 59v6" stroke-width="2"/>
+</g></svg>
