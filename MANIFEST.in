@@ -7,6 +7,7 @@ recursive-include skills *.py *.md *.R *.json *.yaml *.txt
 recursive-include scripts *.R *.py *.json
 prune docs
 include docs/architecture.md docs/skills.md docs/data.md docs/checkpoint_storage.md docs/multi_user.md docs/trace.md docs/custom_codeact.md docs/executor_transport.md docs/result_refs.md docs/final_result_delivery.md
+include docs/configuration.md docs/development.md docs/assets/mrcat-workspace.png
 prune skills/mr-grip/execution
 prune skills/mr-grip/tests
 exclude skills/mr-grip/build_contract.json

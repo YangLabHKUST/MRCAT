@@ -1,147 +1,168 @@
+<div align="center">
+
 # MRCAT
 
-MRCAT is a skill-guided agent for Mendelian randomization (MR). It finds GWAS
-studies, prepares exposure/outcome data, runs MR methods and diagnostics, and
-writes reports grounded in saved results. Conversations can reuse saved evidence.
+**An AI assistant for Mendelian randomization**
 
-## Install
+Find GWAS studies, run analyses and explore the evidence in one workspace.
 
-Linux and Python 3.11 or newer are required. From the repository root:
+[![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB)](pyproject.toml) [![License](https://img.shields.io/badge/License-BSD--3--Clause-blue)](LICENSE)
+
+[Quick start](#quick-start) · [Model configuration](docs/configuration.md) · [Examples](#examples) · [Reference data](#reference-data) · [Documentation](#documentation) · [Checks](https://github.com/77JULIE/MRCAT/actions/workflows/ci.yml)
+
+</div>
+
+MRCAT turns a research question into a reviewable MR workflow. It searches for
+studies, prepares exposure and outcome data, runs MR methods and diagnostics,
+and writes reports grounded in the saved results. You can inspect the proposed
+plan, follow the execution and ask follow-up questions in the same conversation.
+
+[![MRCAT workspace showing a recorded analysis with conversation, execution cells and results](docs/assets/mrcat-workspace.png)](docs/assets/mrcat-workspace.png)
+
+*The MRCAT interface displaying the included Result 4 recording. This is a
+read-only view of an existing analysis; viewing it makes no model calls.*
+
+## What you can do
+
+- **Find studies:** search GWAS sources and review candidate datasets and metadata.
+- **Analyze data:** start from online studies or local files; prepare inputs and
+  run MR estimators, sensitivity analyses, replication and other supported workflows.
+- **Inspect the work:** expand code and execution outputs, explore tables and
+  figures, and open or download the scientific report.
+- **Continue a question:** reuse suitable saved evidence in a follow-up analysis,
+  or continue in an independent copy of a session.
+
+See the [26 built-in Skills](docs/skills.md) for their inputs and requirements.
+Completed execution does not establish causality: interpret results with the
+study design, ancestry, assumptions and diagnostics.
+
+## Quick start
+
+<a id="install"></a>
+
+### 1. Install
+
+Use **Linux**, **Conda** and **Git**. The environment recipe installs Python 3.11,
+R and the Python package. Clone the repository (access is required while it is
+private), then run:
 
 ```bash
+git clone https://github.com/77JULIE/MRCAT.git
+cd MRCAT
 conda env create -f environment.yml
 conda activate mrcat
 Rscript scripts/install_r_dependencies.R
+```
+
+The R installer is needed for scientific analysis; you can skip it when only
+viewing the recorded example. Reference data and GWAS inputs are prepared
+separately in [Reference data](#reference-data). The environment recipe is not
+a complete dependency lock.
+
+### 2. Configure a model
+
+Create your local settings file once:
+
+```bash
 cp .env.example .env
 ```
 
-Set your provider, model and API key in `.env`. R libraries and GWAS/reference
-resources are separate dependencies; see [data preparation](docs/data.md).
-The environment file is an installation recipe, not a complete dependency lock.
-The installer reports missing R packages and retrieves the pinned BWMR helper
-under its upstream terms. Check an existing installation without modifying it:
+If you already have `.env`, edit it instead of replacing it. Open `.env` in a text
+editor and update the existing entries below. This example uses DeepSeek:
 
-```bash
-Rscript scripts/install_r_dependencies.R --check
+```dotenv
+LLM_PROVIDER=deepseek
+DEEPSEEK_API_KEY=your_api_key_here
+DEEPSEEK_BASE_URL=https://api.deepseek.com
+DEEPSEEK_MODEL=deepseek-flash
 ```
 
-If Python and the analysis dependencies are already available:
+Replace `your_api_key_here` with your own key from the
+[DeepSeek platform](https://platform.deepseek.com/). The model name and endpoint
+follow the [provider's API guide](https://api-docs.deepseek.com/).
+Model calls use your provider account. Keep `.env` private.
 
-```bash
-python -m pip install .
-```
+Only configure the provider you intend to use; leave other API keys blank.
+The template's model capacity settings also need to fit the model served by your
+endpoint; see [model limits](docs/configuration.md#model-limits).
+For OpenAI, Qwen or another supported provider, follow the
+[configuration guide](docs/configuration.md#choose-a-provider).
 
-The distribution includes Skills, prompts, Python/R wrappers and Web assets.
-Python installation alone does not install R libraries or reference data.
+### 3. Start and try a question
 
-## Reference data
-
-MRCAT provides one complete reference-data set: HapMap3/MHC lists, European
-LDSC files, the European GRCh37 panel, EUR/AFR/EAS/SAS GRCh38 panels and the
-PLINK executable. It downloads about 2.92 GB and installs about 12.86 GB.
-GWAS study inputs are separate.
-
-**The reference data are prepared locally and have not been published.**
-Before publication, install the maintainer-provided local archives with:
-
-```bash
-python scripts/download_database.py --from-dir /path/to/database-bundles
-```
-
-After publication, one command will download, verify and install the complete set:
-
-```bash
-python scripts/download_database.py
-```
-
-Existing verified files are reused. Use `python scripts/download_database.py
---check` to verify the complete installation without changing files.
-Non-European PLINK panels do not change the workflow's European LDSC background
-reference. See [data preparation](docs/data.md) for sources, platform restrictions
-and storage requirements.
-
-## Start
+Run from the repository root with the `mrcat` environment active:
 
 ```bash
 mrcat-web --port 7869
 ```
 
-Open `http://127.0.0.1:7869`, choose your configured provider and ask a research
-question. Review and confirm the proposed plan. The console provides conversation,
-execution cells, tables, interactive figures, reports and downloads. It supports
-study setup with local files, stopping a turn and continuing in an independent copy.
+Open **http://127.0.0.1:7869** in your browser. Select **deepseek** in the
+**Model provider** menu to match the example configuration, then select **New Chat**.
+Try a first question that does not require GWAS downloads or R analysis:
+
+> Explain what study information I should prepare for a two-sample MR analysis
+> of BMI and type 2 diabetes. Do not search, download data or run an analysis yet.
+
+A response in **Conversation** confirms that this session can reach the configured
+model. The provider menu selects credentials already configured on the server;
+it does not collect API keys. After changing `.env`, restart the server and
+create a new chat. See [troubleshooting](docs/configuration.md#troubleshooting)
+if the request fails.
+
+**Want to inspect an existing analysis first?** Select **Result 4 ·
+Hexadecanedioate → CAD** in the sidebar. Viewing this recording needs no API key,
+reference database or original GWAS files. You can skip step 2 for this view.
+
+## Using the workspace
+
+| Area | How to use it |
+| --- | --- |
+| Sidebar | Start or reopen a session, choose a configured provider, or open the recorded example. |
+| Study setup | Supply local exposure/outcome files and study metadata when using your own data. |
+| Conversation | Ask a question, review the proposed plan and confirm before analysis proceeds. |
+| Execution Notebook | Expand execution cells to inspect code, outputs, tables and plots. |
+| Reports and downloads | Open the generated report and save the available result files. |
+
+For a new scientific analysis, prepare the required data first. Then ask a
+specific question, inspect the selected studies and settings, and confirm the
+plan. Outputs appear as execution progresses. The
+[BMI → T2D tutorial](examples/bmi_t2d/README.md) provides example requests for
+online data, local data and an MR-APSS follow-up.
+
+## Reference data
+
+The installer provides **one complete set**: HapMap3/MHC lists, European LDSC,
+the European GRCh37 panel, EUR/AFR/EAS/SAS GRCh38 panels and PLINK for Linux x86_64.
+It downloads approximately **2.92 GB** and installs **12.86 GB**; allow at least
+**16 GB** of free space, plus space for study data and analysis outputs.
+
+**The reference archives have not yet been published.** If you have the prepared
+archives from the maintainer, install and verify them with:
 
 ```bash
-mrcat --question "Find GWAS studies of systolic blood pressure and coronary artery disease."
-mrcat --session session_ID
+python scripts/download_database.py --from-dir /path/to/database-bundles
+python scripts/download_database.py --check
 ```
 
-`python main.py` and `python -m mrcat.web.server` use the same implementation.
-New sessions use `session_` IDs. Existing `bridge_` IDs and directories remain
-valid; both use `/api/sessions` and the same access checks.
+Replace `/path/to/database-bundles` with the actual archive directory.
+The command `python scripts/download_database.py` will support network
+installation after the archives are published and the download URL is configured.
+It is not a working public download yet. GWAS study inputs are separate.
 
-For a shared console, follow [Cloudflare Access setup](docs/multi_user.md).
-Authenticated users have separate session stores. Model-generated code still
-runs under the operator's OS account; web ownership checks are not an OS sandbox.
-
-## Configuration and outputs
-
-Command-line entry points read `.env` and `config.yaml` from the current directory.
-`MRCAT_CONFIG_DIR` chooses another settings directory. `--env-file` selects an
-explicit environment file. Exported variables take priority, followed by the
-explicit file, then the settings directory's `.env`.
-
-Sessions default to `runtime_artifacts/` in the current directory; use
-`--artifact-dir /path/to/sessions` for another location. Checkpoints own workflow
-state; generated JSON/Markdown and trace files are readable projections.
-See [checkpoint storage](docs/checkpoint_storage.md) before backing up sessions
-whose SQLite entries link to host-local storage.
-
-`MRCAT_DATABASE_DIR` points directly to your reference database directory.
-It does not change the installed code location. Never distribute private `.env`
-files, API keys or user sessions.
-
-Supported providers are `anthropic`, `openai`, `deepseek`, `qwen`, `glm`, `grok`
-and `custom`. The Web selector currently exposes deepseek, openai and qwen; the
-CLI supports the full list. Configure provider-specific `*_API_KEY`, `*_MODEL`
-and, if required, `*_BASE_URL`. The `custom` provider uses an OpenAI-compatible
-endpoint. `REPORTER_MODEL` optionally overrides the report model.
-
-Match `MRCAT_CONTEXT_TOKENS`, `MRCAT_MAX_OUTPUT_TOKENS` and
-`MRCAT_MAX_RETRY_OUTPUT_TOKENS` to the served model. These are explicit capacities,
-not values discovered from the provider. `MRCAT_DISABLE_PROXY=1` removes inherited
-proxy variables for this process.
-
-## Skills and use
-
-The [26 built-in Skills](docs/skills.md) include GWAS search, selection, download,
-QC and pair preparation; MR estimators; and sensitivity, bidirectional, mediation,
-replication and cross-result summaries. Skills and generated code use the same
-saved result store. Tool completion is an execution status, not proof of a causal
-claim. Confirm phenotype definitions, direction, ancestry, assumptions and scales.
-
-Tools can be called from Python as documented in the owning Skill, for example:
-
-```python
-from pathlib import Path
-from mrcat.tools import mr_primary
-result = mr_primary(mrdat_path=Path("prepared_pair.tsv"), output_dir=Path("outputs/primary"))
-print(result["summary"])
-```
-
-This requires the prepared input contract and R environment in
-[mr-primary](skills/mr-primary/SKILL.md).
+See [data preparation](docs/data.md) for sources, storage locations and provenance.
+The standard pair-preparation workflow uses European LDSC background files;
+AFR/EAS/SAS PLINK panels do not make that background population-specific.
 
 ## Examples
 
-Start `mrcat-web --port 7869` and select **Result 4 · Hexadecanedioate → CAD**
-in the sidebar. The included read-only recording shows the original MR analysis,
-FinnGen replication and final scientific report, including failed attempts and
-subsequent corrections. Viewing it makes no model calls and requires no API key.
-Inspect the plans, code, tables and plots in the Conversation and Execution
-Notebook. See the [Result 4 guide](examples/result4/README.md) for provenance and
-static-site export. The recording contains selected small outputs, not the
-original GWAS files or a resumable session database.
+| Example | What it provides |
+| --- | --- |
+| [Result 4: hexadecanedioate → CAD](examples/result4/README.md) | An included read-only recording of MR analysis, FinnGen replication and the final report, with code, plots and selected outputs. |
+| [BMI → T2D](examples/bmi_t2d/README.md) | A guided live demo and workflow tutorial; see the preview link and run-status qualifications below. |
+| [Offline installation check](examples/offline_smoke.py) | Run `python examples/offline_smoke.py` to check conversation persistence with a fixed local model fixture. It makes no API calls and performs no MR analysis. |
+
+<details>
+<summary>BMI → T2D live demo and online recordings</summary>
 
 Try the [BMI → T2D interactive demo](https://wiki-northern-diploma-cumulative.trycloudflare.com/)
 without signing in or supplying an API key. This is a **temporary preview URL**;
@@ -169,54 +190,24 @@ that the entire sequence has been rerun successfully.
 For an immediately viewable completed analysis, open the
 [public Result 4 recording](https://result4.mrcat.science/#example-result4).
 
-## Offline installation check
+</details>
 
-```bash
-python examples/offline_smoke.py
-```
+## Documentation
 
-This uses a deterministic local model fixture, makes no external model calls,
-and checks conversation persistence. It does not perform MR or reproduce a paper
-experiment. Scientific analysis requires the real dependencies and inputs above.
-
-## Repository
-
-```text
-mrcat/       Agent, model gateway, state, results, reporting and Web console
-skills/      Skill guides, Python/R analysis wrappers and plot explanations
-scripts/     R dependency installation and reference-data download/verification
-examples/    Small software usage examples
-tests/       Product behavior, method output and browser regressions
-docs/        Architecture, installation resources and user documentation
-```
-
-Full paper experiment inputs, runners and results are maintained separately and
-are not bundled with this software. The selected read-only example above is
-included for inspection. Development audit scripts and records, private settings,
-session stores and reference databases are excluded from the source distribution.
-
-## Development
-
-```bash
-python -m pip install -e ".[dev]"
-ruff check mrcat skills tests
-python -m pytest -m "not r" -q
-python -m pytest -m r -q
-node tests/test_result_formatters.cjs
-python -m build
-```
-
-Browser scenarios in `tests/browser_*.cjs` use Playwright and deterministic fixture
-servers. R tests require the documented analysis libraries. Software tests do not
-establish scientific accuracy for every live-model analysis.
-
-Checkpoint tests need a local temporary filesystem. On a machine with an NFS
-temporary directory, prefix the test commands with `TMPDIR=/var/tmp`.
+| Guide | Contents |
+| --- | --- |
+| [Configuration](docs/configuration.md) | Provider settings, model limits, session locations, CLI use and troubleshooting. |
+| [Data preparation](docs/data.md) | Reference resources, local GWAS inputs and R dependencies. |
+| [Skills](docs/skills.md) | Supported workflows and their input/output contracts. |
+| [Architecture](docs/architecture.md) | Agent execution, state and result handling. |
+| [Shared deployment](docs/multi_user.md) | Cloudflare Access and separation of user sessions. |
+| [Development](docs/development.md) | Repository layout, tests, builds and Python tool usage. |
 
 ## License and citation
 
-Original code uses [BSD-3-Clause](LICENSE). Third-party code and data retain their
-own terms; see [THIRD_PARTY.md](THIRD_PARTY.md). [CITATION.cff](CITATION.cff) contains
-software citation metadata. Record the actual software version and configuration
-used for an analysis. Authorship metadata currently uses MRCAT contributors and
-must be finalized before publication.
+Original code is licensed under [BSD-3-Clause](LICENSE). Third-party code and
+data retain their own terms; see [THIRD_PARTY.md](THIRD_PARTY.md).
+Use [CITATION.cff](CITATION.cff) for software metadata and record the exact commit
+used for an analysis. Author metadata currently lists MRCAT contributors and
+is provisional. Full paper experiment inputs, runners and results are maintained
+separately from this software repository.

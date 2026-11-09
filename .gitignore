@@ -47,3 +47,8 @@ skills/mr-bwmr/scripts/bwmr/BWMR_updated.R
 !/docs/executor_transport.md
 !/docs/result_refs.md
 !/docs/final_result_delivery.md
+!/docs/configuration.md
+!/docs/development.md
+!/docs/assets/
+/docs/assets/*
+!/docs/assets/mrcat-workspace.png
