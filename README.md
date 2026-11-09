@@ -143,9 +143,31 @@ Notebook. See the [Result 4 guide](examples/result4/README.md) for provenance an
 static-site export. The recording contains selected small outputs, not the
 original GWAS files or a resumable session database.
 
-The [BMI → T2D tutorial](examples/bmi_t2d/README.md) describes literature search,
-online-data analysis, local-file analysis and follow-up MR-APSS analysis.
-Its demonstration run is incomplete; no BMI → T2D recording is included.
+Try the [BMI → T2D interactive demo](https://wiki-northern-diploma-cumulative.trycloudflare.com/)
+without signing in or supplying an API key. This is a **temporary preview URL**;
+it may change or become unavailable when the preview tunnel restarts.
+
+The guided example stays in one session:
+
+1. Search the literature, then select online GWAS studies and run MR.
+2. Load the supplied native local GWAS files and run a separate MR analysis.
+3. Follow up with MR-APSS using the same local studies and suitable QC outputs.
+
+Preview each request, send it, then review and confirm the proposed analysis
+plan. The server runs the agent and analysis tools to generate results and plots;
+this is not a recording. Verified pre-QC downloads can be reused, while QC,
+pair preparation, MR fitting and plotting run for the new session. The host
+provides the model credentials, data and analysis dependencies. Progress and
+errors remain visible; runtime depends on the model, tools and external services.
+
+See the [BMI → T2D guide](examples/bmi_t2d/README.md) for hosting with `--auth demo`,
+input provenance and checksums, and the manual tutorial. Full GWAS inputs are
+not bundled in Git. The historical tutorial run completed the primary analyses
+but not its MR-APSS follow-up; publishing this live interface does not establish
+that the entire sequence has been rerun successfully.
+
+For an immediately viewable completed analysis, open the
+[public Result 4 recording](https://result4.mrcat.science/#example-result4).
 
 ## Offline installation check
 

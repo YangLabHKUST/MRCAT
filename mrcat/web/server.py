@@ -11,14 +11,20 @@ from .access import CloudflareAccess, UserServices
 from .study_methods import study_method_catalog
 from .study_sources import study_source_catalog
 
-def create_app(*,repo_root=None,artifact_dir=None,auth_mode="local",access_team_domain=None,access_aud=None):
+def create_app(*,repo_root=None,artifact_dir=None,auth_mode="local",access_team_domain=None,access_aud=None,demo_data_dir=None):
     root=Path(repo_root or Path(__file__).resolve().parents[2]).resolve()
     artifact_dir=Path(artifact_dir or Path.cwd()/"runtime_artifacts").resolve()
-    if auth_mode not in {"local", "cloudflare"}:
-        raise ValueError("auth_mode must be local or cloudflare")
+    if auth_mode not in {"local", "cloudflare", "demo"}:
+        raise ValueError("auth_mode must be local, cloudflare or demo")
     access=CloudflareAccess(access_team_domain, access_aud) if auth_mode=="cloudflare" else None
     users=UserServices(root, artifact_dir, access.issuer) if access else None
-    local_service=Service(root, artifact_dir) if not access else None
+    demo = auth_mode == "demo"
+    if demo:
+        from .demo import DemoVisitors
+        if not demo_data_dir:
+            raise ValueError("Demo mode requires --demo-data-dir with the verified original GWAS inputs")
+        users = DemoVisitors(root, artifact_dir, demo_data_dir)
+    local_service=Service(root, artifact_dir) if not users else None
     def current_service(request):
         return local_service if local_service is not None else request.state.service
     @asynccontextmanager
@@ -33,17 +39,28 @@ def create_app(*,repo_root=None,artifact_dir=None,auth_mode="local",access_team_
     app.state.user_services=users
     @app.middleware("http")
     async def authenticate(request, call_next):
-        if access:
+        visitor_token = None
+        if access or demo:
             try:
-                identity=await asyncio.to_thread(access.verify, request.headers.get("Cf-Access-Jwt-Assertion"))
+                if access:
+                    identity=await asyncio.to_thread(access.verify, request.headers.get("Cf-Access-Jwt-Assertion"))
                 if request.method not in {"GET", "HEAD", "OPTIONS"}:
                     origin=request.headers.get("origin")
                     if (request.headers.get("sec-fetch-site")=="cross-site" or
                             origin and urlsplit(origin).netloc!=request.url.netloc):
                         raise HTTPException(403, "Cross-origin changes are not allowed")
-                service=await asyncio.to_thread(users.get, identity)
+                if demo:
+                    if request.method not in {"GET", "HEAD", "OPTIONS"} and not (
+                            request.method == "POST" and re.fullmatch(r"/api/sessions(?:/[^/]+/(?:mr/reply|stop))?", request.url.path)):
+                        raise HTTPException(403, "Use the guided example buttons for this public demo.")
+                    if int(request.headers.get("content-length", "0")) > 16384:
+                        raise HTTPException(413, "Demo requests must be small text messages.")
+                    service, visitor_token = await asyncio.to_thread(users.visitor, request)
+                else:
+                    service=await asyncio.to_thread(users.get, identity)
                 request.state.service=service
-                request.state.access_expires_at=identity.expires_at
+                if access:
+                    request.state.access_expires_at=identity.expires_at
                 match=re.match(r"^/api/sessions/([^/]+)(?:/|$)", request.url.path)
                 if match:
                     try:
@@ -59,8 +76,11 @@ def create_app(*,repo_root=None,artifact_dir=None,auth_mode="local",access_team_
             return JSONResponse({"detail":"Start MRCAT with --auth cloudflare for Access sign-ins"},
                                 status_code=503, headers={"Cache-Control":"private, no-store"})
         response=await call_next(request)
-        if access:
+        if access or demo:
             response.headers["Cache-Control"]="private, no-store"
+        if visitor_token and request.cookies.get("mrcat_demo_visitor") != visitor_token:
+            response.set_cookie("mrcat_demo_visitor", visitor_token, httponly=True,
+                                secure=request.url.scheme == "https", samesite="strict", max_age=7 * 86400)
         return response
     static=root/"mrcat/web/static";app.mount("/static",StaticFiles(directory=static),name="static")
     @app.exception_handler(BusyError)
@@ -73,12 +93,15 @@ def create_app(*,repo_root=None,artifact_dir=None,auth_mode="local",access_team_
     async def forbidden(request,exc): return JSONResponse({"detail":str(exc)},status_code=403)
     @app.get("/")
     @app.get("/index.html")
-    def index(): return FileResponse(static/"index.html")
+    def index():
+        if demo:
+            return Response((static/"index.html").read_text().replace("<body>", '<body data-live-demo="true">'), media_type="text/html")
+        return FileResponse(static/"index.html")
     @app.get("/api/methods")
     def methods(): return {"methods":study_method_catalog(root/"skills"),"sources":study_source_catalog()}
     @app.get("/api/sessions")
     def sessions(request:Request):
-        return {"sessions":current_service(request).sessions(local_only=bool(access))}
+        return {"sessions":current_service(request).sessions(local_only=bool(users))}
     @app.post("/api/sessions")
     async def start(request:Request):
         service=current_service(request)
@@ -189,7 +212,8 @@ def create_app(*,repo_root=None,artifact_dir=None,auth_mode="local",access_team_
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument("--host",default="127.0.0.1");parser.add_argument("--port",type=int,default=7869);parser.add_argument("--artifact-dir",default="runtime_artifacts");parser.add_argument("--env-file",type=Path)
-    parser.add_argument("--auth",choices=["local", "cloudflare"],help="Use cloudflare for a private multi-user console")
+    parser.add_argument("--auth",choices=["local", "cloudflare", "demo"],help="Use cloudflare for private sign-in or demo for the anonymous guided example")
+    parser.add_argument("--demo-data-dir", type=Path, help="Directory containing the original BMI/T2D example GWAS files")
     args=parser.parse_args();root=Path(__file__).resolve().parents[2]
     os.environ.setdefault("MRCAT_CONFIG_DIR", str(Path.cwd()))
     from mrcat.config.env import load_repo_dotenv,disable_proxy_from_env_if_requested
@@ -200,9 +224,12 @@ def main():
     disable_proxy_from_env_if_requested()
     import uvicorn
     auth_mode=args.auth or os.getenv("MRCAT_AUTH_MODE", "local")
+    if auth_mode == "demo":
+        os.environ.setdefault("MRCAT_MAX_ROUNDS", "60")
+        os.environ.setdefault("MRCAT_EXECUTION_TIMEOUT", "1800")
     if auth_mode=="local" and args.host not in {"127.0.0.1", "localhost", "::1"}:
         parser.error("Local mode must listen on loopback. Use --auth cloudflare for network access.")
     uvicorn.run(create_app(repo_root=root,artifact_dir=Path(args.artifact_dir).resolve(),auth_mode=auth_mode,
                           access_team_domain=os.getenv("MRCAT_ACCESS_TEAM_DOMAIN"),
-                          access_aud=os.getenv("MRCAT_ACCESS_AUD")),host=args.host,port=args.port)
+                          access_aud=os.getenv("MRCAT_ACCESS_AUD"),demo_data_dir=args.demo_data_dir),host=args.host,port=args.port)
 if __name__=="__main__":main()

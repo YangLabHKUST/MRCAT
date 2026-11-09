@@ -10,6 +10,61 @@ BMI → T2D recording or numerical MR-APSS result is distributed here.
 For the included read-only browser example, see the
 [Result 4 guide](../result4/README.md).
 
+## Interactive hosted demo
+
+[Open the interactive BMI → T2D demo](https://wiki-northern-diploma-cumulative.trycloudflare.com/)
+without signing in or entering an API key. **This is a temporary preview URL**
+and can change or stop working when its tunnel restarts. The public host supplies
+the credentials, dependencies and inputs; self-hosting requires the setup below.
+
+The guided demo uses the current frontend and real agent workers in one session:
+literature search and online GWAS analysis, supplied local GWAS analysis, then an
+MR-APSS follow-up. Visitors preview each request before sending it and confirm
+the agent's proposed plans. Result tables, code and plots appear as execution
+progresses. The previous recording is not played back as a new computation.
+
+To host it from this source checkout, configure the server's model/search
+credentials and the usual R/LD-reference dependencies, then run:
+
+```bash
+python -m mrcat.web.server --auth demo --host 127.0.0.1 --port 7892 \
+  --artifact-dir /path/to/dedicated-demo-sessions \
+  --demo-data-dir /path/to/original-bmi-t2d-files \
+  --env-file /path/to/private-config.env
+```
+
+The data directory must contain the two files identified in `local_inputs.json`;
+their full SHA-256 checksums are verified at startup. Task 2 copies them into the
+visitor's session and populates the existing Study setup fields. No upload or
+visitor API key is required. All requests use the existing session/reply API.
+
+Optionally set `MRCAT_DEMO_ONLINE_CACHE` to the `cache/gwas-download` directory of
+the previous online BMI/T2D run. The server checks its completion markers and
+copies the pre-QC downloads for `ieu-b-40` and `ebi-a-GCST006867` when Task 1's
+online analysis starts. It supplies an inventory with checksums and study IDs,
+without temporary signed download URLs. The request still requires online
+metadata verification and fresh QC, pair preparation, MR fitting and plotting.
+Cached downloads do not imply that the online and local branches use the same
+studies or should produce identical estimates.
+
+Publish only this dedicated service through the desired tunnel. Signed,
+HTTP-only visitor cookies keep session stores separate and allow continuation
+in the same browser for seven days. The public service accepts only the supplied
+example prompts, confirmation, resume and stop; arbitrary questions, uploads,
+forks and provider changes are unavailable. It admits one running agent turn at
+a time, up to 40 turns per UTC day (`MRCAT_DEMO_DAILY_TURNS`) and 16 user messages
+per visitor session. `MRCAT_DEMO_PROVIDER` defaults to `deepseek`. The server pays
+for model/search calls; its environment file must remain private. Keep this
+artifact directory across restarts to preserve cookies, sessions and allowances.
+The demo polls the existing snapshot API for progress, so temporary Cloudflare
+Quick Tunnels can be used for previews despite their lack of SSE support. Use a
+named tunnel and a fixed hostname for a permanent public link.
+
+The interface is verified with synthetic transport fixtures, not by pretending
+that the historical incomplete MR-APSS run succeeded. An actual visitor run can
+still fail on external services or scientific prerequisites; those failures
+remain visible in the normal conversation and execution notebook.
+
 ## Run the workflow yourself
 
 First complete the [installation](../../README.md#install) and

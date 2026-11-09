@@ -795,6 +795,10 @@ function connectEvents() {
     state.eventSource.close();
     state.eventSource = null;
   }
+  if (LIVE_DEMO) {
+    connectLiveDemoPolling();
+    return;
+  }
   const source = new EventSource(`/api/sessions/${encodeURIComponent(state.currentSessionId)}/events`);
   source.addEventListener("snapshot", (event) => {
     if (state.eventSource !== source) return;
@@ -938,8 +942,8 @@ function applySnapshot(snapshot) {
 
 function renderHeader(snapshot) {
   const session = snapshot?.state || {};
-  els.sessionTitle.textContent = session.session_id ? `MRCAT Session · ${displaySessionId(session.session_id)}` : "New Chat";
-  els.sessionSubtitle.textContent = session.question || "Ask a research question or describe a coding task.";
+  els.sessionTitle.textContent = session.session_id ? `MRCAT Session · ${displaySessionId(session.session_id)}` : LIVE_DEMO ? "BMI → T2D · Interactive example" : "New Chat";
+  els.sessionSubtitle.textContent = session.question || (LIVE_DEMO ? "Three connected tasks · Real analysis and figures" : "Ask a research question or describe a coding task.");
   els.statusChip.textContent = sessionActivity(snapshot)?.title || session.status || "Ready";
   els.statusChip.className = "status-chip";
   els.pendingText.hidden = !text(snapshot?.pending_question);
@@ -1190,7 +1194,7 @@ function renderConversation(snapshot) {
     }
   }
   if (state.pendingUserMessage && !events.some(e => e.type === "user_message" && e.content === state.pendingUserMessage.text)) appendMessage("user", "You", state.pendingUserMessage.text);
-  if (!els.conversationFeed.children.length) appendEmptyConversation("Ask a research question or describe a coding task.");
+  if (!els.conversationFeed.children.length) appendEmptyConversation(LIVE_DEMO ? "Choose the literature request above to begin. Your conversation and analysis results will appear here." : "Ask a research question or describe a coding task.");
   restoreConversationScroll(scroll);
 }
 
@@ -3325,6 +3329,7 @@ function updateComposer() {
   els.replyButton.textContent = state.currentSessionId ? "Send" : "Start";
   els.replyInput.placeholder = state.example ? "Recorded example · Start a new chat to run an analysis" : running ? `${sessionActivity(state.snapshot).title} · see progress above` : "Describe what you want to do";
   document.querySelectorAll("[data-report-action]").forEach(button => { button.disabled = locked; });
+  updateLiveDemo();
 }
 
 async function forkCurrentSession() {
@@ -3721,6 +3726,7 @@ async function bootstrap() {
     await openResult4Example();
     return;
   }
+  await initLiveDemo();
   await loadStudyMethodOptions();
   await refreshSessions();
   if (state.example) {
