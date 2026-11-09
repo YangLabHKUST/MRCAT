@@ -1,0 +1,82 @@
+Downloaded study keys: ['ancestry', 'ancestry_raw', 'file_size', 'label', 'n_cases', 'n_controls', 'raw_path', 'sample_size', 'source', 'study_id', 'study_metadata']
+raw_path: /recorded-session/cache/gwas-download/gwas_catalog/GCST90243839/55b09353528969cc/GCST90243839_buildNCBI36.tsv.gz
+sample_size: 6887
+[gwas-qc] Canonicalizing one GWAS: /recorded-session/cache/gwas-download/gwas_catalog/GCST90243839/55b09353528969cc/GCST90243839_buildNCBI36.tsv.gz
+[gwas-qc] Starting study canonicalization: raw_path=/recorded-session/cache/gwas-download/gwas_catalog/GCST90243839/55b09353528969cc/GCST90243839_buildNCBI36.tsv.gz
+[gwas-qc] study preview started.
+[gwas-qc] study preview done: format=table; header_fields=9; sample_rows=50.
+[gwas-qc] study sample input written: /recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/samples/study.sample.txt.gz
+[gwas-qc] study counting input rows.
+[gwas-qc] study input rows counted: rows=2545171.
+[gwas-qc] study LLM codegen attempt 1/3 started.
+[gwas-qc] study LLM code written for attempt 1: /recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/generated_code/study_attempt_1.py
+[gwas-qc] study sample execution attempt 1 started: rows=50.
+[gwas-qc] study sample execution attempt 1 finished: exit_code=0.
+[gwas-qc] study sample validation attempt 1 started.
+[gwas-qc] study sample validation attempt 1 passed: rows=50; snp_counts={'rsid': 50, 'coordinate': 0, 'other': 0, 'missing': 0}.
+[gwas-qc] study full execution started: rows=2545171; code=/recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/generated_code/study_attempt_1.py.
+[gwas-qc] study full execution finished: exit_code=0.
+[gwas-qc] study pre-mapping validation started.
+[gwas-qc] study pre-mapping validation passed: rows=2545171; snp_counts={'rsid': 2545171, 'coordinate': 0, 'other': 0, 'missing': 0}.
+[gwas-qc] study genome build LLM inference started.
+[gwas-qc] study genome build inferred: genome_build=unknown; reason=Source metadata explicitly states genome_assembly is NCBI36, which is neither GRCh37 nor GRCh38, so the build cannot be classified as grch37 or grch38.
+[gwas-qc] study final strict validation started.
+[gwas-qc] study final strict validation passed: rows=2545171; snp_counts={'rsid': 2545171, 'coordinate': 0, 'other': 0, 'missing': 0}.
+[gwas-qc] study canonical output ready: /recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/canonical/study.canonical.tsv.gz
+[gwas-qc] Formatting and filtering the canonical study.
+[gwas-qc] Loaded MR-APSS references; min_freq=0.05.
+[gwas-qc] Reading study canonical GWAS: /recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/canonical/study.canonical.tsv.gz
+[gwas-qc] Loaded study canonical GWAS: rows=2545171; sample_size=6887; min_freq=0.05.
+[gwas-qc] Sample size decision for study: source=side_level_sample_size; detail=side-level sample_size=6887; n_col=none; n_cases_col=none; n_controls_col=none; side_sample_size=6887.
+[gwas-qc] Formatting study with MRAPSS::format_data.
+[gwas-qc] Completed study formatting: input rows=2545171; retained rows=1026635.
+[gwas-qc] Sample size used for study: source=side_level_sample_size (side-level sample_size=6887); final formatted N is fixed at 6887 for 1026635 rows.
+[gwas-qc] mrcat_format_data study message: Begin formatting ....
+[gwas-qc] mrcat_format_data study message: The raw data set has 2545171 dat lines
+[gwas-qc] mrcat_format_data study message: Remove ambiguous SNPs ..., remaining 2153996 SNPs.
+[gwas-qc] mrcat_format_data study message: Remove SNPs in MHC region ..., remaining 2143548 SNPs.
+[gwas-qc] mrcat_format_data study message: Remove duplicated SNPs ..., remaining 2143548 SNPs.
+[gwas-qc] mrcat_format_data study message: Merge SNPs with the hapmap3 snplist ..., remaining 1134287 SNPs.
+[gwas-qc] mrcat_format_data study message: Remove SNPs with alleles not matched with the hapmap3 snplist, remaining 1134249 SNPs.
+[gwas-qc] mrcat_format_data study message: Remove SNPs with MAF less than0.05, remaining 1026691 SNPs.
+[gwas-qc] mrcat_format_data study message: Generating sample size from specified sample size
+[gwas-qc] mrcat_format_data study message: Remove SNPs with p-value < 0 or p-value > 1, remaining 1026691 SNPs.
+[gwas-qc] mrcat_format_data study message: Remove missing values, remaining 1026691 SNPs.
+[gwas-qc] mrcat_format_data study message: Remove SNPs with sample size 5 standard deviations away from the mean, remaining 1026691 SNPs.
+[gwas-qc] mrcat_format_data study message: Remove SNPs with chi2 > chi2_max ... , remaining 1026635 SNPs.
+[gwas-qc] mrcat_format_data study message: The formatted data has 1026635 dat lines.
+[gwas-qc] Formatting evidence for study: removed_rows=1518536; log_pval=FALSE; beta_from_or=FALSE; n_from_case_control=FALSE; formatted_P_range=[4.082e-19, 1e+00]; formatted_Z_range=[-8.93472e+00, 8.73952e+00]; formatted_N_range=[6.887e+03, 6.887e+03]; messages=Begin formatting .... 
+ | The raw data set has 2545171 dat lines
+ | Remove ambiguous SNPs ..., remaining 2153996 SNPs.
+ | Remove SNPs in MHC region ..., remaining 2143548 SNPs.
+ | Remove duplicated SNPs ..., remaining 2143548 SNPs.
+ | Merge SNPs with the hapmap3 snplist ..., remaining 1134287 SNPs.
+ | Remove SNPs with alleles not matched with the hapmap3 snplist, remaining 1134249 SNPs.
+ | Remove SNPs with MAF less than0.05, remaining 1026691 SNPs.
+ | Generating sample size from specified sample size
+ | Remove SNPs with p-value < 0 or p-value > 1, remaining 1026691 SNPs.
+ | Remove missing values, remaining 1026691 SNPs.
+ | Remove SNPs with sample size 5 standard deviations away from the mean, remaining 1026691 SNPs.
+ | Remove SNPs with chi2 > chi2_max ... , remaining 1026635 SNPs.
+ | The formatted data has 1026635 dat lines. 
+
+.
+[gwas-qc] Writing study formatted GWAS: /recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/formatted/study.mrapss.tsv.gz
+[gwas-qc] Completed successfully.
+[gwas-qc] Completed successfully: canonical_rows=2545171; formatted_rows=1026635; genome_build=unknown; genome_build_reason=Source metadata explicitly states genome_assembly is NCBI36, which is neither GRCh37 nor GRCh38, so the build cannot be classified as grch37 or grch38.
+
+--- gwas_qc summary ---
+gwas-qc completed: canonical_rows=2545171, formatted_rows=1026635. genome_build=unknown, genome_build_reason=Source metadata explicitly states genome_assembly is NCBI36, which is neither GRCh37 nor GRCh38, so the build cannot be classified as grch37 or grch38. gwas-qc formatting completed: min_freq=0.05; rows input=2545171, formatted=1026635, removed=1518536; input_rows=2545171, ambiguous_removed=391175, mhc_removed=10448, duplicate_removed=0, hapmap_reference_removed=1009261, hapmap_allele_mismatch_removed=38, low_maf_removed=107558, invalid_pvalue_removed=0, missing_value_removed=0, sample_size_outlier_removed=0, chi_square_outlier_removed=56, formatted_rows=1026635, input_effect_field=beta, beta_from_or=false, formatted_effect_representation=source_beta; report=/recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/reports/gwas_qc_format_report.json.
+outputs status: ok
+canonical_path: /recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/canonical/study.canonical.tsv.gz
+formatted_path: /recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/formatted/study.mrapss.tsv.gz
+label: Hexadecanedioate levels
+ancestry: european
+sample_size: 6887.0
+genome_build: unknown
+genome_build_reason: Source metadata explicitly states genome_assembly is NCBI36, which is neither GRCh37 nor GRCh38, so the build cannot be classified as grch37 or grch38.
+report_path: /recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/reports/gwas_qc_report.json
+explanation_path: /recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/reports/gwas_qc_explanation.md
+risk_notes: None
+missing_requirements: None
+artifacts: [{'path': '/recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/canonical/study.canonical.tsv.gz', 'kind': 'tsv', 'summary': 'validated canonical GWAS'}, {'path': '/recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/generated_code/study_attempt_1.py', 'kind': 'py', 'summary': 'validated GWAS canonicalization transform'}, {'path': '/recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/formatted/study.mrapss.tsv.gz', 'kind': 'tsv', 'summary': 'analysis-ready formatted GWAS'}, {'path': '/recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/reports/gwas_qc_report.json', 'kind': 'json', 'summary': 'GWAS QC report'}, {'path': '/recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/reports/gwas_qc_explanation.md', 'kind': 'md', 'summary': 'human-readable GWAS QC explanation'}]

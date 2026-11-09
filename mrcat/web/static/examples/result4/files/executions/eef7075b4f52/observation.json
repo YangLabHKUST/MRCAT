@@ -1,0 +1,44 @@
+{
+  "execution_id": "eef7075b4f52",
+  "language": "python",
+  "status": "exited",
+  "returncode": 0,
+  "stdout": "Downloading selected exposure study:\n{'study_id': 'GCST90243839', 'trait': 'Hexadecanedioate levels', 'source': 'gwas_catalog', 'ancestry': 'european', 'sample_size': 6887, 'download_descriptor_url': 'https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90243001-GCST90244000/GCST90243839/GCST90243839_buildNCBI36.tsv.gz'}\n[gwas-download] Starting single-study GWAS download.\n[gwas-download] Downloading source=gwas_catalog; study_id=GCST90243839; cache_dir=/recorded-session/cache/gwas-download/gwas_catalog/GCST90243839/55b09353528969cc.\n[gwas-download] Downloading target GCST90243839 from gwas_catalog.\n[gwas-download] Downloading target GCST90243839 from gwas_catalog: 8.0 MiB / 50.9 MiB (15.7%).\n[gwas-download] Downloading target GCST90243839 from gwas_catalog: 16.0 MiB / 50.9 MiB (31.4%).\n[gwas-download] Downloading target GCST90243839 from gwas_catalog: 24.0 MiB / 50.9 MiB (47.1%).\n[gwas-download] Downloading target GCST90243839 from gwas_catalog: 32.0 MiB / 50.9 MiB (62.9%).\n[gwas-download] Downloading target GCST90243839 from gwas_catalog: 40.0 MiB / 50.9 MiB (78.6%).\n[gwas-download] Downloading target GCST90243839 from gwas_catalog: 48.0 MiB / 50.9 MiB (94.3%).\n[gwas-download] Downloading target GCST90243839 from gwas_catalog: 50.9 MiB / 50.9 MiB (100.0%).\n[gwas-download] Completed download target GCST90243839 from gwas_catalog: 50.9 MiB.\n[gwas-download] Completed single-study download: study_id=GCST90243839; path=/recorded-session/cache/gwas-download/gwas_catalog/GCST90243839/55b09353528969cc/GCST90243839_buildNCBI36.tsv.gz; file_size=53375810.\n\nTool summary:\nGWAS download completed: downloaded gwas_catalog:GCST90243839 to /recorded-session/cache/gwas-download/gwas_catalog/GCST90243839/55b09353528969cc/GCST90243839_buildNCBI36.tsv.gz.\n\nDownload status: ok\n{'raw_path': '/recorded-session/cache/gwas-download/gwas_catalog/GCST90243839/55b09353528969cc/GCST90243839_buildNCBI36.tsv.gz', 'file_size': 53375810, 'study_id': 'GCST90243839', 'source': 'gwas_catalog', 'ancestry': 'european', 'sample_size': 6887}\n\nArtifacts:\n",
+  "stderr": "",
+  "source_path": "executions/eef7075b4f52/code.py",
+  "stdout_path": "executions/eef7075b4f52/stdout.log",
+  "stderr_path": "executions/eef7075b4f52/stderr.log",
+  "duration_seconds": 120.821,
+  "working_directory": "/recorded-session/workspace",
+  "generated_files": [
+    "workspace/outputs/eef7075b4f52/gwas_download_7hi_t3fs/response.json"
+  ],
+  "tool_results": [
+    {
+      "path": "workspace/outputs/eef7075b4f52/gwas_download_7hi_t3fs/response.json",
+      "status": "ok",
+      "failure_class": null,
+      "summary": "GWAS download completed: downloaded gwas_catalog:GCST90243839 to /recorded-session/cache/gwas-download/gwas_catalog/GCST90243839/55b09353528969cc/GCST90243839_buildNCBI36.tsv.gz.",
+      "message": ""
+    }
+  ],
+  "result_refs": [
+    {
+      "ref": "$ref:gwas_download_8dd34ff1f05e",
+      "fields": [
+        "status",
+        "gwas_download_result"
+      ],
+      "status": "ok",
+      "tool": "gwas_download",
+      "input_identity": {
+        "selected_study.trait": "Hexadecanedioate levels",
+        "selected_study.study_id": "GCST90243839",
+        "selected_study.source": "gwas_catalog",
+        "selected_study.download_descriptor.source": "gwas_catalog",
+        "selected_study.download_descriptor.study_id": "GCST90243839"
+      },
+      "response_path": "/recorded-session/workspace/outputs/eef7075b4f52/gwas_download_7hi_t3fs/response.json"
+    }
+  ]
+}

@@ -1,0 +1,531 @@
+{
+  "schema_version": 1,
+  "snapshot": "mrcat-reference-v1",
+  "publication_status": "local_preparation_only",
+  "release_base_url": null,
+  "bundles": {
+    "core": {
+      "description": "HapMap3/MHC formatting references and European LDSC background reference.",
+      "resources": [
+        "hapmap3.snplist_rdata",
+        "hapmap3.mhc_rdata",
+        "ldsc.eur"
+      ],
+      "sources": [
+        {
+          "url": "https://github.com/YangLabHKUST/MR-APSS/tree/ef6afd2b4dd4923722cb74c4a5fd20dd41ed0510/data",
+          "verification": "Both RDA files are byte-identical to the pinned upstream files."
+        },
+        {
+          "url": "https://doi.org/10.5281/zenodo.14993076",
+          "license": "CC-BY-4.0",
+          "verification": "All 45 required score/count/SNP-list files are byte-identical to eur_w_ld_chr.tgz (MD5 76c1890c8cf22d99d05c6707cc8441b4). The historical Broad URL currently returns 404."
+        }
+      ],
+      "archive": {
+        "name": "mrcat-reference-v1-core.tar.gz",
+        "format": "tar.gz",
+        "url": null,
+        "size_bytes": 37748671,
+        "sha256": "e4568d3aac9702fc3ee948b2ef2d9c32a2a47ab39a9103342bd6f56329624c62"
+      },
+      "files": [
+        {
+          "path": "hapmap3/w_hm3.snplist.rda",
+          "size_bytes": 4543165,
+          "sha256": "e402b6afd65c9b8ba6bb978f40bd3c9673160604a6c204c32b1612d36f7bce8d"
+        },
+        {
+          "path": "hapmap3/MHC.SNPs.rda",
+          "size_bytes": 416477,
+          "sha256": "f35ee90f68f6ac637475db23ef52dc48132231136b2a143198409d5fadb47841"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/w_hm3.snplist",
+          "size_bytes": 17264312,
+          "sha256": "ec73fca0b696e8beba465b51e52911676fcade375bcc9475d99c0ec30509d3ed"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/README",
+          "size_bytes": 198,
+          "sha256": "5b4b20cdf78494a984eb47a0cb5f1d14a7ddf6834f6cd141f77985d00b86dda6"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/1.l2.ldscore.gz",
+          "size_bytes": 2135584,
+          "sha256": "cac171317ab93347f0b692b1784452e471956a0d68d409345f4cf9e100452348"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/1.l2.M_5_50",
+          "size_bytes": 6,
+          "sha256": "4d93a65a13d474494886b5a08d6f1353eb7d097199c1edd94e1c0063f1452043"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/2.l2.ldscore.gz",
+          "size_bytes": 2222117,
+          "sha256": "956cf536da2a02da35f8e75544b6e0c1b777384469a11858b94ff166ba978320"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/2.l2.M_5_50",
+          "size_bytes": 6,
+          "sha256": "873641ba1b1d1954f12de3efda9befac347b024f51e676947d229c46352b1680"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/3.l2.ldscore.gz",
+          "size_bytes": 1847002,
+          "sha256": "cdaf43b8329936a95f2fd3497ebf607bb53a188798805459d6327b0aed0331aa"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/3.l2.M_5_50",
+          "size_bytes": 6,
+          "sha256": "cbebc916d828f2dc7bf6f41a318ea9386615ca18368103b3bf151b15697360de"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/4.l2.ldscore.gz",
+          "size_bytes": 1659366,
+          "sha256": "165db569080638532d126680afc9473933f70dfd376a698058c25ffbe3c5155b"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/4.l2.M_5_50",
+          "size_bytes": 6,
+          "sha256": "10b50bfa353bcc6c715edd27bbc2575f11db162cfa32683d1436b4044e118269"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/5.l2.ldscore.gz",
+          "size_bytes": 1701430,
+          "sha256": "9f8080896a435ec16e51ccc75c9ef3d08cce586c649c74da1e3fea7386521ddf"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/5.l2.M_5_50",
+          "size_bytes": 6,
+          "sha256": "3da70d571578cd8166044b9e28b1be8b05dca2466a6b2b6e005e929ce510a332"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/6.l2.ldscore.gz",
+          "size_bytes": 1588764,
+          "sha256": "ffc211ff03da2126e950ee1b1163b0c749e486f1f36daa0015c8d24d28652d31"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/6.l2.M_5_50",
+          "size_bytes": 6,
+          "sha256": "829d481f2f402abb3da05ff969d9083d14a2495a1339f882935aaff0a1f425d4"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/7.l2.ldscore.gz",
+          "size_bytes": 1479136,
+          "sha256": "576cff613856c32ab471a8b8250a18b472ab6a3601cf829b9aa3d9d2a3c1fada"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/7.l2.M_5_50",
+          "size_bytes": 6,
+          "sha256": "3d2ffe6200693fa2d94398a632bcd814c60d4deb4da11eeed80a2bb47737db02"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/8.l2.ldscore.gz",
+          "size_bytes": 1462963,
+          "sha256": "fa6e623a876529c91abcdadb7ab18318e0203f93c91cec9d3a49cc438c4be2e1"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/8.l2.M_5_50",
+          "size_bytes": 6,
+          "sha256": "549a32add09387bb75dd0a21af29786788d056d19530b713d2637b9a442e64f9"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/9.l2.ldscore.gz",
+          "size_bytes": 1251946,
+          "sha256": "010ddc1311840eb8cd0d3b06d4e2f7f93c803449ca5d1e9f36bd271513a0a4c6"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/9.l2.M_5_50",
+          "size_bytes": 6,
+          "sha256": "8aeb3b5dbe44176c244e5684b530330e114f4853112a2caa3737e3bb2afb268a"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/10.l2.ldscore.gz",
+          "size_bytes": 1411676,
+          "sha256": "198423513408539f4988f51fe0b85e7bee177f6d3bcc3ef97fa7f3b8e4743097"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/10.l2.M_5_50",
+          "size_bytes": 6,
+          "sha256": "76e9eb09c8ebe87f41e738c499417df57b080cfb7f9c986258ce7ddc2684b026"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/11.l2.ldscore.gz",
+          "size_bytes": 1351364,
+          "sha256": "370c609fb337499dadf294e64f55fe8fd99b7b26a32a9aabcb0995f0b7f8f318"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/11.l2.M_5_50",
+          "size_bytes": 6,
+          "sha256": "47217613c248ed2c6459e57df484a5a294a0f844f08f09d0f4b216bc8bdce987"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/12.l2.ldscore.gz",
+          "size_bytes": 1314068,
+          "sha256": "714ac1eb55c1854d4258e6aeaf9ffb368e17d34d2eb80ded502bbad287cc6a6f"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/12.l2.M_5_50",
+          "size_bytes": 6,
+          "sha256": "c382026b135bf5c44004d1421ae0599cab5404c25be31a1f1930bc30f8417b33"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/13.l2.ldscore.gz",
+          "size_bytes": 1012467,
+          "sha256": "59980b567f8f505e1d382beeab5e3a4a090d5c9392955d1fe4296f23303d3739"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/13.l2.M_5_50",
+          "size_bytes": 6,
+          "sha256": "edf26a214f6db0cb87c65050ba59bed40d9bc46c4a7752fbc12997931dc33021"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/14.l2.ldscore.gz",
+          "size_bytes": 885137,
+          "sha256": "6bf8d3012cb139bd536d149248c116a64e7bce3d0415e9083cb6efa307fbc0b6"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/14.l2.M_5_50",
+          "size_bytes": 6,
+          "sha256": "21ef47fed5ba0c0426161ad0ed6204995e1c7b919b094468be14542193411589"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/15.l2.ldscore.gz",
+          "size_bytes": 813558,
+          "sha256": "928877c7144869fd66978a446d9d7a98cd46509f11a772833f6c381692697a4a"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/15.l2.M_5_50",
+          "size_bytes": 6,
+          "sha256": "a6c64f1a5aaf49bfec1ec27ec4949945d597180a8dc1c4510348d8ac9868f7db"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/16.l2.ldscore.gz",
+          "size_bytes": 857555,
+          "sha256": "733175753db174c21773feafc0ef85991426b6cd2e98f83a428fff0e25a1e66a"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/16.l2.M_5_50",
+          "size_bytes": 6,
+          "sha256": "1964cc8ae26fd5f3e5b560a00f370036d07a9aa68c70dafe0108d48dceb5f054"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/17.l2.ldscore.gz",
+          "size_bytes": 717215,
+          "sha256": "cc8b02af96567ea6bb84205d3da0b4709118c1c58eb13d3240f49178a933716e"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/17.l2.M_5_50",
+          "size_bytes": 6,
+          "sha256": "f34d58135a64456148f6e48ea73f8e0e65e7e28d70783c22796294b60c522cb1"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/18.l2.ldscore.gz",
+          "size_bytes": 800003,
+          "sha256": "10d4bb0697d980b4a2cc752b72c9b6881e33c6e6f7b238b76c6697fe56e793cf"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/18.l2.M_5_50",
+          "size_bytes": 6,
+          "sha256": "5134cfa8390c7aecccd89b5e808b62935257b27094f03330b2306ccd02840b28"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/19.l2.ldscore.gz",
+          "size_bytes": 500497,
+          "sha256": "71da5f97e7d3da46a173759ed468ad486333137918a308a77c09e67ec861f326"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/19.l2.M_5_50",
+          "size_bytes": 6,
+          "sha256": "cb6b0ba4e36b96d4cfbdac20202153baa70eb3633246d89172d7a7847e536fc7"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/20.l2.ldscore.gz",
+          "size_bytes": 689106,
+          "sha256": "362486d23bf12a34e84d466a65bbd2df1b6f881d8d1748bb64816e67003e09f5"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/20.l2.M_5_50",
+          "size_bytes": 6,
+          "sha256": "aa2f7130a8e1e1b63719554bd801476dd39597742316febf68f7f8d1952725cb"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/21.l2.ldscore.gz",
+          "size_bytes": 381900,
+          "sha256": "4b168d698b0104ec5b57bffb4e130358ec2577528f69ad46b40f32ff5a17f4b5"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/21.l2.M_5_50",
+          "size_bytes": 6,
+          "sha256": "0128dc6fab98f08718a84499eb384b03565f259ba016f40029d31f1ba874c9ae"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/22.l2.ldscore.gz",
+          "size_bytes": 388008,
+          "sha256": "63822b0c989daadb99243fe2913ffc9e18d569e1bb460f37e8e1b746e71ebe06"
+        },
+        {
+          "path": "ldsc/eur_w_ld_chr/22.l2.M_5_50",
+          "size_bytes": 6,
+          "sha256": "e5bf514d371a97ad95e75b5e7189e8b8654c01059da78891628e074445fdc1ee"
+        }
+      ]
+    },
+    "eur-grch37": {
+      "description": "European GRCh37 panel for local clumping and GRCh37 coordinate checks.",
+      "resources": [
+        "plink.eur.grch37"
+      ],
+      "sources": [
+        {
+          "url": "https://github.com/MRCIEU/gwasglue/blob/master/vignettes/mr.Rmd",
+          "verification": "All three local files match http://fileserve.mrcieu.ac.uk/ld/data_maf0.01_rs_ref.tgz byte for byte. Upstream archive SHA-256: 8c6086487fefff16dfba1635d5e7be33f3407209f695fcd80944f246a4c742ec. HTTPS hostname verification fails at the upstream host; the documented HTTP endpoint was used for comparison."
+        }
+      ],
+      "archive": {
+        "name": "mrcat-reference-v1-eur-grch37.tar.gz",
+        "format": "tar.gz",
+        "url": null,
+        "size_bytes": 344776072,
+        "sha256": "824b56659d5f8c3d47e30492d2fc424befc1ed55f2c7f64ba485b69050db9aac"
+      },
+      "files": [
+        {
+          "path": "plink/EUR/data_maf0.01_rs_ref.bed",
+          "size_bytes": 1134428529,
+          "sha256": "80d28e52e68770df73bccd1da87326efb414d417dddeca0aafecfaf7531eec09"
+        },
+        {
+          "path": "plink/EUR/data_maf0.01_rs_ref.bim",
+          "size_bytes": 257012344,
+          "sha256": "5b1b973cd8165f538cc49a0ec17f2f0fa765515bf47a66220a0f75f0b24457da"
+        },
+        {
+          "path": "plink/EUR/data_maf0.01_rs_ref.fam",
+          "size_bytes": 12550,
+          "sha256": "4496748bc8bbfc4426e8dba74556da287ac35e9987f1afec5f8b51d39ee34119"
+        }
+      ]
+    },
+    "plink-linux-x86_64": {
+      "description": "PLINK 1.9.0-b.7.11 (19 Aug 2025), Linux x86_64; needed for local clumping.",
+      "resources": [
+        "plink.binary"
+      ],
+      "platform": "linux-x86_64",
+      "sources": [
+        {
+          "url": "https://www.cog-genomics.org/plink/1.9/",
+          "verification": "Official pinned archive; binary matches the existing local installation."
+        }
+      ],
+      "archive": {
+        "name": "plink_linux_x86_64_20250819.zip",
+        "url": "https://s3.amazonaws.com/plink1-assets/plink_linux_x86_64_20250819.zip",
+        "format": "zip",
+        "size_bytes": 6321240,
+        "sha256": "0be346f0ffc5d68bc3ae0098ec3f997b470e7d75d9548e0d64a5f40f6bb8caa2"
+      },
+      "files": [
+        {
+          "path": "plink/bin/plink1.9/plink",
+          "size_bytes": 24408832,
+          "sha256": "045982f7b849a4082d8f4bac46c858f3ff96876e8455fa6728a8b53aef1ef338",
+          "member": "plink",
+          "executable": true
+        },
+        {
+          "path": "plink/bin/plink1.9/LICENSE",
+          "size_bytes": 35147,
+          "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
+          "member": "LICENSE"
+        }
+      ]
+    },
+    "eur-grch38": {
+      "description": "European GRCh38 panel for compatible local clumping and GRCh38 coordinate-to-rsID mapping.",
+      "resources": [
+        "plink.eur.grch38"
+      ],
+      "sources": [
+        {
+          "url": "https://www.cog-genomics.org/plink/2.0/resources",
+          "verification": "Local panel snapshot. BED/BIM/FAM dimensions verified. Exact upstream conversion/filtering history is not recorded; do not claim upstream byte identity."
+        },
+        {
+          "url": "https://www.dropbox.com/scl/fi/u5udzzaibgyvxzfnjcvjc/hg38_corrected.psam?dl=1&rlkey=oecjnk4vmbhc8b1p202l0ih4x",
+          "sha256": "727a01b637d5e1ef02516a53069dc552b1fa46f442004ad50ea3d069c7741cdd",
+          "verification": "Local EUR sample IDs match the complete corresponding upstream super-population sample set."
+        }
+      ],
+      "archive": {
+        "name": "mrcat-reference-v1-eur-grch38.tar.gz",
+        "format": "tar.gz",
+        "url": null,
+        "size_bytes": 454652026,
+        "sha256": "e68cf0600778fad31278b763c91d330707ada3310f37ab3db3160c38ee57220f"
+      },
+      "files": [
+        {
+          "path": "plink/EUR/EUR_phase3_hg38_autosomes.bed",
+          "size_bytes": 1815399675,
+          "sha256": "e1588c525bf80a206d99fc987d9e66e2f19cd9dbeb97abca1075bf81f853c00e"
+        },
+        {
+          "path": "plink/EUR/EUR_phase3_hg38_autosomes.bim",
+          "size_bytes": 333245256,
+          "sha256": "076276b4cc81b0e373fd0f2f705c952a0392d79730d4ab6a663fa0996025b4db"
+        },
+        {
+          "path": "plink/EUR/EUR_phase3_hg38_autosomes.fam",
+          "size_bytes": 13317,
+          "sha256": "267205567c6cb32dda5d1d5a131cb51db4c7cf0b4592b7e9b8dd8da7919921f7"
+        }
+      ],
+      "ancestry": "EUR",
+      "genome_build": "GRCh38",
+      "sample_count": 633,
+      "variant_count": 11417608,
+      "provenance_status": "local_snapshot_preparation_history_unresolved"
+    },
+    "afr-grch38": {
+      "description": "African GRCh38 panel for compatible local clumping.",
+      "resources": [
+        "plink.afr.grch38"
+      ],
+      "sources": [
+        {
+          "url": "https://www.cog-genomics.org/plink/2.0/resources",
+          "verification": "Local panel snapshot. BED/BIM/FAM dimensions verified. Exact upstream conversion/filtering history is not recorded; do not claim upstream byte identity."
+        },
+        {
+          "url": "https://www.dropbox.com/scl/fi/u5udzzaibgyvxzfnjcvjc/hg38_corrected.psam?dl=1&rlkey=oecjnk4vmbhc8b1p202l0ih4x",
+          "sha256": "727a01b637d5e1ef02516a53069dc552b1fa46f442004ad50ea3d069c7741cdd",
+          "verification": "Local AFR sample IDs match the complete corresponding upstream super-population sample set."
+        }
+      ],
+      "archive": {
+        "name": "mrcat-reference-v1-afr-grch38.tar.gz",
+        "format": "tar.gz",
+        "url": null,
+        "size_bytes": 1230998074,
+        "sha256": "14701c941310a045e454faf81691df9891548b1da71cfaea5c2d84e1c29367de"
+      },
+      "files": [
+        {
+          "path": "plink/AFR/AFR_phase3_hg38_autosomes.bed",
+          "size_bytes": 4684882947,
+          "sha256": "130a2e14ec281ff3909116e63b8ffc2db45b85e1b83d2fa1af930de4faffae69"
+        },
+        {
+          "path": "plink/AFR/AFR_phase3_hg38_autosomes.bim",
+          "size_bytes": 617367914,
+          "sha256": "315dd6def0a34bcaf7cd4688835eec1684bb30c07e2106a7c40ae7504d578e1a"
+        },
+        {
+          "path": "plink/AFR/AFR_phase3_hg38_autosomes.fam",
+          "size_bytes": 19451,
+          "sha256": "1aa55671f2af51a2a5cb46df0dc1a7099e9e96211b588697565e334cdb0551f0"
+        }
+      ],
+      "ancestry": "AFR",
+      "genome_build": "GRCh38",
+      "sample_count": 893,
+      "variant_count": 20914656,
+      "provenance_status": "local_snapshot_preparation_history_unresolved"
+    },
+    "eas-grch38": {
+      "description": "East Asian GRCh38 panel for compatible local clumping.",
+      "resources": [
+        "plink.eas.grch38"
+      ],
+      "sources": [
+        {
+          "url": "https://www.cog-genomics.org/plink/2.0/resources",
+          "verification": "Local panel snapshot. BED/BIM/FAM dimensions verified. Exact upstream conversion/filtering history is not recorded; do not claim upstream byte identity."
+        },
+        {
+          "url": "https://www.dropbox.com/scl/fi/u5udzzaibgyvxzfnjcvjc/hg38_corrected.psam?dl=1&rlkey=oecjnk4vmbhc8b1p202l0ih4x",
+          "sha256": "727a01b637d5e1ef02516a53069dc552b1fa46f442004ad50ea3d069c7741cdd",
+          "verification": "Local EAS sample IDs match the complete corresponding upstream super-population sample set."
+        }
+      ],
+      "archive": {
+        "name": "mrcat-reference-v1-eas-grch38.tar.gz",
+        "format": "tar.gz",
+        "url": null,
+        "size_bytes": 376744288,
+        "sha256": "7789ad1f9c516d93e8074a5161b483c4b11a344ecb8ced4b9947917ec72808cd"
+      },
+      "files": [
+        {
+          "path": "plink/EAS/EAS_phase3_hg38_autosomes.bed",
+          "size_bytes": 1484343675,
+          "sha256": "c0eac0ecfbe9c07ca5b1e384712bade171e01d071217a246b75d057eb00bf6c2"
+        },
+        {
+          "path": "plink/EAS/EAS_phase3_hg38_autosomes.bim",
+          "size_bytes": 294748810,
+          "sha256": "385526e5d369d3b03707e0349b45798a0bfd4ccf538b820d5798068de056af3d"
+        },
+        {
+          "path": "plink/EAS/EAS_phase3_hg38_autosomes.fam",
+          "size_bytes": 11985,
+          "sha256": "397d0aef9e8e75cc5ffb2d01f9fc938670e337afa17a064af50f79ebb7a645d2"
+        }
+      ],
+      "ancestry": "EAS",
+      "genome_build": "GRCh38",
+      "sample_count": 585,
+      "variant_count": 10097576,
+      "provenance_status": "local_snapshot_preparation_history_unresolved"
+    },
+    "sas-grch38": {
+      "description": "South Asian GRCh38 panel for compatible local clumping.",
+      "resources": [
+        "plink.sas.grch38"
+      ],
+      "sources": [
+        {
+          "url": "https://www.cog-genomics.org/plink/2.0/resources",
+          "verification": "Local panel snapshot. BED/BIM/FAM dimensions verified. Exact upstream conversion/filtering history is not recorded; do not claim upstream byte identity."
+        },
+        {
+          "url": "https://www.dropbox.com/scl/fi/u5udzzaibgyvxzfnjcvjc/hg38_corrected.psam?dl=1&rlkey=oecjnk4vmbhc8b1p202l0ih4x",
+          "sha256": "727a01b637d5e1ef02516a53069dc552b1fa46f442004ad50ea3d069c7741cdd",
+          "verification": "Local SAS sample IDs match the complete corresponding upstream super-population sample set."
+        }
+      ],
+      "archive": {
+        "name": "mrcat-reference-v1-sas-grch38.tar.gz",
+        "format": "tar.gz",
+        "url": null,
+        "size_bytes": 471027030,
+        "sha256": "1b7cb29fc8dbacb3b651509db789bfc7ebe395f952472871efa0c8ef3e846f76"
+      },
+      "files": [
+        {
+          "path": "plink/SAS/SAS_phase3_hg38_autosomes.bed",
+          "size_bytes": 1815247711,
+          "sha256": "769acef24245d1b6fac99f1b79e3b1aa40ebabc7df17f1801d4e0ee7cb5b17fc"
+        },
+        {
+          "path": "plink/SAS/SAS_phase3_hg38_autosomes.bim",
+          "size_bytes": 351674645,
+          "sha256": "9fa4632537ffbfc8baef0ba7d96abe6d3efdb8b424b60a5b13976f42e293f436"
+        },
+        {
+          "path": "plink/SAS/SAS_phase3_hg38_autosomes.fam",
+          "size_bytes": 12469,
+          "sha256": "1191fa95721e634641ad32bda07e39e2b51431979ff76c6634abc70c9df00566"
+        }
+      ],
+      "ancestry": "SAS",
+      "genome_build": "GRCh38",
+      "sample_count": 601,
+      "variant_count": 12021508,
+      "provenance_status": "local_snapshot_preparation_history_unresolved"
+    }
+  }
+}

@@ -126,16 +126,24 @@ def search_one_side(
                 source_probe_failure_count += int(
                     probe_summary.get("probe_failure_count") or 0
                 )
-                last_source_stats = getattr(searcher, "last_source_stats", None) or {}
-                if isinstance(last_source_stats, dict):
-                    source_stats.update(last_source_stats)
-                    endpoint_failures.extend(last_source_stats.get("endpoint_failures", []))
             except SearchError as exc:
                 last_error = exc
                 break
             except Exception as exc:
                 last_error = exc
                 break
+            finally:
+                last_source_stats = getattr(searcher, "last_source_stats", None) or {}
+                if isinstance(last_source_stats, dict):
+                    source_stats.update(last_source_stats)
+                    endpoint_failures.extend(last_source_stats.get("endpoint_failures", []))
+
+        if last_error is not None and source_dedup:
+            # A failed alias must not discard candidates found by an earlier query.
+            endpoint_failures.append({"query": variant, "error": str(last_error)})
+            last_error = None
+        if endpoint_failures:
+            source_stats["endpoint_failures"] = endpoint_failures
 
         if last_error is None and supports_post_probe and source_dedup:
             try:
@@ -163,6 +171,8 @@ def search_one_side(
                 last_source_stats = getattr(searcher, "last_source_stats", None) or {}
                 if isinstance(last_source_stats, dict):
                     source_stats.update(last_source_stats)
+                    if endpoint_failures:
+                        source_stats["endpoint_failures"] = endpoint_failures
             except SearchError as exc:
                 last_error = exc
             except Exception as exc:

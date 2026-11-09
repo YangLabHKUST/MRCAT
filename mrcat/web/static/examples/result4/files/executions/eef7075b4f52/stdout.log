@@ -1,0 +1,22 @@
+Downloading selected exposure study:
+{'study_id': 'GCST90243839', 'trait': 'Hexadecanedioate levels', 'source': 'gwas_catalog', 'ancestry': 'european', 'sample_size': 6887, 'download_descriptor_url': 'https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90243001-GCST90244000/GCST90243839/GCST90243839_buildNCBI36.tsv.gz'}
+[gwas-download] Starting single-study GWAS download.
+[gwas-download] Downloading source=gwas_catalog; study_id=GCST90243839; cache_dir=/recorded-session/cache/gwas-download/gwas_catalog/GCST90243839/55b09353528969cc.
+[gwas-download] Downloading target GCST90243839 from gwas_catalog.
+[gwas-download] Downloading target GCST90243839 from gwas_catalog: 8.0 MiB / 50.9 MiB (15.7%).
+[gwas-download] Downloading target GCST90243839 from gwas_catalog: 16.0 MiB / 50.9 MiB (31.4%).
+[gwas-download] Downloading target GCST90243839 from gwas_catalog: 24.0 MiB / 50.9 MiB (47.1%).
+[gwas-download] Downloading target GCST90243839 from gwas_catalog: 32.0 MiB / 50.9 MiB (62.9%).
+[gwas-download] Downloading target GCST90243839 from gwas_catalog: 40.0 MiB / 50.9 MiB (78.6%).
+[gwas-download] Downloading target GCST90243839 from gwas_catalog: 48.0 MiB / 50.9 MiB (94.3%).
+[gwas-download] Downloading target GCST90243839 from gwas_catalog: 50.9 MiB / 50.9 MiB (100.0%).
+[gwas-download] Completed download target GCST90243839 from gwas_catalog: 50.9 MiB.
+[gwas-download] Completed single-study download: study_id=GCST90243839; path=/recorded-session/cache/gwas-download/gwas_catalog/GCST90243839/55b09353528969cc/GCST90243839_buildNCBI36.tsv.gz; file_size=53375810.
+
+Tool summary:
+GWAS download completed: downloaded gwas_catalog:GCST90243839 to /recorded-session/cache/gwas-download/gwas_catalog/GCST90243839/55b09353528969cc/GCST90243839_buildNCBI36.tsv.gz.
+
+Download status: ok
+{'raw_path': '/recorded-session/cache/gwas-download/gwas_catalog/GCST90243839/55b09353528969cc/GCST90243839_buildNCBI36.tsv.gz', 'file_size': 53375810, 'study_id': 'GCST90243839', 'source': 'gwas_catalog', 'ancestry': 'european', 'sample_size': 6887}
+
+Artifacts:

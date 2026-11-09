@@ -1,0 +1,193 @@
+{
+  "status": "completed",
+  "source": "PubMed ESearch and EFetch",
+  "searched_at": "2026-11-09T10:28:30.679742+00:00",
+  "policy": {
+    "max_claims": 3,
+    "max_verified_studies": 9,
+    "metadata_is_not_support": true,
+    "abstract_verification_required": true,
+    "analysis_and_literature_authority_are_separate": true,
+    "support_grades": [
+      "background_support",
+      "contradictory_or_limiting",
+      "partial_support",
+      "strong_support"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "LC1",
+      "claim": "What prior evidence motivates studying hexadecanedioate levels in relation to coronary artery disease, and what remains uncertain?",
+      "claim_type": "background",
+      "search_queries": [
+        "\"hexadecanedioate\" \"coronary artery disease\"",
+        "\"hexadecanedioic acid\" \"coronary heart disease\"",
+        "dicarboxylic acid metabolites coronary artery disease"
+      ]
+    },
+    {
+      "claim_id": "LC2",
+      "claim": "The supplied MR evidence found no statistically significant causal effect of genetically predicted hexadecanedioate levels on coronary artery disease in the original GWAS Catalog outcome analysis, with a nominally significant inverse weighted-median estimate.",
+      "claim_type": "main_result",
+      "search_queries": [
+        "\"hexadecanedioate\" \"coronary artery disease\" Mendelian randomization",
+        "metabolite Mendelian randomization coronary artery disease dicarboxylic acid"
+      ]
+    },
+    {
+      "claim_id": "LC3",
+      "claim": "The supplied MR evidence did not replicate a statistically significant causal effect of hexadecanedioate levels on major coronary heart disease events in the FinnGen outcome analysis, although all method point estimates remained inverse.",
+      "claim_type": "null_result",
+      "search_queries": [
+        "\"hexadecanedioate\" \"coronary heart disease\" Mendelian randomization",
+        "FinnGen Mendelian randomization metabolite coronary artery disease"
+      ]
+    }
+  ],
+  "search_runs": [
+    {
+      "claim_id": "LC1",
+      "query": "\"hexadecanedioate\" \"coronary artery disease\"",
+      "result_count": 1
+    },
+    {
+      "claim_id": "LC2",
+      "query": "\"hexadecanedioate\" \"coronary artery disease\" Mendelian randomization",
+      "result_count": 1
+    },
+    {
+      "claim_id": "LC3",
+      "query": "\"hexadecanedioate\" \"coronary heart disease\" Mendelian randomization",
+      "result_count": 1
+    }
+  ],
+  "studies": [
+    {
+      "reference_id": "PMID:39448312",
+      "title": "A stratified study of human blood metabolites and coronary artery diseases-A Mendelian randomization study.",
+      "abstract": "BACKGROUND AND AIMS: Metabolic dysregulation is closely associated with coronary artery diseases (CAD). Exploring the relationship between metabolites and CAD is helpful in identifying changes in energy metabolism during disease progression.\nMETHODS AND RESULTS: We use Mendelian Randomization (MR) analysis to assess the relationships between 275 serum metabolites and CAD such as angina pectoris, post-myocardial infarction complications, coronary atherosclerosis, myocardial infarction (MI), and unstable angina pectoris (UA). The inverse variance-weighted method (IVW) served as the primary approach for causal analysis, with MR-Egger and weighted median (WM) as supplementary methods. Sensitivity analyses were conducted to assess heterogeneity and multiple effects. We also analyzed potentially related metabolic pathways.We identified causal relationships between 42 known metabolites and CAD. Among them, the genetic susceptibility to elevated levels of amino acid Isobutyrylcarnitine is associated with an increased risk of coronary artery atherosclerosis; but it provides protection against the development of MI. Genetic susceptibility to elevated levels of fatty acids Stearate, Caprylate is associated with higher risk of angina pectoris, while Threonate has a protective effect in the development of angina; Stearate is associated with an increased risk of UA, whereas higher levels of the lipids Choline, 1-arachidonoylglycerophosphoinositol∗, Hexadecanedioate, Tetradecanedioate play a protective role in UA.Metabolic pathway analysis identified 6 pathways that may be associated with CAD.\nCONCLUSION: We identified causal relationships between 42 serum metabolites and CAD. Specifically, changes in metabolites such as Isobutyrylcarnitine, Caprylate, and Stearate were associated with risks of CAD. These findings provide new insights into the metabolic mechanisms of CAD.",
+      "authors": [
+        {
+          "family": "Peng",
+          "given": "Mengling",
+          "collective": "",
+          "display": "Peng, Mengling"
+        },
+        {
+          "family": "Fu",
+          "given": "Yu",
+          "collective": "",
+          "display": "Fu, Yu"
+        },
+        {
+          "family": "Qin",
+          "given": "Cong",
+          "collective": "",
+          "display": "Qin, Cong"
+        },
+        {
+          "family": "Shi",
+          "given": "Lei",
+          "collective": "",
+          "display": "Shi, Lei"
+        },
+        {
+          "family": "Zhang",
+          "given": "Meiwei",
+          "collective": "",
+          "display": "Zhang, Meiwei"
+        },
+        {
+          "family": "Zhou",
+          "given": "Shanshan",
+          "collective": "",
+          "display": "Zhou, Shanshan"
+        }
+      ],
+      "journal": "Nutrition, metabolism, and cardiovascular diseases : NMCD",
+      "year": "2024",
+      "doi": "10.1016/j.numecd.2024.09.024",
+      "pmid": "39448312",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39448312/",
+      "publication_types": [
+        "Journal Article"
+      ],
+      "metadata_source": "PubMed EFetch XML",
+      "metadata_complete": true,
+      "retracted": false,
+      "candidate_claim_ids": [
+        "LC1",
+        "LC2"
+      ],
+      "claim_ids": [
+        "LC1",
+        "LC2"
+      ],
+      "support_grade": "partial_support",
+      "reasoning": "The abstract reports an MR analysis of serum metabolites and CAD-related outcomes, including a protective association of hexadecanedioate with unstable angina pectoris. This provides background motivation for studying hexadecanedioate in CAD and partially supports the main result claim by reporting an inverse association for hexadecanedioate, but only for unstable angina pectoris, not coronary artery disease overall, and the abstract does not report the specific null IVW result or weighted-median estimate from the supplied MR evidence.",
+      "citation_wording": "A prior MR study reported that higher hexadecanedioate levels were associated with a protective role in unstable angina pectoris, although it did not assess coronary artery disease overall.",
+      "evidence_basis": "abstract"
+    },
+    {
+      "reference_id": "PMID:40182922",
+      "title": "Causal relationships between serum metabolites and coronary heart disease risk: a mendelian randomization study.",
+      "abstract": "BACKGROUND: Coronary heart disease (CHD) represents a substantial global burden in terms of morbidity and mortality. Understanding the causal relationships between serum metabolites and CHD can provide a crucial understanding of disease mechanisms and potential therapeutic targets.\nMETHODS: We conducted a Mendelian randomization (MR) approach to explore the potential causal associations between serum metabolites and CHD risk. The primary analysis employed the inverse variance weighted (IVW) method, supplemented by additional analyses, including MR-Egger, weighted median, weighted mode, and sample mode. To bolster the robustness and reliability of our findings, we performed sensitivity analyses, which included evaluating, horizontal pleiotropy and leave-one-out analysis. Additionally, pathway enrichment analysis was conducted.\nRESULTS: We identified 15 known and 11 unknown metabolites with potential associations to CHD. Among the known, six displayed protective effects, while nine were identified as risk factors. Notably, many of these metabolites are closely related to mitochondrial function, which was further supported by pathways and enrichment analysis. Using multiple statistical models to ensure robust results, we unveiled a significant association between hexadecanedioate, a palmitoyl lipid metabolized in mitochondria, and a ∼18% reduced risk of CHD (OR = 0.82, 95%CI: 0.72-0.93).\nCONCLUSION: MR analysis revealed 6 protective molecules, 9 hazardous metabolites associated with CHD. Many of these known metabolites are closely link to mitochondrial function, suggesting a critical role of mitochondria in CHD development. In particular, hexadecanedioate, an essential component for mitochondrial energy production, was inversely associated with CHD risk. This suggests that mitochondrial function, and specifically the role of hexadecanedioate, may be pivotal in the development and progression of CHD.",
+      "authors": [
+        {
+          "family": "Meng",
+          "given": "Xiao-Yan",
+          "collective": "",
+          "display": "Meng, Xiao-Yan"
+        },
+        {
+          "family": "Zhu",
+          "given": "Yong-Qing",
+          "collective": "",
+          "display": "Zhu, Yong-Qing"
+        },
+        {
+          "family": "Zhang",
+          "given": "Ying-Jie",
+          "collective": "",
+          "display": "Zhang, Ying-Jie"
+        },
+        {
+          "family": "Sun",
+          "given": "Wei",
+          "collective": "",
+          "display": "Sun, Wei"
+        },
+        {
+          "family": "Li",
+          "given": "Shu-Ang",
+          "collective": "",
+          "display": "Li, Shu-Ang"
+        }
+      ],
+      "journal": "Frontiers in genetics",
+      "year": "2025",
+      "doi": "10.3389/fgene.2025.1440364",
+      "pmid": "40182922",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40182922/",
+      "publication_types": [
+        "Journal Article"
+      ],
+      "metadata_source": "PubMed EFetch XML",
+      "metadata_complete": true,
+      "retracted": false,
+      "candidate_claim_ids": [
+        "LC3"
+      ],
+      "claim_ids": [
+        "LC3"
+      ],
+      "support_grade": "contradictory_or_limiting",
+      "reasoning": "The abstract reports a significant inverse association between hexadecanedioate and coronary heart disease risk using MR, with OR = 0.82 (95% CI: 0.72-0.93). This conflicts with the supplied MR evidence's null result for major coronary heart disease events in FinnGen, although the abstract does not specify FinnGen as the outcome source and reports a different outcome definition.",
+      "citation_wording": "A separate MR study reported a significant inverse association between hexadecanedioate and coronary heart disease risk, which contrasts with the null FinnGen-based result in the current analysis.",
+      "evidence_basis": "abstract"
+    }
+  ],
+  "screened_candidates": [],
+  "failures": []
+}

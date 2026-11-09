@@ -1,0 +1,38 @@
+{
+  "execution_id": "c713cbe17d8c",
+  "language": "python",
+  "status": "exited",
+  "returncode": 0,
+  "stdout": "GWAS select completed: selected 1 reusable study/studies: outcome Major coronary heart disease event (FinnGen study_id=finngen_R12_I9_CHD, ancestry=finnish, n=500,348). Selection reason: The requested outcome is coronary artery disease (CAD). The closest eligible candidate is finngen_R12_I9_CHD, whose endpoint is I9_CHD (Major coronary heart disease event). Coronary heart disease is a supported equivalent synonym for coronary artery disease, and the endpoint definition is a major CHD event, which is within the requested CAD scope. The alternative finngen_R12_I9_HEARTFAIL_AND_CHD combines heart failure with CHD, broadening the endpoint beyond CAD and therefore is less faithful to the requested trait. Both candidates are Finnish, downloadable, and executable. The CHD-only candidate is selected because it preserves the requested CAD definition without adding heart failure, despite its reported trait label not literally matching the full requested phrase.\n",
+  "stderr": "[gwas-select] Starting GWAS selection.\n[gwas-select] Loading outcome shortlist artifact: /recorded-session/workspace/outputs/41dfedfba76e/gwas_search_1azkfd0w/gwas_search_shortlists.json.\n[gwas-select] Loaded outcome shortlist: raw=2; downloadable=2.\n[gwas-select] Selecting one reusable GWAS study per target with the LLM: outcome.\n[gwas-select] Selected outcome: source=finngen; study_id=finngen_R12_I9_CHD; trait=Major coronary heart disease event.\n[gwas-select] Selection reason: The requested outcome is coronary artery disease (CAD). The closest eligible candidate is finngen_R12_I9_CHD, whose endpoint is I9_CHD (Major coronary heart disease event). Coronary heart disease is a supported equivalent synonym for coronary artery disease, and the endpoint definition is a major CHD event, which is within the requested CAD scope. The alternative finngen_R12_I9_HEARTFAIL_AND_CHD combines heart failure with CHD, broadening the endpoint beyond CAD and therefore is less faithful to the requested trait. Both candidates are Finnish, downloadable, and executable. The CHD-only candidate is selected because it preserves the requested CAD definition without adding heart failure, despite its reported trait label not literally matching the full requested phrase.\n",
+  "source_path": "executions/c713cbe17d8c/code.py",
+  "stdout_path": "executions/c713cbe17d8c/stdout.log",
+  "stderr_path": "executions/c713cbe17d8c/stderr.log",
+  "duration_seconds": 4.904,
+  "working_directory": "/recorded-session/workspace",
+  "generated_files": [
+    "workspace/outputs/c713cbe17d8c/gwas_select_qn_r9mir/response.json"
+  ],
+  "tool_results": [
+    {
+      "path": "workspace/outputs/c713cbe17d8c/gwas_select_qn_r9mir/response.json",
+      "status": "ok",
+      "failure_class": null,
+      "summary": "GWAS select completed: selected 1 reusable study/studies: outcome Major coronary heart disease event (FinnGen study_id=finngen_R12_I9_CHD, ancestry=finnish, n=500,348). Selection reason: The requested outcome is coronary artery disease (CAD). The closest eligible candidate is finngen_R12_I9_CHD, whose endpoint is I9_CHD (Major coronary heart disease event). Coronary heart disease is a supported equivalent synonym for coronary artery disease, and the endpoint definition is a major CHD event, which is within the requested CAD scope. The alternative finngen_R12_I9_HEARTFAIL_AND_CHD combines heart failure with CHD, broadening the endpoint beyond CAD and therefore is less faithful to the requested trait. Both candidates are Finnish, downloadable, and executable. The CHD-only candidate is selected because it preserves the requested CAD definition without adding heart failure, despite its reported trait label not literally matching the full requested phrase.",
+      "message": ""
+    }
+  ],
+  "result_refs": [
+    {
+      "ref": "$ref:gwas_select_9d52e7acce42",
+      "fields": [
+        "status",
+        "gwas_selection_result"
+      ],
+      "status": "ok",
+      "tool": "gwas_select",
+      "input_identity": {},
+      "response_path": "/recorded-session/workspace/outputs/c713cbe17d8c/gwas_select_qn_r9mir/response.json"
+    }
+  ]
+}

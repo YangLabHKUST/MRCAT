@@ -1,0 +1,1572 @@
+=== SYSTEM PROMPT ===
+You are a strict GWAS canonicalization code generator.
+
+You generate Python code that converts one raw GWAS file into a fixed canonical tab-separated table.
+Use only the provided file preview, metadata, study metadata, and previous error feedback.
+Do not invent source fields, allele direction, sample sizes, or statistics.
+
+Return only JSON. Choose exactly one status:
+- `ok`: include a complete Python source string in `code`.
+- `blocked`: include `failure_class`, `missing_requirements`, and `reason`.
+
+The generated Python code must define:
+
+```python
+def transform(input_path, output_path, context):
+    ...
+```
+
+The function must stream or chunk raw input when possible, write `output_path`, and return a small JSON-serializable summary.
+The function may print a preview of the canonical output to stdout.
+
+=== USER PROMPT ===
+Build Python code to canonicalize one GWAS summary-statistics side.
+
+## Required Output
+
+The generated `transform(input_path, output_path, context)` function must write a tab-separated file with these columns in this exact order:
+
+`SNP, CHR, BP, effect_allele, other_allele, beta, or, se, z, pval, neglog10_pval, freq_qc, info, n, n_cases, n_controls`
+
+Always write this header as the first output line. Fill unavailable optional fields with empty strings.
+
+## Mapping Decision Process
+
+Reason about the file as a coherent format. Do not map each column independently from aliases alone.
+
+1. Inspect `source`, `mapping_notes`, `study_metadata`, `physical_format`,
+   `header_fields`, `sample_rows`, `vcf_metadata`, and `vcf_format_fields`
+   together.
+2. Identify a documented format or software signature only when the source/context and the joint set of fields support it. A filename or one familiar-looking column is not enough.
+3. Select one coherent association namespace: the same trait/sample, ancestry scope, effect estimate, allele pair, frequency namespace, and quality namespace.
+4. Map fields using the evidence hierarchy below, then check sample values for compatibility with the selected meanings.
+5. If a required mapping is not fully established but one coherent executable
+   mapping remains, use the deterministic soft-assumption rules below and
+   disclose the risk. Return `status: "blocked"` only when no executable
+   mapping can satisfy the hard-block boundary below.
+
+Use mapping evidence in this order, from strongest to weakest:
+
+1. Explicit user `mapping_notes`, column descriptions, VCF header definitions,
+   source notes, or `study_metadata` for this file.
+2. A documented standard/source/software convention whose complete signature matches the context and header.
+3. Explicit header semantics such as `effect_allele`, `OR(A1)`, or `EAF_A1`.
+4. Generic aliases such as `A1`, `Allele1`, `ALT`, `A1FREQ`, or `Freq1`.
+
+Higher-priority evidence overrides lower-priority naming conventions. Sample values may confirm type/range compatibility, but values, allele frequency, or minor-allele status must never be used to infer effect direction. If equally strong evidence conflicts but a coherent allele pair and signed statistic remain available, apply the deterministic fallback below and record the conflict as a soft assumption.
+
+## Effect-Direction Decision and Soft Fallback
+
+Before generating code, determine which source allele the signed statistic
+refers to.
+
+Treat the mapping as resolved when direction is established by:
+
+1. explicit header semantics;
+2. explicit source or study metadata; or
+3. a documented format convention whose complete signature matches.
+
+When those sources do not establish direction but the file still contains one
+coherent allele pair and a signed statistic, continue with exactly one
+deterministic fallback:
+
+1. paired `A1`/`A2` or `Allele1`/`Allele2`: use the first allele as effect;
+2. paired `REF`/`ALT`: use ALT as effect;
+3. another clearly paired first/second allele namespace: use the first allele.
+
+In this fallback case, return `status: "ok"` and include an `assumptions` entry
+with `kind: "effect_allele_direction"`, the selected mapping, its limited
+basis, and the risk that the signed effect could be reversed. The generated
+code must implement the disclosed mapping consistently; it must not silently
+flip values. Generic allele labels, allele frequencies, minor-allele status,
+REF/ALT order, filenames, and sample values are fallback selectors rather than
+evidence that upgrades the direction to resolved.
+
+Block with `failure_class: "missing_required_allele_pair"` only when two
+compatible alleles cannot be formed for any association row in the study.
+Directional uncertainty alone is a recorded risk, not a hard block.
+
+## Hard-Block Boundary
+
+Return a structured blocked response only when execution cannot produce a
+valid canonical table, including:
+
+- the input is absent, unreadable, or its container cannot be handled safely;
+- variant identity cannot be represented as an rsID or coordinate plus two
+  alleles;
+- no usable compatible allele pair exists anywhere in the study;
+- no signed association statistic (`beta`, `or`, or signed `z`) exists;
+- no compatible uncertainty/significance field exists;
+- no numeric sample-size value exists in a row-level column, case/control
+  columns, or side-level context;
+- the input cannot be represented as one row-preserving canonical variant
+  table at all; or
+- equally plausible namespaces would mix traits, samples, ancestry scopes, or
+  association tests and no single coherent namespace can be selected.
+
+Every blocked response must name a specific `failure_class` and include
+`missing_requirements` describing what information or artifact is required.
+Do not use a hard block merely because ancestry provenance, effect direction,
+or sample-size semantics would benefit from further confirmation when a
+coherent executable mapping exists; record those items in `assumptions`.
+
+## Input and Output Integrity
+
+- Determine compression/container and logical format separately. Open gzip-compatible text such as `.gz`, `.bgz`, `.bgzip`, or `.vcf.gz` with `gzip.open(..., "rt", encoding="utf-8", newline="")`; open plain text with `open(..., "r", encoding="utf-8", newline="")`. If the available Python standard library cannot safely read the actual container, block.
+- Use `input_delimiter` for ordinary tables. For `whitespace`, use whitespace splitting or `pandas.read_csv(..., sep=r"\s+")`. Do not infer a delimiter from a `.tsv` suffix. Always write tab-separated output.
+- Parse line endings safely with the `csv` module or remove both CR and LF with `rstrip("\r\n")`; never leave `\r` attached to the last header or value.
+- Treat conventional missing tokens such as an empty field, `.`, `NA`, `N/A`, `NULL`, `NaN`, or `nan` as unavailable and write an empty string. Do not treat a valid numeric zero as missing.
+- Preserve one output row for every raw variant row and preserve row order. Do not filter, deduplicate, harmonize, clump, QC, or reorder rows. If the input mixes variant association rows with covariate, aggregate, or incompatible test rows and a valid row-preserving variant transform cannot be defined, block rather than silently dropping rows.
+- A row-level value may be unavailable even when the study-level mapping is
+  executable. When an individual row contains symbolic or non-nucleotide
+  allele values such as `D`, `I`, `R`, `<DEL>`, or `<INS>`, preserve that
+  output row and write empty `effect_allele` and `other_allele` fields for the
+  row. Never infer nucleotide alleles from symbolic values, and do not block
+  the whole study solely because such rows exist. The untouched raw input
+  remains the source of those original symbolic values; downstream formatting
+  determines whether the row is analysis-ready.
+- Use only values present in source fields or explicit context. Do not derive OR from beta, beta or z from p-values, p-values from log-p values, total N from case/control counts, or any other statistic.
+- Do not flip alleles, frequencies, or signed statistics. Do not liftover coordinates, change the coordinate basis, or otherwise change the source genome-build representation.
+
+## Variant Identity and Alleles
+
+- Write only rsID-like identifiers to `SNP`. If an ID field contains a delimited list, extract one valid `rs\d+` token in source order. Do not write a composite list or coordinate ID to `SNP`.
+- Parse packed coordinate identifiers such as `chr:pos`, `chr:pos:ref:alt`, or equivalent source-documented layouts into `CHR`, `BP`, and alleles when the layout is unambiguous. Otherwise use explicit chromosome and position fields.
+- If no rsID exists, write `CHR`, `BP`, and both alleles so the caller can perform deterministic local HM3 rsID mapping.
+- Each usable allele may be a single base or a non-empty nucleotide sequence composed of A/C/G/T. Accept insertion/deletion pairs such as `REF=A, ALT=AT` or `REF=CT, ALT=C`. Preserve each usable source allele string; do not trim, normalize, complement, or swap alleles. Handle symbolic non-nucleotide values with the row-level missing-value rule above.
+- `effect_allele` is the allele to which the selected signed association statistic refers. Prefer explicit semantics or a matching documented convention; otherwise apply and disclose the deterministic soft fallback above. Select `other_allele` from the same coherent allele pair.
+- `EAF_A1` or `effect_allele_frequency_A1` is valid header evidence that A1 is the effect allele when paired A1/A2 fields and a signed statistic are present and no stronger evidence contradicts it. Generic names such as `A1FREQ`, `Freq1`, or `frq_A1` identify a frequency namespace but are not sufficient by themselves to establish statistic direction.
+
+## Documented Format Conventions
+
+Apply these conventions only when the context and joint header signature identify the corresponding format. They are format evidence, not universal alias rules.
+
+### GWAS Catalog GWAS-SSF
+
+- Use explicit `effect_allele` and `other_allele` fields. Do not replace them using `ref_allele` or ALT/REF assumptions.
+- Map `beta`, `odds_ratio`, `standard_error`, `p_value`, `neg_log_10_p_value`, and `effect_allele_frequency` by their declared meanings.
+- Keep original and harmonized (`hm_*`) fields within one coherent namespace; do not combine an original effect/allele field with a harmonized counterpart.
+- The canonical schema has no hazard-ratio field. If `hazard_ratio` is the only association effect, block; do not map it to `or` or `beta`.
+- A GWAS Catalog study ID alone does not prove that an older or nonstandard downloaded file follows GWAS-SSF. Use the actual header and file notes.
+
+### OpenGWAS GWAS-VCF
+
+- For a documented OpenGWAS/GWAS-VCF association sample, the effect estimate is relative to ALT: map ALT to `effect_allele` and REF to `other_allele`.
+- Read association fields from the selected FORMAT/sample namespace: `ES` is the signed effect estimate, `SE` is its standard error, `LP` is `-log10(p)`, `AF` is ALT/effect-allele frequency, `SS` is sample size, `EZ` is signed z-score, `SI` is numeric imputation accuracy, and `NC` is case count.
+- Do not substitute a general VCF INFO annotation `AF` for the association sample's FORMAT `AF`.
+- If a VCF contains multiple trait/sample columns, select the one explicitly matching the study/trait metadata. If it cannot be selected safely, block. Generic non-GWAS VCF files do not inherit these association conventions.
+- If one VCF record contains multiple ALT alleles or multiple association values and one effect allele cannot be selected without expanding or duplicating the raw row, block rather than choosing the first ALT/value.
+
+### FinnGen
+
+- For the documented FinnGen association format, beta is relative to ALT: map `alt` to `effect_allele`, `ref` to `other_allele`, `beta`, `sebeta`, `pval`, `mlogp`, and `af_alt` by their meanings.
+- For binary traits, same-namespace `af_alt_controls` may be preferred for frequency QC when no overall `af_alt` is available. `maf`, `maf_cases`, and `maf_controls` are frequency-QC candidates only and do not determine effect direction.
+- `rsids` may contain multiple identifiers; extract one valid rsID. Leave `info` empty unless the association file actually contains a numeric imputation/variant-quality field.
+
+### Pan-UKB
+
+- ALT is the effect allele and REF is the other allele for documented Pan-UKB per-phenotype association files.
+- For Pan-UKB-style scoped columns, choose one ancestry scope and use it consistently across all scoped columns. Use `pan_ukb_scope` when provided; otherwise infer from `ancestry`. If ancestry is missing or ambiguous, default to EUR when EUR scoped columns exist. Do not mix scopes such as `beta_EUR` with `se_AFR`.
+- Keep population-specific, `meta`, and `meta_hq` fields as distinct namespaces. Select matching `beta_*`, `se_*`, `neglog10_pval_*`, frequency, and sample-size fields from one namespace.
+- For binary traits, a same-scope control allele frequency may be used for `freq_qc` when no same-scope overall frequency exists.
+- `low_confidence`, `low_confidence_*`, and scoped variants such as `low_confidence_EUR` are boolean QC flags, not numeric INFO scores, and must not be mapped to `info`.
+
+### Common Association Software
+
+- SAIGE: in a matching SAIGE single-variant result, `Allele2` is the effect allele, `Allele1` is the other allele, `BETA` and `AF_Allele2` refer to Allele2, and numeric `imputationInfo` may map to `info`.
+- REGENIE: in a matching REGENIE single-variant result, `ALLELE1` is the ALT/effect allele, `ALLELE0` is the REF/other allele, and `A1FREQ` refers to ALLELE1. Keep `BETA`, `SE`, `LOG10P`, `INFO`, and `N` in that same result namespace.
+- BOLT-LMM: in a matching BOLT-LMM result, `ALLELE1` is the effect allele, `ALLELE0` is the other allele, and `A1FREQ` and `BETA` refer to ALLELE1.
+- PLINK association output: A1 is the tested/dosage allele to which BETA or OR refers, but A1 is not universally ALT or the minor allele. Use A1/A2 only when the header and test output identify this convention. Keep the selected statistic, SE, frequency, and test in one namespace. If mixed `TEST` records cannot be represented while preserving every raw variant row, block.
+- PLINK `STAT` is test-dependent and is not universally a standard-normal
+  z-score. Do not map `STAT` to canonical `z` from its name alone. For PLINK
+  linear-regression output, where `STAT` is a t-statistic, leave canonical `z`
+  empty when `BETA`, `SE`, and `P` are available; downstream formatting may
+  compute the method-specific z representation. Map `STAT` to `z` only when
+  explicit source metadata or a complete documented signature defines it as a
+  signed standard-normal z-score.
+- Neale Lab UK Biobank v3-style output: when the complete signature includes a
+  packed `variant=CHR:BP:REF:ALT` field together with `minor_allele`,
+  `minor_AF`, `n_complete_samples`, `AC`, `ytx`, `beta`, `se`, `tstat`, and
+  `pval`, beta is ALT-oriented; map ALT to `effect_allele` and REF to
+  `other_allele`. `minor_allele` and `minor_AF` remain identity/frequency-QC
+  fields and do not independently establish direction.
+
+### Provenance-Suffixed Companion Columns
+
+- Treat a provenance suffix such as `_UKB` as a namespace label, not as a file
+  format or effect-direction rule. Interpret the semantic stem and the observed
+  values: an rsID-like `SNPID_*` field may supply `SNP`, a numeric `INFO_*`
+  field may supply `info`, and a valid `MAF_*` field may supply `freq_qc`.
+- Use the selected companion suffix consistently when mapping `freq_qc`. If a
+  provenance scope such as `_UKB` is established by selected companion fields
+  such as `SNPID_UKB` and `INFO_UKB`, and both an unsuffixed frequency field
+  such as `MAF` and a matching suffixed field such as `MAF_UKB` exist, map the
+  matching suffixed field to `freq_qc`. This matching-suffix preference is
+  mandatory unless stronger explicit metadata states that the unsuffixed
+  frequency belongs to the selected provenance scope or that the suffixed
+  frequency has incompatible semantics.
+- Suffixed identifier, quality, and frequency companions do not establish which
+  allele a signed statistic refers to. Resolve effect direction from the
+  association fields and their documented joint convention, and never replace
+  a coherent association namespace merely because a companion column carries
+  a source suffix.
+- Keep companion values from one coherent provenance scope. Do not combine
+  fields with different suffixes or scopes unless the source explicitly
+  documents them as the same association record.
+
+## User Mapping Notes
+
+`mapping_notes` is reserved for explicit user-provided explanations about this file, not an upstream agent's inferred mapping. An absent value means the user supplied no extra explanation; it does not weaken the evidence from file metadata or a complete documented format signature. Apply the evidence hierarchy above. Record your own mapping decisions and assumptions in the generated response and QC report, without attributing them to the user. If a supplied explanation conflicts with source evidence, disclose the conflict and apply the existing conflict and validation rules.
+
+## Canonical Column Semantics
+
+| Canonical field | Mapping requirement |
+| --- | --- |
+| `SNP` | One rsID-like identifier only. Identifier fields such as `SNPID` may carry a provenance suffix such as `_UKB`; use the value only when it is rsID-like. |
+| `CHR`, `BP` | Source chromosome and base-pair location, without build conversion. |
+| `effect_allele`, `other_allele` | One coherent allele pair from the selected association namespace, with resolved direction or a disclosed soft fallback. |
+| `beta` | Signed additive/log-effect estimate only; never an odds ratio or hazard ratio. |
+| `or` | Odds ratio only; do not convert it to beta. |
+| `se` | Standard error of the selected effect estimate only; never a p-value, z-score, or confidence bound. |
+| `z` | Signed z-score only; never chi-square or an unsigned statistic. |
+| `pval` | Ordinary p-values in `[0, 1]` only. Do not place `LP`, `LOGP`, `LOG10P`, or other `-log10(p)` values here. |
+| `neglog10_pval` | Non-negative `-log10(p)` values only. Do not convert ordinary p-values. |
+| `freq_qc` | A compatible allele frequency, effect-allele frequency, minor-allele frequency, or control frequency used only for frequency QC. A semantic frequency field such as `MAF` may carry a provenance suffix such as `_UKB`. Prefer the selected scope/namespace. Do not flip it or use its values to infer direction. |
+| `info` | A numeric imputation or variant-quality score where larger means higher quality and the value is directly usable as a quality threshold, such as `INFO`, a provenance-suffixed `INFO_*`, `imputation_info`, `imputation_quality`, `R2`, or `RSQ`. Boolean inclusion/exclusion flags are not INFO. |
+| `n` | Row-level total/per-variant sample size only. If N exists only as side metadata, leave row-level sample-size columns empty; downstream formatting uses the side-level value. |
+| `n_cases`, `n_controls` | Row-level case and control counts respectively; do not exchange them or derive total N. |
+
+## Consistency Checks Before Returning Code
+
+Confirm that:
+
+- the study contains usable variant identity as an rsID or an unambiguous
+  coordinate plus both alleles;
+- usable effect and other alleles belong to the selected statistic's
+  namespace; row-level symbolic allele records follow the missing-value rule
+  and do not invalidate otherwise usable study rows;
+- one signed statistic among `beta`, `or`, or `z` is available;
+- at least one compatible uncertainty/significance field among `se`, `pval`, `neglog10_pval`, or `z` is available;
+- sample size is available as row-level `n`, both row-level case/control counts, or side-level context;
+- ordinary p-values are compatible with `[0, 1]`, `-log10(p)` is non-negative, and frequency values are compatible with frequency semantics;
+- scoped or suffixed fields have not been mixed across ancestry, trait, sample, imputation panel, original/harmonized representation, or analysis test.
+- when both unsuffixed and provenance-suffixed frequency candidates exist,
+  `freq_qc` matches the selected companion suffix unless stronger explicit
+  metadata documents the exception.
+
+If a numeric column conventionally named `N`, `NMISS`, `SS`, `samplesize`, or
+equivalent is the only executable sample-size mapping but its provenance is not
+fully documented, map it and add a `sample_size_semantics` soft assumption.
+Block only when no usable sample-size value exists at all.
+
+If a required item crosses the hard-block boundary, return a structured
+blocked response. Otherwise generate one coherent transform and disclose every
+unresolved decision in `assumptions`.
+
+## JSON Response Shape
+
+For code:
+
+```json
+{
+  "status": "ok",
+  "code": "def transform(input_path, output_path, context):\n    ...",
+  "reason": "short explanation of the identified format and mapping namespace",
+  "assumptions": [
+    {
+      "kind": "effect_allele_direction or sample_size_semantics",
+      "decision": "the mapping used by the generated code",
+      "basis": "why this is the best executable mapping",
+      "risk": "what could change if the assumption is wrong"
+    }
+  ]
+}
+```
+
+For blocked:
+
+```json
+{
+  "status": "blocked",
+  "failure_class": "missing_required_...",
+  "missing_requirements": [
+    {"field": "allele_pair", "message": "why no executable allele pair can be formed"}
+  ],
+  "reason": "short explanation"
+}
+```
+
+Generate the canonicalization code for this GWAS side from this JSON context:
+{
+  "side": "study",
+  "file_name": "GCST90132314_buildGRCh37.tsv",
+  "physical_format": "table",
+  "study_metadata": {
+    "initial_sample_size": "181,522 European ancestry, unknown cases; 984,168 European ancestry, unknown controls",
+    "population": "1165690 European, NR",
+    "sample_size": 1165690,
+    "initialSampleSize": "181,522 European ancestry, unknown cases; 984,168 European ancestry, unknown controls",
+    "replicationSampleSize": "NA",
+    "pmid": "36474045",
+    "publication_title": "Discovery and systematic characterization of risk variants and genes for coronary artery disease in over a million participants. ",
+    "publication_date": "2022-12-06",
+    "publication_year": 2022,
+    "file_notes": "GWAS Catalog file notes: GCST90132314_buildGRCh37.tsv-meta.yaml: # Study meta-data gwas_id: GCST90132314 author_notes: \"1. GWAS summary statistics for the primary discovery meta-analysis from Aragam KG, Jiang T, Goel A et al (2022) Discovery and systematic characterization of risk variants and genes for coronary artery disease in over a million participants. Nature Genetics.\\n\\n2. Columns included in the file are:\\n\\np_value - the p-value from the fixed-effect inverse variance weighted meta-analysis across studies for each variant.\\nchromosome - the autosome each variant is found on.\\nbase_pair_location - the position of each variant according to GRCh37.\\neffect_allele - the allele to which the beta and odds ratio correspond.\\nother_allele - the 'non-effect' allele (i.e. the allele that is not the effect allele).\\neffect_allele_frequency - the average allele frequency for the effect allele across the studies in the meta-analysis for each variant (as estimated by METAL).\\nodds_ratio - the estimated per-allele odds ratio for the effect allele from the meta-analysis.\\nbeta - the beta estimate for the effect allele from the meta-analysis.\\nstandard_error - the standard error for the beta estimate for the effect allele from the meta-analysis.\\nmarkername - a unique variant identifier comprising chromosome, base_pair_position, first allele, second allele. Positions are based on GRCh37.\\nfreqse - the standard error of the frequency of the effect allele across the studies (as estimated by METAL).\\nminfreq - the minimum frequency of the effect allele across the studies (as estimated by METAL).\\nmaxfreq - the maximum frequency of the effect allele across the studies (as estimated by METAL).\\ndirection - the direction column from the METAL output, which includes the studies in the following order according to the three different meta-analyses (see column descriptor for 'meta_analysis' below): \\n\\n'Cardiogram' (n=11): UK Biobank, CARDIoGRAMplusC4D-1000G, EPIC-CVD, GerMIFs5, GerMIFs6, GerMIFs7, deCODE, Greek Coronary Disease cohort, HUNT, Mass General Brigham Biobank, TIMI\\n\\ 'Exome' (n=11): UK Biobank, CARDIoGRAMplusC4D-Exome, GerMIFs1, GerMIFS2, GerMIFs5, GerMIFs6, GerMIFs7, Greek Coronary Disease cohort, deCODE, Mass General Brigham Biobank, TIMI\\n'Metabo' (n=10): UK Biobank, CARDIoGRAMplusC4D-Metabo, GerMIFs4, GerMIFs5, GerMIFs6, GerMIFs7, Greek Coronary Disease cohort, HUNT, Mass General Brigham Biobank, TIMI\\n\\nhetisq - the estimated I2 value representing the between-study heterogeneity in the meta-analysis for each variant (as estimated by METAL).\\nhetchisq - the estimated chi-squared ('Q') value representing the between-study heterogeneity in the meta-analysis for each variant (as estimated by METAL).\\nhetdf - the number of degrees of freedom (i.e. non-missing studies minus one) in the meta-analysis for each variant.\\nhetpval - the p-value for the between-study heterogeneity in the meta-analysis for each variant (as estimated by METAL).\\ncases - the total number of coronary artery disease (CAD) cases included in the meta-analysis for each variant.\\n effective_cases - the sum of the effective number of cases (calculated within each study as the variant-specific INFO score multipled by the number of cases, with INFO score=1 for genotyped variants) across studies.\\nn - the total sample size (CAD cases and controls) included in the meta-analysis for each variant.\\nmeta_analysis - denotes whether the summary statistics for each variant are from the CARDIoGRAMplusC4D 1000Genomes imputed GWAS ('Cardiogram'), Cardiometabochip ('Metabo') or Exomechip ('Exome') meta-analysis (based on the maximum number of effective cases for variants that were available in more than one meta-analysis).\\n\\n3. This file comprises the GWAS summary statistics for the primary discovery meta-analysis. There are technically 3 separate meta-analyses of de novo datasets with previously published CARDIoGRAMplusC4D summary statistics using (a) 1000Genomes imputed genome-wide genotypes, (b) CardioMetabochip, and (c) Exomechip. For each variant, only the results with the largest number of effective cases were kept. The summary statistics are after implementation of a post-meta-analysis QC filter, which required a variant with p_value<1e-5 from the meta-analysis to have at least 2 studies with point estimates in the same direction of effect as the overall meta-analysis direction of effect, and the 2nd largest p_value to be less than 0.2 (i.e. 2 studies have p<0.2). This filter removed some clearly erroneous variants driven by single studies.\" gwas_catalog_api: https://www.ebi.ac.uk/gwas/rest/api/studies/GCST90132314 date_metadata_last_modified: 2025-01-13 # Trait Information trait_description: - Coronary artery disease ontology_mapping: - EFO_0001645 # Genotyping Information genome_assembly: GRCh37 genotyping_technology: - Genome-wide genotyping array - Targeted genotyping array - Exome genotyping array # Sample Information samples: - sample_ancestry_category: - European - NR sample_size: 1165690 # Summary Statistic information data_file_name: GCST90132314_buildGRCh37.tsv file_type: pre-GWAS-SSF data_file_md5sum: 92bc58de063ebbf34c4ee39adbdaf798 # Harmonization status is_harmonised: false is_sorted: false README.txt: 1. GWAS summary statistics for the primary discovery meta-analysis from Aragam KG, Jiang T, Goel A et al (2022) Discovery and systematic characterization of risk variants and genes for coronary artery disease in over a million participants. Nature Genetics. 2. Columns included in the file are: p_value - the p-value from the fixed-effect inverse variance weighted meta-analysis across studies for each variant. chromosome - the autosome each variant is found on. base_pair_location - the position of each variant according to GRCh37. effect_allele - the allele to which the beta and odds ratio correspond. other_allele - the 'non-effect' allele (i.e. the allele that is not the effect allele). effect_allele_frequency - the average allele frequency for the effect allele across the studies in the meta-analysis for each variant (as estimated by METAL). odds_ratio - the estimated per-allele odds ratio for the effect allele from the meta-analysis. beta - the beta estimate for the effect allele from the meta-analysis. standard_error - the standard error for the beta estimate for the effect allele from the meta-analysis. markername - a unique variant identifier comprising chromosome, base_pair_position, first allele, second allele. Positions are based on GRCh37. freqse - the standard error of the frequency of the effect allele across the studies (as estimated by METAL). minfreq - the minimum frequency of the effect allele across the studies (as estimated by METAL). maxfreq - the maximum frequency of the effect allele across the studies (as estimated by METAL). direction - the direction column from the METAL output, which includes the studies in the following order according to the three different meta-analyses (see column descriptor for 'meta_analysis' below): 'Cardiogram' (n=11): UK Biobank, CARDIoGRAMplusC4D-1000G, EPIC-CVD, GerMIFs5, GerMIFs6, GerMIFs7, deCODE, Greek Coronary Disease cohort, HUNT, Mass General Brigham Biobank, TIMI 'Exome' (n=11): UK Biobank, CARDIoGRAMplusC4D-Exome, GerMIFs1, GerMIFS2, GerMIFs5, GerMIFs6, GerMIFs7, Greek Coronary Disease cohort, deCODE, Mass General Brigham Biobank, TIMI 'Metabo' (n=10): UK Biobank, CARDIoGRAMplusC4D-Metabo, GerMIFs4, GerMIFs5, GerMIFs6, GerMIFs7, Greek Coronary Disease cohort, HUNT, Mass General Brigham Biobank, TIMI hetisq - the estimated I2 value representing the between-study heterogeneity in the meta-analysis for each variant (as estimated by METAL). hetchisq - the estimated chi-squared ('Q') value representing the between-study heterogeneity in the meta-analysis for each variant (as estimated by METAL). hetdf - the number of degrees of freedom (i.e. non-missing studies minus one) in the meta-analysis for each variant. hetpval - the p-value for the between-study heterogeneity in the meta-analysis for each variant (as estimated by METAL). cases - the total number of coronary artery disease (CAD) cases included in the meta-analysis for each variant. effective_cases - the sum of the effective number of cases (calculated within each study as the variant-specific INFO score multipled by the number of cases, with INFO score=1 for genotyped variants) across studies. n - the total sample size (CAD cases and controls) included in the meta-analysis for each variant. meta_analysis - denotes whether the summary statistics for each variant are from the CARDIoGRAMplusC4D 1000Genomes imputed GWAS ('Cardiogram'), Cardiometabochip ('Metabo') or Exomechip ('Exome') meta-analysis (based on the maximum number of effective cases for variants that were available in more than one meta-analysis). 3. This file comprises the GWAS summary statistics for the primary discovery meta-analysis. There are technically 3 separate meta-analyses of de novo datasets with previously published CARDIoGRAMplusC4D summary statistics using (a) 1000Genomes imputed genome-wide genotypes, (b) CardioMetabochip, and (c) Exomechip. For each variant, only the results with the largest number of effective cases were kept. The summary statistics are after implementation of a post-meta-analysis QC filter, which required a variant with p_value<1e-5 from the meta-analysis to have at least 2 studies with point estimates in the same direction of effect as the overall meta-analysis direction of effect, and the 2nd largest p_value to be less than 0.2 (i.e. 2 studies have p<0.2). This filter removed some clearly erroneous variants driven by single studies.",
+    "genome_assembly": "GRCh37",
+    "is_harmonised": false
+  },
+  "mapping_notes": null,
+  "trait_label": "Coronary artery disease",
+  "source": "gwas_catalog",
+  "ancestry": "european",
+  "pan_ukb_scope": null,
+  "sample_size": 1165690,
+  "input_delimiter": "\t",
+  "header_fields": [
+    "p_value",
+    "chromosome",
+    "base_pair_location",
+    "effect_allele",
+    "other_allele",
+    "effect_allele_frequency",
+    "odds_ratio",
+    "beta",
+    "standard_error",
+    "markername",
+    "freqse",
+    "minfreq",
+    "maxfreq",
+    "direction",
+    "hetisq",
+    "hetchisq",
+    "hetdf",
+    "hetpval",
+    "cases",
+    "effective_cases",
+    "n",
+    "meta_analysis"
+  ],
+  "sample_rows": [
+    {
+      "p_value": "0.1409",
+      "chromosome": "1",
+      "base_pair_location": "61743",
+      "effect_allele": "c",
+      "other_allele": "g",
+      "effect_allele_frequency": "0.0061",
+      "odds_ratio": ".8901843",
+      "beta": "-.11632669",
+      "standard_error": "0.079006163",
+      "markername": "1:61743_C_G",
+      "freqse": "0.0009",
+      "minfreq": "0.0019",
+      "maxfreq": "0.0064",
+      "direction": "-???????+??",
+      "hetisq": "0.0",
+      "hetchisq": "0.561",
+      "hetdf": "1",
+      "hetpval": "0.454",
+      "cases": "41651",
+      "effective_cases": "18141.4",
+      "n": "538622",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.9005",
+      "chromosome": "1",
+      "base_pair_location": "88370",
+      "effect_allele": "a",
+      "other_allele": "g",
+      "effect_allele_frequency": "0.0033",
+      "odds_ratio": ".9883691",
+      "beta": "-.01169905",
+      "standard_error": "0.093564733",
+      "markername": "1:88370_A_G",
+      "freqse": "0.0004",
+      "minfreq": "0.0019",
+      "maxfreq": "0.0034",
+      "direction": "-???????+??",
+      "hetisq": "51.8",
+      "hetchisq": "2.077",
+      "hetdf": "1",
+      "hetpval": "0.1496",
+      "cases": "41651",
+      "effective_cases": "22939.1",
+      "n": "538622",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.1302",
+      "chromosome": "1",
+      "base_pair_location": "108382",
+      "effect_allele": "a",
+      "other_allele": "c",
+      "effect_allele_frequency": "0.0008",
+      "odds_ratio": "1.301936",
+      "beta": ".26385216",
+      "standard_error": "0.17436496",
+      "markername": "1:108382_A_C",
+      "freqse": "0.0000",
+      "minfreq": "0.0007",
+      "maxfreq": "0.0008",
+      "direction": "+???????-??",
+      "hetisq": "0.0",
+      "hetchisq": "0.932",
+      "hetdf": "1",
+      "hetpval": "0.3344",
+      "cases": "41651",
+      "effective_cases": "26336.9",
+      "n": "538622",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.2477",
+      "chromosome": "1",
+      "base_pair_location": "233476",
+      "effect_allele": "a",
+      "other_allele": "g",
+      "effect_allele_frequency": "0.0055",
+      "odds_ratio": "1.099226",
+      "beta": ".09460607",
+      "standard_error": "0.08184042",
+      "markername": "1:233476_A_G",
+      "freqse": "0.0012",
+      "minfreq": "0.0049",
+      "maxfreq": "0.0081",
+      "direction": "+???????-??",
+      "hetisq": "63.1",
+      "hetchisq": "2.713",
+      "hetdf": "1",
+      "hetpval": "0.09955",
+      "cases": "41651",
+      "effective_cases": "17869.6",
+      "n": "538622",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.9395",
+      "chromosome": "1",
+      "base_pair_location": "526832",
+      "effect_allele": "c",
+      "other_allele": "g",
+      "effect_allele_frequency": "0.0367",
+      "odds_ratio": ".9980791",
+      "beta": "-.00192275",
+      "standard_error": "0.02534286",
+      "markername": "1:526832_C_G",
+      "freqse": "0.0076",
+      "minfreq": "0.0271",
+      "maxfreq": "0.0427",
+      "direction": "+?????-????",
+      "hetisq": "0.0",
+      "hetchisq": "0.584",
+      "hetdf": "1",
+      "hetpval": "0.4448",
+      "cases": "72859",
+      "effective_cases": "50163.8",
+      "n": "829210",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.2113",
+      "chromosome": "1",
+      "base_pair_location": "532413",
+      "effect_allele": "a",
+      "other_allele": "g",
+      "effect_allele_frequency": "0.0030",
+      "odds_ratio": ".8749632",
+      "beta": "-.13357347",
+      "standard_error": "0.10686249",
+      "markername": "1:532413_A_G",
+      "freqse": "0.0005",
+      "minfreq": "0.0012",
+      "maxfreq": "0.0031",
+      "direction": "-???????-??",
+      "hetisq": "59.6",
+      "hetchisq": "2.477",
+      "hetdf": "1",
+      "hetpval": "0.1155",
+      "cases": "41651",
+      "effective_cases": "20089.1",
+      "n": "538622",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.9227",
+      "chromosome": "1",
+      "base_pair_location": "534302",
+      "effect_allele": "a",
+      "other_allele": "g",
+      "effect_allele_frequency": "0.0039",
+      "odds_ratio": ".9900914",
+      "beta": "-.00995801",
+      "standard_error": "0.10263685",
+      "markername": "1:534302_A_G",
+      "freqse": "0.0006",
+      "minfreq": "0.0001",
+      "maxfreq": "0.0040",
+      "direction": "-?????-????",
+      "hetisq": "0.0",
+      "hetchisq": "0.083",
+      "hetdf": "1",
+      "hetpval": "0.7733",
+      "cases": "72859",
+      "effective_cases": "53551.5",
+      "n": "829210",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.8839",
+      "chromosome": "1",
+      "base_pair_location": "534540",
+      "effect_allele": "t",
+      "other_allele": "g",
+      "effect_allele_frequency": "0.0030",
+      "odds_ratio": "1.012422",
+      "beta": ".01234532",
+      "standard_error": "0.084510691",
+      "markername": "1:534540_G_T",
+      "freqse": "0.0006",
+      "minfreq": "0.0022",
+      "maxfreq": "0.0035",
+      "direction": "-?????+????",
+      "hetisq": "0.0",
+      "hetchisq": "0.930",
+      "hetdf": "1",
+      "hetpval": "0.3349",
+      "cases": "72859",
+      "effective_cases": "52910.4",
+      "n": "829210",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.3505",
+      "chromosome": "1",
+      "base_pair_location": "540818",
+      "effect_allele": "a",
+      "other_allele": "g",
+      "effect_allele_frequency": "0.0042",
+      "odds_ratio": "1.069916",
+      "beta": ".0675799",
+      "standard_error": "0.072385271",
+      "markername": "1:540818_A_G",
+      "freqse": "0.0009",
+      "minfreq": "0.0031",
+      "maxfreq": "0.0049",
+      "direction": "+?????+????",
+      "hetisq": "2.2",
+      "hetchisq": "1.022",
+      "hetdf": "1",
+      "hetpval": "0.3119",
+      "cases": "72859",
+      "effective_cases": "51073",
+      "n": "829210",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.6844",
+      "chromosome": "1",
+      "base_pair_location": "544584",
+      "effect_allele": "t",
+      "other_allele": "c",
+      "effect_allele_frequency": "0.0026",
+      "odds_ratio": "1.036561",
+      "beta": ".03590892",
+      "standard_error": "0.088336542",
+      "markername": "1:544584_C_T",
+      "freqse": "0.0005",
+      "minfreq": "0.0019",
+      "maxfreq": "0.0030",
+      "direction": "+?????-????",
+      "hetisq": "42.6",
+      "hetchisq": "1.741",
+      "hetdf": "1",
+      "hetpval": "0.187",
+      "cases": "72859",
+      "effective_cases": "54000",
+      "n": "829210",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.4624",
+      "chromosome": "1",
+      "base_pair_location": "544755",
+      "effect_allele": "a",
+      "other_allele": "g",
+      "effect_allele_frequency": "0.0016",
+      "odds_ratio": "1.204212",
+      "beta": ".18582551",
+      "standard_error": "0.25287968",
+      "markername": "1:544755_A_G",
+      "freqse": "0.0008",
+      "minfreq": "0.0002",
+      "maxfreq": "0.0021",
+      "direction": "??????-?+??",
+      "hetisq": "46.3",
+      "hetchisq": "1.862",
+      "hetdf": "1",
+      "hetpval": "0.1724",
+      "cases": "46628",
+      "effective_cases": "36563.5",
+      "n": "423162",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.09765",
+      "chromosome": "1",
+      "base_pair_location": "546697",
+      "effect_allele": "a",
+      "other_allele": "g",
+      "effect_allele_frequency": "0.0933",
+      "odds_ratio": ".9753233",
+      "beta": "-.02498625",
+      "standard_error": "0.015085108",
+      "markername": "1:546697_A_G",
+      "freqse": "0.0096",
+      "minfreq": "0.0758",
+      "maxfreq": "0.1030",
+      "direction": "-???+?-????",
+      "hetisq": "56.7",
+      "hetchisq": "4.618",
+      "hetdf": "2",
+      "hetpval": "0.09937",
+      "cases": "74498",
+      "effective_cases": "53508.5",
+      "n": "832035",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.00688",
+      "chromosome": "1",
+      "base_pair_location": "564397",
+      "effect_allele": "t",
+      "other_allele": "c",
+      "effect_allele_frequency": "0.9993",
+      "odds_ratio": ".5396953",
+      "beta": "-.61675062",
+      "standard_error": "0.22820558",
+      "markername": "1:564397_C_T",
+      "freqse": "0.0002",
+      "minfreq": "0.9993",
+      "maxfreq": "0.9999",
+      "direction": "-?????+????",
+      "hetisq": "0.0",
+      "hetchisq": "0.705",
+      "hetdf": "1",
+      "hetpval": "0.401",
+      "cases": "72859",
+      "effective_cases": "52669.8",
+      "n": "829210",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.907",
+      "chromosome": "1",
+      "base_pair_location": "565470",
+      "effect_allele": "a",
+      "other_allele": "g",
+      "effect_allele_frequency": "0.0011",
+      "odds_ratio": "1.014045",
+      "beta": ".01394781",
+      "standard_error": "0.1193378",
+      "markername": "1:565470_A_G",
+      "freqse": "0.0002",
+      "minfreq": "0.0010",
+      "maxfreq": "0.0017",
+      "direction": "-?????+?+??",
+      "hetisq": "0.0",
+      "hetchisq": "0.161",
+      "hetdf": "2",
+      "hetpval": "0.9227",
+      "cases": "80569",
+      "effective_cases": "59519.1",
+      "n": "895497",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.479",
+      "chromosome": "1",
+      "base_pair_location": "566776",
+      "effect_allele": "c",
+      "other_allele": "g",
+      "effect_allele_frequency": "0.9961",
+      "odds_ratio": "1.068935",
+      "beta": ".06666315",
+      "standard_error": "0.094179043",
+      "markername": "1:566776_C_G",
+      "freqse": "0.0012",
+      "minfreq": "0.9956",
+      "maxfreq": "0.9994",
+      "direction": "-?????+????",
+      "hetisq": "5.5",
+      "hetchisq": "1.058",
+      "hetdf": "1",
+      "hetpval": "0.3036",
+      "cases": "72859",
+      "effective_cases": "51170.4",
+      "n": "829210",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.7505",
+      "chromosome": "1",
+      "base_pair_location": "567006",
+      "effect_allele": "t",
+      "other_allele": "g",
+      "effect_allele_frequency": "0.0026",
+      "odds_ratio": "1.025701",
+      "beta": ".02537672",
+      "standard_error": "0.079802913",
+      "markername": "1:567006_G_T",
+      "freqse": "0.0006",
+      "minfreq": "0.0015",
+      "maxfreq": "0.0030",
+      "direction": "+?????-?-??",
+      "hetisq": "40.5",
+      "hetchisq": "3.360",
+      "hetdf": "2",
+      "hetpval": "0.1863",
+      "cases": "80569",
+      "effective_cases": "62010.9",
+      "n": "895497",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.2609",
+      "chromosome": "1",
+      "base_pair_location": "567867",
+      "effect_allele": "a",
+      "other_allele": "g",
+      "effect_allele_frequency": "0.9741",
+      "odds_ratio": ".9104951",
+      "beta": "-.09376675",
+      "standard_error": "0.083398718",
+      "markername": "1:567867_A_G",
+      "freqse": "0.0547",
+      "minfreq": "0.8020",
+      "maxfreq": "0.9915",
+      "direction": "-????????-?",
+      "hetisq": "0.0",
+      "hetchisq": "0.193",
+      "hetdf": "1",
+      "hetpval": "0.6604",
+      "cases": "34072",
+      "effective_cases": "18699.4",
+      "n": "472979",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.04483",
+      "chromosome": "1",
+      "base_pair_location": "574151",
+      "effect_allele": "a",
+      "other_allele": "t",
+      "effect_allele_frequency": "0.9482",
+      "odds_ratio": "1.060685",
+      "beta": ".05891478",
+      "standard_error": "0.029366187",
+      "markername": "1:574151_A_T",
+      "freqse": "0.0080",
+      "minfreq": "0.9466",
+      "maxfreq": "0.9873",
+      "direction": "+???????-??",
+      "hetisq": "61.4",
+      "hetchisq": "2.592",
+      "hetdf": "1",
+      "hetpval": "0.1074",
+      "cases": "41651",
+      "effective_cases": "17066.9",
+      "n": "538622",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.8395",
+      "chromosome": "1",
+      "base_pair_location": "601630",
+      "effect_allele": "c",
+      "other_allele": "g",
+      "effect_allele_frequency": "0.9998",
+      "odds_ratio": "1.115326",
+      "beta": ".10914644",
+      "standard_error": "0.5388069",
+      "markername": "1:601630_C_G",
+      "freqse": "0.0000",
+      "minfreq": "0.9998",
+      "maxfreq": "0.9999",
+      "direction": "-?????+????",
+      "hetisq": "69.0",
+      "hetchisq": "3.222",
+      "hetdf": "1",
+      "hetpval": "0.07265",
+      "cases": "72859",
+      "effective_cases": "51295.9",
+      "n": "829210",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.9626",
+      "chromosome": "1",
+      "base_pair_location": "604779",
+      "effect_allele": "a",
+      "other_allele": "t",
+      "effect_allele_frequency": "0.9975",
+      "odds_ratio": ".9947009",
+      "beta": "-.00531316",
+      "standard_error": "0.11325825",
+      "markername": "1:604779_A_T",
+      "freqse": "0.0008",
+      "minfreq": "0.9972",
+      "maxfreq": "0.9997",
+      "direction": "-?????+????",
+      "hetisq": "2.2",
+      "hetchisq": "1.022",
+      "hetdf": "1",
+      "hetpval": "0.312",
+      "cases": "72859",
+      "effective_cases": "54386.8",
+      "n": "829210",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.7422",
+      "chromosome": "1",
+      "base_pair_location": "636975",
+      "effect_allele": "a",
+      "other_allele": "g",
+      "effect_allele_frequency": "0.0022",
+      "odds_ratio": ".9596361",
+      "beta": "-.04120116",
+      "standard_error": "0.12526519",
+      "markername": "1:636975_A_G",
+      "freqse": "0.0007",
+      "minfreq": "0.0003",
+      "maxfreq": "0.0024",
+      "direction": "-?????+????",
+      "hetisq": "31.3",
+      "hetchisq": "1.455",
+      "hetdf": "1",
+      "hetpval": "0.2277",
+      "cases": "72859",
+      "effective_cases": "62580",
+      "n": "829210",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.3142",
+      "chromosome": "1",
+      "base_pair_location": "648843",
+      "effect_allele": "t",
+      "other_allele": "tatta",
+      "effect_allele_frequency": "0.0044",
+      "odds_ratio": "1.098355",
+      "beta": ".09381388",
+      "standard_error": "0.093210656",
+      "markername": "1:648843_T_TATTA",
+      "freqse": "0.0003",
+      "minfreq": "0.0043",
+      "maxfreq": "0.0050",
+      "direction": "??????+?+??",
+      "hetisq": "0.0",
+      "hetchisq": "0.008",
+      "hetdf": "1",
+      "hetpval": "0.9284",
+      "cases": "46628",
+      "effective_cases": "39565.1",
+      "n": "423162",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.9707",
+      "chromosome": "1",
+      "base_pair_location": "649192",
+      "effect_allele": "a",
+      "other_allele": "t",
+      "effect_allele_frequency": "0.8692",
+      "odds_ratio": ".9995661",
+      "beta": "-.00043395",
+      "standard_error": "0.011829159",
+      "markername": "1:649192_A_T",
+      "freqse": "0.0131",
+      "minfreq": "0.8534",
+      "maxfreq": "0.8800",
+      "direction": "+?????-????",
+      "hetisq": "0.0",
+      "hetchisq": "0.244",
+      "hetdf": "1",
+      "hetpval": "0.6213",
+      "cases": "72859",
+      "effective_cases": "61008.5",
+      "n": "829210",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.2484",
+      "chromosome": "1",
+      "base_pair_location": "657963",
+      "effect_allele": "t",
+      "other_allele": "c",
+      "effect_allele_frequency": "0.0017",
+      "odds_ratio": "1.179975",
+      "beta": ".16549341",
+      "standard_error": "0.14336315",
+      "markername": "1:657963_C_T",
+      "freqse": "0.0013",
+      "minfreq": "0.0007",
+      "maxfreq": "0.0034",
+      "direction": "+???????+??",
+      "hetisq": "27.4",
+      "hetchisq": "1.377",
+      "hetdf": "1",
+      "hetpval": "0.2406",
+      "cases": "41651",
+      "effective_cases": "30528.9",
+      "n": "538622",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.6162",
+      "chromosome": "1",
+      "base_pair_location": "662414",
+      "effect_allele": "t",
+      "other_allele": "c",
+      "effect_allele_frequency": "0.1368",
+      "odds_ratio": "1.005921",
+      "beta": ".00590342",
+      "standard_error": "0.011776252",
+      "markername": "1:662414_C_T",
+      "freqse": "0.0026",
+      "minfreq": "0.1336",
+      "maxfreq": "0.1389",
+      "direction": "+?????+????",
+      "hetisq": "0.0",
+      "hetchisq": "0.000",
+      "hetdf": "1",
+      "hetpval": "0.9891",
+      "cases": "72859",
+      "effective_cases": "59814.6",
+      "n": "829210",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.6373",
+      "chromosome": "1",
+      "base_pair_location": "662613",
+      "effect_allele": "a",
+      "other_allele": "g",
+      "effect_allele_frequency": "0.0419",
+      "odds_ratio": ".9884292",
+      "beta": "-.01163827",
+      "standard_error": "0.024687278",
+      "markername": "1:662613_A_G",
+      "freqse": "0.0169",
+      "minfreq": "0.0120",
+      "maxfreq": "0.0522",
+      "direction": "+?????-?-?-",
+      "hetisq": "0.0",
+      "hetchisq": "1.431",
+      "hetdf": "3",
+      "hetpval": "0.6984",
+      "cases": "98456",
+      "effective_cases": "66028.3",
+      "n": "922234",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.7666",
+      "chromosome": "1",
+      "base_pair_location": "662622",
+      "effect_allele": "a",
+      "other_allele": "g",
+      "effect_allele_frequency": "0.1214",
+      "odds_ratio": ".9966677",
+      "beta": "-.00333791",
+      "standard_error": "0.011245588",
+      "markername": "1:662622_A_G",
+      "freqse": "0.0086",
+      "minfreq": "0.1140",
+      "maxfreq": "0.1330",
+      "direction": "-?????+?+?-",
+      "hetisq": "0.0",
+      "hetchisq": "2.681",
+      "hetdf": "3",
+      "hetpval": "0.4435",
+      "cases": "98456",
+      "effective_cases": "78026.6",
+      "n": "922234",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.0794",
+      "chromosome": "1",
+      "base_pair_location": "662623",
+      "effect_allele": "a",
+      "other_allele": "g",
+      "effect_allele_frequency": "0.0011",
+      "odds_ratio": "1.299397",
+      "beta": ".2619",
+      "standard_error": "0.149302",
+      "markername": "1:662623_A_G",
+      "freqse": "0.0004",
+      "minfreq": "0.0004",
+      "maxfreq": "0.0013",
+      "direction": "+?????+????",
+      "hetisq": "0.0",
+      "hetchisq": "0.258",
+      "hetdf": "1",
+      "hetpval": "0.6114",
+      "cases": "72859",
+      "effective_cases": "52822.5",
+      "n": "829210",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.8661",
+      "chromosome": "1",
+      "base_pair_location": "665266",
+      "effect_allele": "t",
+      "other_allele": "c",
+      "effect_allele_frequency": "0.9708",
+      "odds_ratio": ".9956297",
+      "beta": "-.00437989",
+      "standard_error": "0.025974758",
+      "markername": "1:665266_C_T",
+      "freqse": "0.0097",
+      "minfreq": "0.9622",
+      "maxfreq": "0.9817",
+      "direction": "-?????+????",
+      "hetisq": "0.0",
+      "hetchisq": "0.266",
+      "hetdf": "1",
+      "hetpval": "0.6063",
+      "cases": "72859",
+      "effective_cases": "58716.2",
+      "n": "829210",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.685",
+      "chromosome": "1",
+      "base_pair_location": "668394",
+      "effect_allele": "a",
+      "other_allele": "ag",
+      "effect_allele_frequency": "0.0221",
+      "odds_ratio": "1.017541",
+      "beta": ".01738857",
+      "standard_error": "0.042860509",
+      "markername": "1:668394_A_AG",
+      "freqse": "0.0023",
+      "minfreq": "0.0211",
+      "maxfreq": "0.0272",
+      "direction": "+?????????+",
+      "hetisq": "0.0",
+      "hetchisq": "0.012",
+      "hetdf": "1",
+      "hetpval": "0.9127",
+      "cases": "51828",
+      "effective_cases": "21529",
+      "n": "499072",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.5658",
+      "chromosome": "1",
+      "base_pair_location": "669128",
+      "effect_allele": "t",
+      "other_allele": "c",
+      "effect_allele_frequency": "0.0020",
+      "odds_ratio": ".9353475",
+      "beta": "-.06683715",
+      "standard_error": "0.11639549",
+      "markername": "1:669128_C_T",
+      "freqse": "0.0007",
+      "minfreq": "0.0006",
+      "maxfreq": "0.0024",
+      "direction": "+?????-????",
+      "hetisq": "0.0",
+      "hetchisq": "0.423",
+      "hetdf": "1",
+      "hetpval": "0.5154",
+      "cases": "72859",
+      "effective_cases": "52946.9",
+      "n": "829210",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.8189",
+      "chromosome": "1",
+      "base_pair_location": "669746",
+      "effect_allele": "t",
+      "other_allele": "c",
+      "effect_allele_frequency": "0.0012",
+      "odds_ratio": ".9633105",
+      "beta": "-.0373795",
+      "standard_error": "0.16329454",
+      "markername": "1:669746_C_T",
+      "freqse": "0.0004",
+      "minfreq": "0.0002",
+      "maxfreq": "0.0014",
+      "direction": "-?????-????",
+      "hetisq": "0.0",
+      "hetchisq": "0.292",
+      "hetdf": "1",
+      "hetpval": "0.5888",
+      "cases": "72859",
+      "effective_cases": "61083.5",
+      "n": "829210",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.1043",
+      "chromosome": "1",
+      "base_pair_location": "672594",
+      "effect_allele": "t",
+      "other_allele": "c",
+      "effect_allele_frequency": "0.9998",
+      "odds_ratio": ".5848256",
+      "beta": "-.53644156",
+      "standard_error": "0.33023738",
+      "markername": "1:672594_C_T",
+      "freqse": "0.0000",
+      "minfreq": "0.9998",
+      "maxfreq": "0.9998",
+      "direction": "-?????+????",
+      "hetisq": "80.1",
+      "hetchisq": "5.033",
+      "hetdf": "1",
+      "hetpval": "0.02486",
+      "cases": "72859",
+      "effective_cases": "58562.6",
+      "n": "829210",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.215",
+      "chromosome": "1",
+      "base_pair_location": "672940",
+      "effect_allele": "c",
+      "other_allele": "g",
+      "effect_allele_frequency": "0.0016",
+      "odds_ratio": ".8267596",
+      "beta": "-.19024131",
+      "standard_error": "0.15343531",
+      "markername": "1:672940_C_G",
+      "freqse": "0.0005",
+      "minfreq": "0.0002",
+      "maxfreq": "0.0018",
+      "direction": "-?????-????",
+      "hetisq": "0.0",
+      "hetchisq": "0.025",
+      "hetdf": "1",
+      "hetpval": "0.8742",
+      "cases": "72859",
+      "effective_cases": "61923.7",
+      "n": "829210",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.3605",
+      "chromosome": "1",
+      "base_pair_location": "674498",
+      "effect_allele": "a",
+      "other_allele": "t",
+      "effect_allele_frequency": "0.9920",
+      "odds_ratio": ".9515332",
+      "beta": "-.04968072",
+      "standard_error": "0.054329641",
+      "markername": "1:674498_A_T",
+      "freqse": "0.0023",
+      "minfreq": "0.9905",
+      "maxfreq": "0.9954",
+      "direction": "-?????-????",
+      "hetisq": "0.0",
+      "hetchisq": "0.121",
+      "hetdf": "1",
+      "hetpval": "0.7279",
+      "cases": "72859",
+      "effective_cases": "53431.5",
+      "n": "829210",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.515",
+      "chromosome": "1",
+      "base_pair_location": "676118",
+      "effect_allele": "t",
+      "other_allele": "c",
+      "effect_allele_frequency": "0.0708",
+      "odds_ratio": ".9890419",
+      "beta": "-.01101854",
+      "standard_error": "0.016925254",
+      "markername": "1:676118_C_T",
+      "freqse": "0.0126",
+      "minfreq": "0.0554",
+      "maxfreq": "0.0818",
+      "direction": "-?????+???+",
+      "hetisq": "50.9",
+      "hetchisq": "4.074",
+      "hetdf": "2",
+      "hetpval": "0.1304",
+      "cases": "90746",
+      "effective_cases": "62529.9",
+      "n": "855947",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.697",
+      "chromosome": "1",
+      "base_pair_location": "692794",
+      "effect_allele": "ca",
+      "other_allele": "c",
+      "effect_allele_frequency": "0.8864",
+      "odds_ratio": ".9951562",
+      "beta": "-.0048556",
+      "standard_error": "0.01247026",
+      "markername": "1:692794_C_CA",
+      "freqse": "0.0068",
+      "minfreq": "0.8820",
+      "maxfreq": "0.8968",
+      "direction": "+?????-????",
+      "hetisq": "44.2",
+      "hetchisq": "1.793",
+      "hetdf": "1",
+      "hetpval": "0.1805",
+      "cases": "72859",
+      "effective_cases": "59896.5",
+      "n": "829210",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.4039",
+      "chromosome": "1",
+      "base_pair_location": "693593",
+      "effect_allele": "a",
+      "other_allele": "at",
+      "effect_allele_frequency": "0.0048",
+      "odds_ratio": ".8944684",
+      "beta": "-.11152573",
+      "standard_error": "0.13362524",
+      "markername": "1:693593_A_AT",
+      "freqse": "0.0028",
+      "minfreq": "0.0007",
+      "maxfreq": "0.0066",
+      "direction": "-?????????-",
+      "hetisq": "0.0",
+      "hetchisq": "0.016",
+      "hetdf": "1",
+      "hetpval": "0.8982",
+      "cases": "51828",
+      "effective_cases": "27273.3",
+      "n": "499072",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.9901",
+      "chromosome": "1",
+      "base_pair_location": "693625",
+      "effect_allele": "t",
+      "other_allele": "c",
+      "effect_allele_frequency": "0.9534",
+      "odds_ratio": "1.000353",
+      "beta": ".00035283",
+      "standard_error": "0.028345387",
+      "markername": "1:693625_C_T",
+      "freqse": "0.0035",
+      "minfreq": "0.9521",
+      "maxfreq": "0.9627",
+      "direction": "+?????????-",
+      "hetisq": "55.5",
+      "hetchisq": "2.249",
+      "hetdf": "1",
+      "hetpval": "0.1337",
+      "cases": "51828",
+      "effective_cases": "24528.3",
+      "n": "499072",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.6723",
+      "chromosome": "1",
+      "base_pair_location": "693731",
+      "effect_allele": "a",
+      "other_allele": "g",
+      "effect_allele_frequency": "0.8751",
+      "odds_ratio": "1.003768",
+      "beta": ".00376061",
+      "standard_error": "0.0088900645",
+      "markername": "1:693731_A_G",
+      "freqse": "0.0055",
+      "minfreq": "0.8617",
+      "maxfreq": "0.8815",
+      "direction": "+??-+?----+",
+      "hetisq": "0.0",
+      "hetchisq": "6.052",
+      "hetdf": "7",
+      "hetpval": "0.5337",
+      "cases": "107128",
+      "effective_cases": "87505.3",
+      "n": "947084",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.5",
+      "chromosome": "1",
+      "base_pair_location": "693823",
+      "effect_allele": "c",
+      "other_allele": "g",
+      "effect_allele_frequency": "0.1213",
+      "odds_ratio": ".9924114",
+      "beta": "-.00761749",
+      "standard_error": "0.011293825",
+      "markername": "1:693823_C_G",
+      "freqse": "0.0066",
+      "minfreq": "0.1157",
+      "maxfreq": "0.1297",
+      "direction": "-?????+???-",
+      "hetisq": "0.0",
+      "hetchisq": "1.906",
+      "hetdf": "2",
+      "hetpval": "0.3855",
+      "cases": "90746",
+      "effective_cases": "74869.1",
+      "n": "855947",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.4066",
+      "chromosome": "1",
+      "base_pair_location": "693920",
+      "effect_allele": "t",
+      "other_allele": "c",
+      "effect_allele_frequency": "0.9954",
+      "odds_ratio": ".9351277",
+      "beta": "-.06707212",
+      "standard_error": "0.080816815",
+      "markername": "1:693920_C_T",
+      "freqse": "0.0010",
+      "minfreq": "0.9951",
+      "maxfreq": "0.9981",
+      "direction": "-???????-?+",
+      "hetisq": "0.0",
+      "hetchisq": "1.280",
+      "hetdf": "2",
+      "hetpval": "0.5273",
+      "cases": "59538",
+      "effective_cases": "33088.5",
+      "n": "565359",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.5775",
+      "chromosome": "1",
+      "base_pair_location": "701779",
+      "effect_allele": "g",
+      "other_allele": "gaata",
+      "effect_allele_frequency": "0.0812",
+      "odds_ratio": "1.008822",
+      "beta": ".00878312",
+      "standard_error": "0.015767527",
+      "markername": "1:701779_G_GAATA",
+      "freqse": "0.0122",
+      "minfreq": "0.0690",
+      "maxfreq": "0.0935",
+      "direction": "+?????-???-",
+      "hetisq": "54.0",
+      "hetchisq": "4.349",
+      "hetdf": "2",
+      "hetpval": "0.1137",
+      "cases": "90746",
+      "effective_cases": "61589.9",
+      "n": "855947",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.469",
+      "chromosome": "1",
+      "base_pair_location": "702958",
+      "effect_allele": "t",
+      "other_allele": "c",
+      "effect_allele_frequency": "0.9962",
+      "odds_ratio": "1.065638",
+      "beta": ".06357348",
+      "standard_error": "0.087801376",
+      "markername": "1:702958_C_T",
+      "freqse": "0.0000",
+      "minfreq": "0.9962",
+      "maxfreq": "0.9964",
+      "direction": "+???????-??",
+      "hetisq": "0.0",
+      "hetchisq": "0.087",
+      "hetdf": "1",
+      "hetpval": "0.7674",
+      "cases": "41651",
+      "effective_cases": "27559.3",
+      "n": "538622",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.079",
+      "chromosome": "1",
+      "base_pair_location": "704637",
+      "effect_allele": "a",
+      "other_allele": "g",
+      "effect_allele_frequency": "0.0743",
+      "odds_ratio": ".9706808",
+      "beta": "-.02975762",
+      "standard_error": "0.016941331",
+      "markername": "1:704637_A_G",
+      "freqse": "0.0204",
+      "minfreq": "0.0494",
+      "maxfreq": "0.0914",
+      "direction": "-?????-???-",
+      "hetisq": "43.1",
+      "hetchisq": "3.516",
+      "hetdf": "2",
+      "hetpval": "0.1724",
+      "cases": "90746",
+      "effective_cases": "62681.2",
+      "n": "855947",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.1562",
+      "chromosome": "1",
+      "base_pair_location": "705452",
+      "effect_allele": "a",
+      "other_allele": "t",
+      "effect_allele_frequency": "0.0038",
+      "odds_ratio": ".8665541",
+      "beta": "-.14323076",
+      "standard_error": "0.10101703",
+      "markername": "1:705452_A_T",
+      "freqse": "0.0008",
+      "minfreq": "0.0002",
+      "maxfreq": "0.0040",
+      "direction": "-?????-????",
+      "hetisq": "0.0",
+      "hetchisq": "0.087",
+      "hetdf": "1",
+      "hetpval": "0.7687",
+      "cases": "72859",
+      "effective_cases": "65023.2",
+      "n": "829210",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.1756",
+      "chromosome": "1",
+      "base_pair_location": "705882",
+      "effect_allele": "a",
+      "other_allele": "g",
+      "effect_allele_frequency": "0.0647",
+      "odds_ratio": ".9789484",
+      "beta": "-.0212764",
+      "standard_error": "0.015709956",
+      "markername": "1:705882_A_G",
+      "freqse": "0.0019",
+      "minfreq": "0.0625",
+      "maxfreq": "0.0705",
+      "direction": "-?????-??++",
+      "hetisq": "74.4",
+      "hetchisq": "11.703",
+      "hetdf": "3",
+      "hetpval": "0.008472",
+      "cases": "95052",
+      "effective_cases": "70555.3",
+      "n": "872558",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.3973",
+      "chromosome": "1",
+      "base_pair_location": "705942",
+      "effect_allele": "a",
+      "other_allele": "t",
+      "effect_allele_frequency": "0.9972",
+      "odds_ratio": ".9335774",
+      "beta": "-.06873139",
+      "standard_error": "0.081199107",
+      "markername": "1:705942_A_T",
+      "freqse": "0.0007",
+      "minfreq": "0.9968",
+      "maxfreq": "0.9983",
+      "direction": "-?????-????",
+      "hetisq": "0.0",
+      "hetchisq": "0.589",
+      "hetdf": "1",
+      "hetpval": "0.4429",
+      "cases": "72859",
+      "effective_cases": "56614.2",
+      "n": "829210",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.5581",
+      "chromosome": "1",
+      "base_pair_location": "706330",
+      "effect_allele": "a",
+      "other_allele": "ag",
+      "effect_allele_frequency": "0.9212",
+      "odds_ratio": ".9903079",
+      "beta": "-.00973937",
+      "standard_error": "0.016628008",
+      "markername": "1:706330_A_AG",
+      "freqse": "0.0144",
+      "minfreq": "0.9079",
+      "maxfreq": "0.9369",
+      "direction": "-?????+????",
+      "hetisq": "67.1",
+      "hetchisq": "3.035",
+      "hetdf": "1",
+      "hetpval": "0.08148",
+      "cases": "72859",
+      "effective_cases": "53750.9",
+      "n": "829210",
+      "meta_analysis": "Cardiogram"
+    },
+    {
+      "p_value": "0.2319",
+      "chromosome": "1",
+      "base_pair_location": "706333",
+      "effect_allele": "c",
+      "other_allele": "g",
+      "effect_allele_frequency": "0.0018",
+      "odds_ratio": "1.18272",
+      "beta": ".16781692",
+      "standard_error": "0.14038488",
+      "markername": "1:706333_C_G",
+      "freqse": "0.0012",
+      "minfreq": "0.0009",
+      "maxfreq": "0.0034",
+      "direction": "+???????+??",
+      "hetisq": "25.4",
+      "hetchisq": "1.340",
+      "hetdf": "1",
+      "hetpval": "0.2471",
+      "cases": "41651",
+      "effective_cases": "25732.7",
+      "n": "538622",
+      "meta_analysis": "Cardiogram"
+    }
+  ],
+  "vcf_metadata": [],
+  "vcf_format_fields": [],
+  "required_canonical_columns": [
+    "SNP",
+    "CHR",
+    "BP",
+    "effect_allele",
+    "other_allele",
+    "beta",
+    "or",
+    "se",
+    "z",
+    "pval",
+    "neglog10_pval",
+    "freq_qc",
+    "info",
+    "n",
+    "n_cases",
+    "n_controls"
+  ],
+  "previous_error": null
+}

@@ -3,9 +3,6 @@
 .env.*
 !/.env.example
 *.pem
-# Local audit code and submission records
-*[Aa][Uu][Dd][Ii][Tt]*
-/environments/
 # Python/build/editor state
 __pycache__/
 *.py[cod]
@@ -18,11 +15,15 @@ dist/
 .codex/
 .claude/
 AGENTS.md
+*[Aa][Uu][Dd][Ii][Tt]*
+/environments/
 # Sessions, external inputs and generated records
 runtime*/
 data/
 database
 outputs/
+# Reviewed artifacts used by the bundled read-only example
+!/mrcat/web/static/examples/result4/files/workspace/outputs/
 checkpoints/
 *.sqlite
 *.sqlite-wal
@@ -32,6 +33,7 @@ Rplots.pdf
 **/execution/
 skills/*/build_contract.json
 skills/*/build_validation.json
+skills/mr-grip/tests/
 skills/mr-bwmr/scripts/bwmr/BWMR_updated.R
 # Development records remain local; only user documentation is published
 /docs/*

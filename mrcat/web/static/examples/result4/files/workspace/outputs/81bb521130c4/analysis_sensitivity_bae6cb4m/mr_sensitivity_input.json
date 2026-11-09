@@ -1,0 +1,8 @@
+{
+  "primary_result_record_path": "/recorded-session/workspace/outputs/32e9f140fc83/mr_primary_m8lrhgrn/reports/mr_primary_result_record.json",
+  "nb_distribution": 1000,
+  "signif_threshold": 0.05,
+  "seed": 1234,
+  "detailed_plot_max_instruments": 100,
+  "steiger_filter": false
+}

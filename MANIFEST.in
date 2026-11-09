@@ -1,9 +1,10 @@
 include README.md LICENSE THIRD_PARTY.md CITATION.cff environment.yml config.yaml .env.example main.py
-recursive-include examples *.py
+recursive-include examples *.py *.md *.json *.tsv *.png
 recursive-include tests *.py *.cjs *.txt
 recursive-include mrcat *.py *.md *.R *.js *.css *.html *.svg *.txt *.ico *.png
+recursive-include mrcat/web/static/examples *
 recursive-include skills *.py *.md *.R *.json *.yaml *.txt
-recursive-include scripts *.R
+recursive-include scripts *.R *.py *.json
 prune docs
 include docs/architecture.md docs/skills.md docs/data.md docs/checkpoint_storage.md docs/multi_user.md docs/trace.md docs/custom_codeact.md docs/executor_transport.md docs/result_refs.md docs/final_result_delivery.md
 prune skills/mr-grip/execution

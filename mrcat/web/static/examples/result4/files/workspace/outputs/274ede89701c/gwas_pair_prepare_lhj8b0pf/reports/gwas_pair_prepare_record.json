@@ -1,0 +1,19 @@
+{
+  "clumping_reference": {
+    "mode": "api",
+    "population": "EUR",
+    "bfile": null,
+    "plink_bin": null,
+    "fallback_reason": null
+  },
+  "working_scale": "standardize",
+  "native_usable_rows": 31,
+  "mdat_path": "/recorded-session/workspace/outputs/274ede89701c/gwas_pair_prepare_lhj8b0pf/intermediate/gwas_pair_mdat.tsv.gz",
+  "mrdat_path": "/recorded-session/workspace/outputs/274ede89701c/gwas_pair_prepare_lhj8b0pf/intermediate/gwas_pair_mrdat_clumped.tsv.gz",
+  "c_path": "/recorded-session/workspace/outputs/274ede89701c/gwas_pair_prepare_lhj8b0pf/intermediate/gwas_pair_C.tsv",
+  "omega_path": "/recorded-session/workspace/outputs/274ede89701c/gwas_pair_prepare_lhj8b0pf/intermediate/gwas_pair_Omega.tsv",
+  "ldsc_result_path": "/recorded-session/workspace/outputs/274ede89701c/gwas_pair_prepare_lhj8b0pf/reports/gwas_pair_ldsc_result.json",
+  "exposure_label": "Hexadecanedioate levels",
+  "outcome_label": "Coronary artery disease",
+  "ancestry": "european"
+}

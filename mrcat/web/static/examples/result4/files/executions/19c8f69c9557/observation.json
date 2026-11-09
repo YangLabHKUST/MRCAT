@@ -1,0 +1,45 @@
+{
+  "execution_id": "19c8f69c9557",
+  "language": "python",
+  "status": "exited",
+  "returncode": 0,
+  "stdout": "Replication analysis summarized 2 selected study combination(s), 12 method estimate(s), and 6 method(s) for Hexadecanedioate levels to Coronary artery disease; 6 method(s) covered every analysis.\noutputs.status: ok\nmr_replication_result keys: ['input_scale', 'method', 'exposure', 'outcome', 'analyses', 'estimates', 'summary_table_path', 'forest_matrix_path', 'diagnostics', 'interpretation', 'plot_manifest', 'result_record_path']\nartifacts: [{'path': '/recorded-session/workspace/outputs/19c8f69c9557/analysis_replication_8ut6uc3c/reports/replication_estimates.tsv', 'kind': 'tsv', 'summary': 'Replication MR estimates and study provenance'}, {'path': '/recorded-session/workspace/outputs/19c8f69c9557/analysis_replication_8ut6uc3c/plots/replication_forest_matrix.png', 'kind': 'png', 'summary': 'Replication of hexadecanedioate-to-CAD estimates: original GWAS Catalog vs FinnGen outcome'}, {'path': '/recorded-session/workspace/outputs/19c8f69c9557/analysis_replication_8ut6uc3c/reports/replication_result_record.json', 'kind': 'json', 'summary': 'Replication MR result record'}]\n",
+  "stderr": "",
+  "source_path": "executions/19c8f69c9557/code.py",
+  "stdout_path": "executions/19c8f69c9557/stdout.log",
+  "stderr_path": "executions/19c8f69c9557/stderr.log",
+  "duration_seconds": 5.864,
+  "working_directory": "/recorded-session/workspace",
+  "generated_files": [
+    "workspace/outputs/19c8f69c9557/analysis_replication_8ut6uc3c/response.json",
+    "workspace/outputs/19c8f69c9557/analysis_replication_8ut6uc3c/.matplotlib/fontlist-v390.json",
+    "workspace/outputs/19c8f69c9557/analysis_replication_8ut6uc3c/reports/replication_result_record.json",
+    "workspace/outputs/19c8f69c9557/analysis_replication_8ut6uc3c/reports/replication_estimates.tsv",
+    "workspace/outputs/19c8f69c9557/analysis_replication_8ut6uc3c/plots/replication_forest_matrix.svg",
+    "workspace/outputs/19c8f69c9557/analysis_replication_8ut6uc3c/plots/replication_forest_matrix.pdf",
+    "workspace/outputs/19c8f69c9557/analysis_replication_8ut6uc3c/plots/replication_forest_matrix.png",
+    "workspace/outputs/19c8f69c9557/analysis_replication_8ut6uc3c/plots/replication_forest_matrix.tiff"
+  ],
+  "tool_results": [
+    {
+      "path": "workspace/outputs/19c8f69c9557/analysis_replication_8ut6uc3c/response.json",
+      "status": "ok",
+      "failure_class": null,
+      "summary": "Replication analysis summarized 2 selected study combination(s), 12 method estimate(s), and 6 method(s) for Hexadecanedioate levels to Coronary artery disease; 6 method(s) covered every analysis.",
+      "message": ""
+    }
+  ],
+  "result_refs": [
+    {
+      "ref": "$ref:analysis_replication_36cbfe064d7b",
+      "fields": [
+        "status",
+        "mr_replication_result"
+      ],
+      "status": "ok",
+      "tool": "analysis_replication",
+      "input_identity": {},
+      "response_path": "/recorded-session/workspace/outputs/19c8f69c9557/analysis_replication_8ut6uc3c/response.json"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "canonical_path": "/recorded-session/workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/canonical/study.canonical.tsv.gz",
+  "label": "Major coronary heart disease event",
+  "sample_size": 500348,
+  "ancestry": "finnish",
+  "min_freq": 0.05,
+  "hm3_path": "/local/jyxProject/MRCAT/database/hapmap3/w_hm3.snplist.rda",
+  "mhc_path": "/local/jyxProject/MRCAT/database/hapmap3/MHC.SNPs.rda"
+}

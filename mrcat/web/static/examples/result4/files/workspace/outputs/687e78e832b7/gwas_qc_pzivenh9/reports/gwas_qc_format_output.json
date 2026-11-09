@@ -1,0 +1,38 @@
+{
+  "summary": "gwas-qc formatting completed: min_freq=0.05; rows input=2545171, formatted=1026635, removed=1518536; input_rows=2545171, ambiguous_removed=391175, mhc_removed=10448, duplicate_removed=0, hapmap_reference_removed=1009261, hapmap_allele_mismatch_removed=38, low_maf_removed=107558, invalid_pvalue_removed=0, missing_value_removed=0, sample_size_outlier_removed=0, chi_square_outlier_removed=56, formatted_rows=1026635, input_effect_field=beta, beta_from_or=false, formatted_effect_representation=source_beta; report=/recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/reports/gwas_qc_format_report.json.",
+  "outputs": {
+    "status": "ok",
+    "gwas_qc_format_result": {
+      "formatted_path": "/recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/formatted/study.mrapss.tsv.gz",
+      "format_report_path": "/recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/reports/gwas_qc_format_report.json",
+      "label": "Hexadecanedioate levels",
+      "ancestry": "european",
+      "n_input": 2545171,
+      "n_final": 1026635,
+      "n_removed": 1518536,
+      "diagnostics": {
+        "min_freq": 0.05,
+        "formatted_rows": 1026635,
+        "input_rows": 2545171,
+        "removed_rows": 1518536,
+        "format_report_path": "/recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/reports/gwas_qc_format_report.json"
+      }
+    }
+  },
+  "details": {
+    "result_status": "ok",
+    "failure_class": null
+  },
+  "artifacts": [
+    {
+      "path": "/recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/formatted/study.mrapss.tsv.gz",
+      "kind": "tsv",
+      "summary": "analysis-ready formatted GWAS"
+    },
+    {
+      "path": "/recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/reports/gwas_qc_format_report.json",
+      "kind": "json",
+      "summary": "GWAS format report"
+    }
+  ]
+}

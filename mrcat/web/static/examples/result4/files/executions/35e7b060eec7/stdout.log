@@ -1,0 +1,256 @@
+[gwas-search] Starting trait target search: trait=hexadecanedioate levels; query=hexadecanedioate levels; sources=opengwas,gwas_catalog,pan_ukb,finngen.
+[gwas-search] Searching target.
+[gwas-search] Searching target in opengwas: query variants=5.
+[gwas-search] Fetching OpenGWAS metadata for query="hexadecanedioate levels".
+[gwas-search] Fetched OpenGWAS metadata for query="hexadecanedioate levels": results=50066.
+[gwas-search] Fetching OpenGWAS metadata for query="hexadecanedioate".
+[gwas-search] Fetched OpenGWAS metadata for query="hexadecanedioate": results=50066.
+[gwas-search] Fetching OpenGWAS metadata for query="hexadecanedioic acid".
+[gwas-search] Fetched OpenGWAS metadata for query="hexadecanedioic acid": results=50066.
+[gwas-search] Fetching OpenGWAS metadata for query="1,16-hexadecanedioic acid".
+[gwas-search] Fetched OpenGWAS metadata for query="1,16-hexadecanedioic acid": results=50066.
+[gwas-search] Fetching OpenGWAS metadata for query="hexadecane-1,16-dioic acid".
+[gwas-search] Fetched OpenGWAS metadata for query="hexadecane-1,16-dioic acid": results=50066.
+[gwas-search] Probing URL: [REDACTED_DOWNLOAD_URL]
+[gwas-search] URL probe ok with HTTP 200 in 933 ms: [REDACTED_DOWNLOAD_URL]
+[gwas-search] Probing URL: [REDACTED_DOWNLOAD_URL]
+[gwas-search] URL probe ok with HTTP 200 in 226 ms: [REDACTED_DOWNLOAD_URL]
+[gwas-search] Probing URL: [REDACTED_DOWNLOAD_URL]
+[gwas-search] URL probe ok with HTTP 200 in 234 ms: [REDACTED_DOWNLOAD_URL]
+[gwas-search] Probing URL: [REDACTED_DOWNLOAD_URL]
+[gwas-search] URL probe ok with HTTP 200 in 227 ms: [REDACTED_DOWNLOAD_URL]
+[gwas-search] Probing URL: [REDACTED_DOWNLOAD_URL]
+[gwas-search] URL probe ok with HTTP 200 in 234 ms: [REDACTED_DOWNLOAD_URL]
+[gwas-search] Probing URL: [REDACTED_DOWNLOAD_URL]
+[gwas-search] URL probe ok with HTTP 200 in 231 ms: [REDACTED_DOWNLOAD_URL]
+[gwas-search] Probing URL: [REDACTED_DOWNLOAD_URL]
+[gwas-search] URL probe ok with HTTP 200 in 234 ms: [REDACTED_DOWNLOAD_URL]
+[gwas-search] Probing URL: [REDACTED_DOWNLOAD_URL]
+[gwas-search] URL probe ok with HTTP 200 in 235 ms: [REDACTED_DOWNLOAD_URL]
+[gwas-search] Probing URL: [REDACTED_DOWNLOAD_URL]
+[gwas-search] URL probe ok with HTTP 200 in 233 ms: [REDACTED_DOWNLOAD_URL]
+[gwas-search] Probing URL: [REDACTED_DOWNLOAD_URL]
+[gwas-search] URL probe ok with HTTP 200 in 227 ms: [REDACTED_DOWNLOAD_URL]
+[gwas-search] Finished target in opengwas: candidates=23; probes=10; downloadable=10; elapsed_ms=33593.
+[gwas-search] Searching target in gwas_catalog: query variants=5.
+[gwas-search] Fetching GWAS Catalog studies for query="hexadecanedioate levels".
+[gwas-search] Catalog REST lookup failed; searching the website with unchanged query="hexadecanedioate levels".
+[gwas-search] Fetched GWAS Catalog studies for query="hexadecanedioate levels": results=5.
+[gwas-search] Fetching GWAS Catalog studies for query="hexadecanedioate".
+[gwas-search] Catalog REST lookup failed; searching the website with unchanged query="hexadecanedioate".
+[gwas-search] Fetched GWAS Catalog studies for query="hexadecanedioate": results=16.
+[gwas-search] Fetching GWAS Catalog studies for query="hexadecanedioic acid".
+[gwas-search] Catalog REST lookup failed; searching the website with unchanged query="hexadecanedioic acid".
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90243001-GCST90244000/GCST90243839/GCST90243839_buildGRCh38.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 825 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90243001-GCST90244000/GCST90243839/GCST90243839_buildGRCh38.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90243001-GCST90244000/GCST90243839/GCST90243839_buildGRCh37.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 827 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90243001-GCST90244000/GCST90243839/GCST90243839_buildGRCh37.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90243001-GCST90244000/GCST90243839/GCST90243839.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 824 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90243001-GCST90244000/GCST90243839/GCST90243839.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90243001-GCST90244000/GCST90243839/GCST90243839_buildNCBI36.tsv.gz.
+[gwas-search] URL probe ok with HTTP 200 in 203 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90243001-GCST90244000/GCST90243839/GCST90243839_buildNCBI36.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90199001-GCST90200000/GCST90199807/GCST90199807_buildGRCh38.tsv.gz.
+[gwas-search] URL probe ok with HTTP 200 in 204 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90199001-GCST90200000/GCST90199807/GCST90199807_buildGRCh38.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90201001-GCST90202000/GCST90201211/GCST90201211_buildGRCh38.tsv.gz.
+[gwas-search] URL probe ok with HTTP 200 in 206 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90201001-GCST90202000/GCST90201211/GCST90201211_buildGRCh38.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90202001-GCST90203000/GCST90202246/GCST90202246_buildGRCh38.tsv.gz.
+[gwas-search] URL probe ok with HTTP 200 in 204 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90202001-GCST90203000/GCST90202246/GCST90202246_buildGRCh38.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90203001-GCST90204000/GCST90203258/GCST90203258_buildGRCh38.tsv.gz.
+[gwas-search] URL probe ok with HTTP 200 in 204 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90203001-GCST90204000/GCST90203258/GCST90203258_buildGRCh38.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90265001-GCST90266000/GCST90265329/GCST90265329_buildGRCh38.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 410 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90265001-GCST90266000/GCST90265329/GCST90265329_buildGRCh38.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90265001-GCST90266000/GCST90265329/GCST90265329_buildGRCh37.tsv.gz.
+[gwas-search] URL probe ok with HTTP 200 in 622 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90265001-GCST90266000/GCST90265329/GCST90265329_buildGRCh37.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90615001-GCST90616000/GCST90615624/GCST90615624_buildGRCh38.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 411 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90615001-GCST90616000/GCST90615624/GCST90615624_buildGRCh38.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90615001-GCST90616000/GCST90615624/GCST90615624_buildGRCh37.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 822 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90615001-GCST90616000/GCST90615624/GCST90615624_buildGRCh37.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90615001-GCST90616000/GCST90615624/GCST90615624.tsv.gz.
+[gwas-search] URL probe ok with HTTP 200 in 621 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90615001-GCST90616000/GCST90615624/GCST90615624.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90607001-GCST90608000/GCST90607301/GCST90607301_buildGRCh38.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 416 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90607001-GCST90608000/GCST90607301/GCST90607301_buildGRCh38.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90607001-GCST90608000/GCST90607301/GCST90607301_buildGRCh37.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 824 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90607001-GCST90608000/GCST90607301/GCST90607301_buildGRCh37.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90607001-GCST90608000/GCST90607301/GCST90607301.tsv.gz.
+[gwas-search] URL probe ok with HTTP 200 in 621 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90607001-GCST90608000/GCST90607301/GCST90607301.tsv.gz.
+[gwas-search] Finished target in gwas_catalog: candidates=16; probes=8; downloadable=8; elapsed_ms=206939.
+[gwas-search] Searching target in pan_ukb: query variants=5.
+[gwas-search] Downloading Pan-UKB manifest.
+[gwas-search] Downloading Pan-UKB manifest: 1.4 MiB / 1.4 MiB (100.0%).
+[gwas-search] Completed download Pan-UKB manifest: 1.4 MiB.
+[gwas-search] Decompressing Pan-UKB manifest.
+[gwas-search] Decompressed Pan-UKB manifest: 7.5 MiB in 81 ms.
+[gwas-search] Scanning Pan-UKB manifest.
+[gwas-search] Scanned Pan-UKB manifest: rows=7223 in 181 ms.
+[gwas-search] Scanned Pan-UKB candidates: rows=7223; matches=0; elapsed_ms=3286.
+[gwas-search] Scanned Pan-UKB candidates: rows=7223; matches=0; elapsed_ms=981.
+[gwas-search] Scanned Pan-UKB candidates: rows=7223; matches=0; elapsed_ms=939.
+[gwas-search] Scanned Pan-UKB candidates: rows=7223; matches=0; elapsed_ms=958.
+[gwas-search] Scanned Pan-UKB candidates: rows=7223; matches=0; elapsed_ms=958.
+[gwas-search] Finished target in pan_ukb: candidates=0; probes=0; downloadable=0; elapsed_ms=7183.
+[gwas-search] Searching target in finngen: query variants=5.
+[gwas-search] Downloading FinnGen R12 manifest.
+[gwas-search] Downloading FinnGen R12 manifest: 0.7 MiB / 0.7 MiB (100.0%).
+[gwas-search] Completed download FinnGen R12 manifest: 0.7 MiB.
+[gwas-search] Decompressing FinnGen R12 manifest.
+[gwas-search] Decompressed FinnGen R12 manifest: 0.7 MiB in 2 ms.
+[gwas-search] Scanning FinnGen R12 manifest.
+[gwas-search] Scanned FinnGen R12 manifest: rows=2469 in 17 ms.
+[gwas-search] Finished target in finngen: candidates=0; probes=0; downloadable=0; elapsed_ms=2436.
+[gwas-search] Finished target: downloadable_candidates=18.
+[gwas-search] Writing shortlist artifact: /recorded-session/workspace/outputs/35e7b060eec7/gwas_search_j5v9g102/gwas_search_shortlists.json.
+[gwas-search] Writing human-readable shortlist workbook: /recorded-session/workspace/outputs/35e7b060eec7/gwas_search_j5v9g102/gwas_search_shortlists.xlsx.
+[gwas-search] Writing raw search artifact: /recorded-session/workspace/outputs/35e7b060eec7/gwas_search_j5v9g102/gwas_search_raw.json.
+[gwas-search] Completed target search: kind=trait; value=hexadecanedioate levels; candidates=18.
+GWAS search completed: searched OpenGWAS, GWAS Catalog, Pan-UKB, FinnGen for trait="hexadecanedioate levels"; found 18 downloadable candidate(s) (Fatty acid(12:1)_[M-H]1- levels | Octadecanoid(C12H18O3)_jasmonic acid_[M-H]1- levels | Octadecanoid(C12H20O3)_dihydrojasmonic_acid_[M-H]1- levels | 11 more).
+Output status: ok
+Target: {'kind': 'trait', 'value': 'hexadecanedioate levels', 'resolved_query': 'hexadecanedioate levels', 'aliases': ['hexadecanedioate', 'hexadecanedioic acid', '1,16-hexadecanedioic acid', 'hexadecane-1,16-dioic acid']}
+Candidate count: 18
+[
+  {
+    "source": "opengwas",
+    "study_id": "ebi-a-GCST90060092",
+    "trait": "Fatty acid(12:1)_[M-H]1- levels",
+    "sample_size": 13814,
+    "ancestry": "european",
+    "downloadable": true
+  },
+  {
+    "source": "opengwas",
+    "study_id": "ebi-a-GCST90060093",
+    "trait": "Octadecanoid(C12H18O3)_jasmonic acid_[M-H]1- levels",
+    "sample_size": 13814,
+    "ancestry": "european",
+    "downloadable": true
+  },
+  {
+    "source": "opengwas",
+    "study_id": "ebi-a-GCST90060094",
+    "trait": "Octadecanoid(C12H20O3)_dihydrojasmonic_acid_[M-H]1- levels",
+    "sample_size": 13814,
+    "ancestry": "european",
+    "downloadable": true
+  },
+  {
+    "source": "opengwas",
+    "study_id": "ebi-a-GCST90060097",
+    "trait": "Fatty acid(14:1)_[M-H]1- levels",
+    "sample_size": 13814,
+    "ancestry": "european",
+    "downloadable": true
+  },
+  {
+    "source": "opengwas",
+    "study_id": "ebi-a-GCST90060098",
+    "trait": "Fatty acid(14:0)_[M-H]1- levels",
+    "sample_size": 13814,
+    "ancestry": "european",
+    "downloadable": true
+  },
+  {
+    "source": "opengwas",
+    "study_id": "ebi-a-GCST90060099",
+    "trait": "Fatty acid(15:0)_[M-H]1- levels",
+    "sample_size": 13814,
+    "ancestry": "european",
+    "downloadable": true
+  },
+  {
+    "source": "opengwas",
+    "study_id": "ebi-a-GCST90060100",
+    "trait": "Fatty acid(16:3)_[M-H]1- levels",
+    "sample_size": 13814,
+    "ancestry": "european",
+    "downloadable": true
+  },
+  {
+    "source": "opengwas",
+    "study_id": "ebi-a-GCST90060101",
+    "trait": "Fatty acid(16:2)_[M-H]1- levels",
+    "sample_size": 13814,
+    "ancestry": "european",
+    "downloadable": true
+  },
+  {
+    "source": "opengwas",
+    "study_id": "ebi-a-GCST90060102",
+    "trait": "Fatty acid(16:1)_[M-H]1- levels",
+    "sample_size": 13814,
+    "ancestry": "european",
+    "downloadable": true
+  },
+  {
+    "source": "gwas_catalog",
+    "study_id": "GCST90199807",
+    "trait": "Hexadecanedioate (C16-DC) levels",
+    "sample_size": 8260,
+    "ancestry": "european",
+    "downloadable": true
+  },
+  {
+    "source": "gwas_catalog",
+    "study_id": "GCST90243839",
+    "trait": "Hexadecanedioate levels",
+    "sample_size": 6887,
+    "ancestry": "european",
+    "downloadable": true
+  },
+  {
+    "source": "opengwas",
+    "study_id": "met-a-711",
+    "trait": "Hexadecanedioate",
+    "sample_size": 6887,
+    "ancestry": "european",
+    "downloadable": true
+  },
+  {
+    "source": "gwas_catalog",
+    "study_id": "GCST90265329",
+    "trait": "Plasma hexadecanedioate (C16-DC) levels in chronic kidney disease",
+    "sample_size": 4959,
+    "ancestry": "european",
+    "downloadable": true
+  },
+  {
+    "source": "gwas_catalog",
+    "study_id": "GCST90615624",
+    "trait": "Hexadecanedioate (C16-DC) metabolite level",
+    "sample_size": 2392,
+    "ancestry": "european",
+    "downloadable": true
+  },
+  {
+    "source": "gwas_catalog",
+    "study_id": "GCST90607301",
+    "trait": "Hexadecanedioate (C16-DC) metabolite level",
+    "sample_size": null,
+    "ancestry": "african",
+    "downloadable": true
+  },
+  {
+    "source": "gwas_catalog",
+    "study_id": "GCST90201211",
+    "trait": "Hexadecanedioate (C16-DC) levels",
+    "sample_size": null,
+    "ancestry": "african",
+    "downloadable": true
+  },
+  {
+    "source": "gwas_catalog",
+    "study_id": "GCST90202246",
+    "trait": "Hexadecanedioate (C16-DC) levels",
+    "sample_size": null,
+    "ancestry": "east_asian",
+    "downloadable": true
+  },
+  {
+    "source": "gwas_catalog",
+    "study_id": "GCST90203258",
+    "trait": "Hexadecanedioate (C16-DC) levels",
+    "sample_size": null,
+    "ancestry": "central_south_asian",
+    "downloadable": true
+  }
+]
+Shortlist path: /recorded-session/workspace/outputs/35e7b060eec7/gwas_search_j5v9g102/gwas_search_shortlists.json
+Artifacts: [{'path': '/recorded-session/workspace/outputs/35e7b060eec7/gwas_search_j5v9g102/gwas_search_shortlists.xlsx', 'kind': 'xlsx', 'summary': 'gwas_search_shortlists.xlsx'}, {'path': '/recorded-session/workspace/outputs/35e7b060eec7/gwas_search_j5v9g102/gwas_search_shortlists.json', 'kind': 'json', 'summary': 'gwas_search_shortlists.json'}, {'path': '/recorded-session/workspace/outputs/35e7b060eec7/gwas_search_j5v9g102/gwas_search_raw.json', 'kind': 'json', 'summary': 'gwas_search_raw.json'}]

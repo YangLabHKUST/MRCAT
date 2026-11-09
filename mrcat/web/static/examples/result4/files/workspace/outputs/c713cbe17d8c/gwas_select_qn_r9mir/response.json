@@ -1,0 +1,88 @@
+{
+  "summary": "GWAS select completed: selected 1 reusable study/studies: outcome Major coronary heart disease event (FinnGen study_id=finngen_R12_I9_CHD, ancestry=finnish, n=500,348). Selection reason: The requested outcome is coronary artery disease (CAD). The closest eligible candidate is finngen_R12_I9_CHD, whose endpoint is I9_CHD (Major coronary heart disease event). Coronary heart disease is a supported equivalent synonym for coronary artery disease, and the endpoint definition is a major CHD event, which is within the requested CAD scope. The alternative finngen_R12_I9_HEARTFAIL_AND_CHD combines heart failure with CHD, broadening the endpoint beyond CAD and therefore is less faithful to the requested trait. Both candidates are Finnish, downloadable, and executable. The CHD-only candidate is selected because it preserves the requested CAD definition without adding heart failure, despite its reported trait label not literally matching the full requested phrase.",
+  "outputs": {
+    "status": "ok",
+    "gwas_selection_result": {
+      "selected_studies": {
+        "outcome": {
+          "trait": "Major coronary heart disease event",
+          "study_id": "finngen_R12_I9_CHD",
+          "source": "finngen",
+          "ancestry": "finnish",
+          "ancestry_raw": "Finnish",
+          "sample_size": 500348,
+          "n_cases": 56650,
+          "n_controls": 443698,
+          "downloadable": true,
+          "auth_required": false,
+          "requires_user_confirmation": false,
+          "study_metadata": {
+            "num_cases": "56650",
+            "num_controls": "443698",
+            "phenocode": "I9_CHD",
+            "release": "R12",
+            "endpoint": "I9_CHD",
+            "endpoint_code": "I9_CHD",
+            "population": "Finnish",
+            "download_url": "https://storage.googleapis.com/finngen-public-data-r12/summary_stats/release/finngen_R12_I9_CHD.gz",
+            "filename": "finngen_R12_I9_CHD.gz"
+          },
+          "downloadability_reason": "confirmed_url",
+          "side": "target",
+          "download_descriptor": {
+            "source": "finngen",
+            "study_id": "finngen_R12_I9_CHD",
+            "status": "ready",
+            "method": "url",
+            "requires_auth": false,
+            "url": "https://storage.googleapis.com/finngen-public-data-r12/summary_stats/release/finngen_R12_I9_CHD.gz"
+          },
+          "status": "selected"
+        }
+      },
+      "selection_reason": "The requested outcome is coronary artery disease (CAD). The closest eligible candidate is finngen_R12_I9_CHD, whose endpoint is I9_CHD (Major coronary heart disease event). Coronary heart disease is a supported equivalent synonym for coronary artery disease, and the endpoint definition is a major CHD event, which is within the requested CAD scope. The alternative finngen_R12_I9_HEARTFAIL_AND_CHD combines heart failure with CHD, broadening the endpoint beyond CAD and therefore is less faithful to the requested trait. Both candidates are Finnish, downloadable, and executable. The CHD-only candidate is selected because it preserves the requested CAD definition without adding heart failure, despite its reported trait label not literally matching the full requested phrase."
+    }
+  },
+  "details": {
+    "result_status": "ok",
+    "failure_class": null,
+    "selected_studies": {
+      "outcome": {
+        "trait": "Major coronary heart disease event",
+        "study_id": "finngen_R12_I9_CHD",
+        "source": "finngen",
+        "ancestry": "finnish",
+        "ancestry_raw": "Finnish",
+        "sample_size": 500348,
+        "n_cases": 56650,
+        "n_controls": 443698,
+        "downloadable": true,
+        "auth_required": false,
+        "requires_user_confirmation": false,
+        "study_metadata": {
+          "num_cases": "56650",
+          "num_controls": "443698",
+          "phenocode": "I9_CHD",
+          "release": "R12",
+          "endpoint": "I9_CHD",
+          "endpoint_code": "I9_CHD",
+          "population": "Finnish",
+          "download_url": "https://storage.googleapis.com/finngen-public-data-r12/summary_stats/release/finngen_R12_I9_CHD.gz",
+          "filename": "finngen_R12_I9_CHD.gz"
+        },
+        "downloadability_reason": "confirmed_url",
+        "side": "target",
+        "download_descriptor": {
+          "source": "finngen",
+          "study_id": "finngen_R12_I9_CHD",
+          "status": "ready",
+          "method": "url",
+          "requires_auth": false,
+          "url": "https://storage.googleapis.com/finngen-public-data-r12/summary_stats/release/finngen_R12_I9_CHD.gz"
+        },
+        "status": "selected"
+      }
+    },
+    "selection_reason": "The requested outcome is coronary artery disease (CAD). The closest eligible candidate is finngen_R12_I9_CHD, whose endpoint is I9_CHD (Major coronary heart disease event). Coronary heart disease is a supported equivalent synonym for coronary artery disease, and the endpoint definition is a major CHD event, which is within the requested CAD scope. The alternative finngen_R12_I9_HEARTFAIL_AND_CHD combines heart failure with CHD, broadening the endpoint beyond CAD and therefore is less faithful to the requested trait. Both candidates are Finnish, downloadable, and executable. The CHD-only candidate is selected because it preserves the requested CAD definition without adding heart failure, despite its reported trait label not literally matching the full requested phrase."
+  }
+}

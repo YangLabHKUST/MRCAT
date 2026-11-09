@@ -175,7 +175,7 @@ function renderReplicationForest(host, payload) {
       svg.appendChild(replicationForestSvg("line", { x1: zero, y1: top, x2: zero, y2: plotBottom, class: "replication-forest-zero" }));
     }
   });
-  svg.appendChild(replicationForestSvg("text", { x: labelWidth + analyses.length * panelWidth / 2, y: height - 12, "text-anchor": "middle", class: "replication-forest-axis-label" }, "MR estimate (β)"));
+  svg.appendChild(replicationForestSvg("text", { x: labelWidth + analyses.length * panelWidth / 2, y: height - 12, "text-anchor": "middle", class: "replication-forest-axis-label" }, "MR estimate (β̂)"));
 
   let active = null;
   const hide = () => {
@@ -242,5 +242,5 @@ function renderReplicationForest(host, payload) {
   viewport.addEventListener("scroll", hide);
 
   host.appendChild(notebookElement("p", "replication-forest-note", `${rows.length} estimates · Hover, tap or focus a point for effect size, 95% CI and P value. All estimates use the same filled marker; evidence is read from the interval and P values.`));
-  host.appendChild(notebookElement("p", "replication-forest-note", "Panels use independent beta axes."));
+  host.appendChild(notebookElement("p", "replication-forest-note", "Panels use independent β̂ axes."));
 }

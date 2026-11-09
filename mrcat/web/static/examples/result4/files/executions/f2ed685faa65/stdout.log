@@ -1,0 +1,27 @@
+[mr-apss] Reading upstream harmonized and clumped MRdat: /recorded-session/workspace/outputs/274ede89701c/gwas_pair_prepare_lhj8b0pf/intermediate/gwas_pair_mrdat_clumped.tsv.gz
+[input-scale] standardize: 31/31 rows have usable effects; no scale fallback
+[mr-apss] Loaded upstream MRdat: rows=31.
+[mr-apss] Reading LDSC matrices: C=/recorded-session/workspace/outputs/274ede89701c/gwas_pair_prepare_lhj8b0pf/intermediate/gwas_pair_C.tsv; Omega=/recorded-session/workspace/outputs/274ede89701c/gwas_pair_prepare_lhj8b0pf/intermediate/gwas_pair_Omega.tsv.
+[mr-apss] Loaded Estimated Background Parameters: C=[[ 1.02620784819260e+00, -4.94714764205156e-03], [-4.94714764205156e-03,  1.03799558289198e+00]]; Omega=[[9.839370183172649e-08, 5.524105577881640e-09], [5.52410557788164e-09, 2.70967348560440e-08]].
+[mr-apss] Prepared fit input: rows=31; MRdat_selection_bias_threshold=5e-05; reused upstream instruments without reselection; minimum required=4.
+[mr-apss] MR-APSS fit input summary: pval.exp_range=[4.082e-19, 4.776e-05]; b.exp_range=[-1.07663e-01, 6.00129e-02]; b.out_range=[-2.2499e-03, 2.22356e-03]; se.exp_range=[1.20499e-02, 1.20499e-02]; se.out_range=[9.26212e-04, 9.43976e-04].
+[mr-apss] Loading R package: MRAPSS.
+[mr-apss] Fitting method: MR-APSS; exposure=Hexadecanedioate levels; outcome=Coronary artery disease.
+***********************************************************
+MR test results of  Hexadecanedioate levels  on  Coronary artery disease : 
+MR-APSS: beta =  -0.0149 , beta.se =  0.01 , p-value =  1.3639e-01 . 
+Total NO. of IVs=  31 , NO. of valid IVs with foreground signals:  9.5997 . 
+***********************************************************
+[mr-apss] Completed method: MR-APSS; beta=-0.0148554543367293; se=0.00997435147238598; pval=1.3639e-01; fitted instruments=31.
+[mr-apss] MR-APSS fitted parameters: pi0=0.309667756941328; nvalid=9.59970046518117; sigma.sq=2.73508124029203e-05; tau.sq=1.7835254504439e-10; IVstrength=0.0289503801557168.
+[mr-apss] Rendering MR-APSS plot: /recorded-session/workspace/outputs/f2ed685faa65/mr_apss_sqnnzrer/plots/mrapss_mrplot.png
+[mr-apss] MR-APSS result JSON: {"method":"MR-APSS","Threshold":5e-05,"nsnp":31,"beta.hat":-0.0148554543367293,"se":0.00997435147238598,"pval":0.13639,"ci":{"level":0.95,"ranges":[{"lower":-0.0344051832226058,"upper":0.00469427454914721}]},"pi0":0.309667756941328,"nvalid":9.59970046518117,"sigma.sq":2.73508124029203e-05,"tau.sq":1.7835254504439e-10,"IVstrength":0.0289503801557168,"threshold_source":"upstream MRdat$Threshold from gwas-pair-prepare"}
+[mr-apss] Writing result record: /recorded-session/workspace/outputs/f2ed685faa65/mr_apss_sqnnzrer/reports/mrapss_result_record.json
+[mr-apss] Completed successfully.
+output_status: ok
+summary:
+Parameters used: MRdat_selection_bias_threshold=5e-05, Cor.SelectionBias=TRUE, min_instruments=4. canonicalized/formatted counts: completed upstream and reused; estimated MR-APSS parameters: reused C/Omega from gwas-pair-prepare; input MRdat: already constructed and LD-clumped upstream, rows=31; fit input instruments=31; MR-APSS selection-bias correction threshold=5e-05; fitted method: MR-APSS beta=-1.48555e-02, se=9.97435e-03, pval=1.3639e-01, nsnp=31, nvalid=9.5997e+00, pi0=3.09668e-01, sigma.sq=2.73508e-05, tau.sq=1.78353e-10, IVstrength=2.89504e-02; artifacts/plots: result_record=1, mrapss_mrplot=1.
+result_record_path: /recorded-session/workspace/outputs/f2ed685faa65/mr_apss_sqnnzrer/reports/mrapss_result_record.json
+diagnostics: {'mrdat_rows': 31, 'fit_input_rows': 31, 'selection_bias_threshold': 5e-05, 'threshold_source': 'upstream MRdat$Threshold from gwas-pair-prepare', 'exposure_label': 'Hexadecanedioate levels', 'outcome_label': 'Coronary artery disease', 'c_path': '/recorded-session/workspace/outputs/274ede89701c/gwas_pair_prepare_lhj8b0pf/intermediate/gwas_pair_C.tsv', 'omega_path': '/recorded-session/workspace/outputs/274ede89701c/gwas_pair_prepare_lhj8b0pf/intermediate/gwas_pair_Omega.tsv', 'result_plot_path': '/recorded-session/workspace/outputs/f2ed685faa65/mr_apss_sqnnzrer/plots/mrapss_mrplot.png'}
+methods: [{'method': 'MR-APSS', 'Threshold': 5e-05, 'nsnp': 31, 'beta.hat': -0.0148554543367293, 'se': 0.00997435147238598, 'pval': 0.13639, 'ci': {'level': 0.95, 'ranges': [{'lower': -0.0344051832226058, 'upper': 0.00469427454914721}]}, 'pi0': 0.309667756941328, 'nvalid': 9.59970046518117, 'sigma.sq': 2.73508124029203e-05, 'tau.sq': 1.7835254504439e-10, 'IVstrength': 0.0289503801557168, 'threshold_source': 'upstream MRdat$Threshold from gwas-pair-prepare'}]
+artifacts: [{'path': '/recorded-session/workspace/outputs/f2ed685faa65/mr_apss_sqnnzrer/reports/mrapss_result_record.json', 'kind': 'json', 'summary': 'MR-APSS result record'}, {'path': '/recorded-session/workspace/outputs/f2ed685faa65/mr_apss_sqnnzrer/plots/mrapss_mrplot.png', 'kind': 'png', 'summary': 'MR-APSS result plot'}]

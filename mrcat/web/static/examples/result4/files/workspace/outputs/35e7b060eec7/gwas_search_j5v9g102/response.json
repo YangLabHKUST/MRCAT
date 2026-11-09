@@ -1,0 +1,400 @@
+{
+  "summary": "GWAS search completed: searched OpenGWAS, GWAS Catalog, Pan-UKB, FinnGen for trait=\"hexadecanedioate levels\"; found 18 downloadable candidate(s) (Fatty acid(12:1)_[M-H]1- levels | Octadecanoid(C12H18O3)_jasmonic acid_[M-H]1- levels | Octadecanoid(C12H20O3)_dihydrojasmonic_acid_[M-H]1- levels | 11 more).",
+  "outputs": {
+    "status": "ok",
+    "gwas_search_results": {
+      "target": {
+        "kind": "trait",
+        "value": "hexadecanedioate levels",
+        "resolved_query": "hexadecanedioate levels",
+        "aliases": [
+          "hexadecanedioate",
+          "hexadecanedioic acid",
+          "1,16-hexadecanedioic acid",
+          "hexadecane-1,16-dioic acid"
+        ]
+      },
+      "sources_searched": [
+        "opengwas",
+        "gwas_catalog",
+        "pan_ukb",
+        "finngen"
+      ],
+      "search_diagnostics": {
+        "candidate_count": 18,
+        "sources_attempted": [
+          "opengwas",
+          "gwas_catalog",
+          "pan_ukb",
+          "finngen"
+        ],
+        "search_exhausted": false,
+        "preferred_sources": [],
+        "allow_source_fallback": true,
+        "source_reports": [
+          {
+            "source": "opengwas",
+            "status": "ok",
+            "n_results": 23,
+            "message": "target: searched 5 query variant(s).",
+            "metadata_endpoint": "https://api.opengwas.io/api/gwasinfo"
+          },
+          {
+            "source": "gwas_catalog",
+            "status": "partial",
+            "n_results": 16,
+            "message": "target: retained candidates; incomplete search: [{'field': 'disease_trait', 'query': 'hexadecanedioate levels', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}, {'field': 'efo_trait', 'query': 'hexadecanedioate levels', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}, {'field': 'disease_trait', 'query': 'hexadecanedioate', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}, {'field': 'efo_trait', 'query': 'hexadecanedioate', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}, {'field': 'disease_trait', 'query': 'hexadecanedioic acid', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}, {'field': 'efo_trait', 'query': 'hexadecanedioic acid', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}, {'query': 'hexadecanedioic acid', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}]",
+            "metadata_endpoint": "https://www.ebi.ac.uk/gwas/rest/api/v2/studies"
+          },
+          {
+            "source": "pan_ukb",
+            "status": "empty",
+            "n_results": 0,
+            "message": "target: no matches across 5 query variant(s).",
+            "metadata_endpoint": "https://pan-ukb-us-east-1.s3.amazonaws.com/sumstats_release/phenotype_manifest.tsv.bgz"
+          },
+          {
+            "source": "finngen",
+            "status": "empty",
+            "n_results": 0,
+            "message": "target: no matches across 5 query variant(s).",
+            "metadata_endpoint": "https://storage.googleapis.com/finngen-public-data-r12/summary_stats/finngen_R12_manifest.tsv"
+          }
+        ],
+        "source_timings": {
+          "opengwas": {
+            "status": "ok",
+            "n_results": 23,
+            "elapsed_ms": 33593,
+            "probe_total": 10,
+            "probe_success_count": 10,
+            "probe_failure_count": 0,
+            "cache_scope": "process_only",
+            "session_cache_hits": 0,
+            "session_cache_misses": 0,
+            "matched_candidate_count": 7,
+            "pre_filter_candidate_count": 329,
+            "relevance_rejected_count": 322,
+            "probe_budget_initial": 10,
+            "probe_budget_final": 10,
+            "probe_budget": 10,
+            "probe_count": 10,
+            "raw_candidate_count": 28,
+            "ancestry_filter_drop_count": 0,
+            "unique_candidate_count": 23,
+            "executable_candidate_count": 10,
+            "dedup_drop_count": 5
+          },
+          "gwas_catalog": {
+            "status": "partial",
+            "n_results": 16,
+            "elapsed_ms": 206939,
+            "probe_total": 8,
+            "probe_success_count": 8,
+            "probe_failure_count": 0,
+            "cache_scope": "process_only",
+            "session_cache_hits": 0,
+            "session_cache_misses": 0,
+            "search_complete": false,
+            "endpoint_failures": [
+              {
+                "field": "disease_trait",
+                "query": "hexadecanedioate levels",
+                "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+              },
+              {
+                "field": "efo_trait",
+                "query": "hexadecanedioate levels",
+                "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+              },
+              {
+                "field": "disease_trait",
+                "query": "hexadecanedioate",
+                "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+              },
+              {
+                "field": "efo_trait",
+                "query": "hexadecanedioate",
+                "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+              },
+              {
+                "field": "disease_trait",
+                "query": "hexadecanedioic acid",
+                "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+              },
+              {
+                "field": "efo_trait",
+                "query": "hexadecanedioic acid",
+                "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+              },
+              {
+                "query": "hexadecanedioic acid",
+                "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+              }
+            ],
+            "fallback_transport": "catalog_website",
+            "website_candidate_count": 0,
+            "matched_candidate_count": 16,
+            "matched_row_count": 16,
+            "unique_candidate_count": 16,
+            "probe_budget": 12,
+            "probe_count": 8,
+            "raw_candidate_count": 21,
+            "ancestry_filter_drop_count": 0,
+            "executable_candidate_count": 8,
+            "dedup_drop_count": 5
+          },
+          "pan_ukb": {
+            "status": "empty",
+            "n_results": 0,
+            "elapsed_ms": 958,
+            "probe_total": 0,
+            "probe_success_count": 0,
+            "probe_failure_count": 0,
+            "cache_scope": "process_only",
+            "session_cache_hits": 0,
+            "session_cache_misses": 0,
+            "manifest_path": "/recorded-session/workspace/outputs/35e7b060eec7/gwas_search_j5v9g102/pan_ukb_manifest.tsv.bgz",
+            "manifest_url": "https://pan-ukb-us-east-1.s3.amazonaws.com/sumstats_release/phenotype_manifest.tsv.bgz",
+            "downloaded_bytes": 1420758,
+            "decompressed_bytes": 7813557,
+            "rows_scanned": 7223,
+            "matched_row_count": 0,
+            "matches_found": 0,
+            "unique_candidate_count": 0,
+            "family_capped_count": 0,
+            "probe_budget": 12,
+            "probe_count": 0,
+            "raw_candidate_count": 0,
+            "ancestry_filter_drop_count": 0,
+            "executable_candidate_count": 0,
+            "dedup_drop_count": 0
+          },
+          "finngen": {
+            "status": "empty",
+            "n_results": 0,
+            "elapsed_ms": 2436,
+            "probe_total": 0,
+            "probe_success_count": 0,
+            "probe_failure_count": 0,
+            "cache_scope": "process_only",
+            "session_cache_hits": 0,
+            "session_cache_misses": 0,
+            "release": "R12",
+            "manifest_url": "https://storage.googleapis.com/finngen-public-data-r12/summary_stats/finngen_R12_manifest.tsv",
+            "rows_scanned": 2469,
+            "matched_candidate_count": 0,
+            "probe_budget": 20,
+            "probe_count": 0,
+            "search_mode": "manifest",
+            "raw_candidate_count": 0,
+            "ancestry_filter_drop_count": 0,
+            "unique_candidate_count": 0,
+            "executable_candidate_count": 0,
+            "dedup_drop_count": 0
+          }
+        }
+      },
+      "shortlists_path": "/recorded-session/workspace/outputs/35e7b060eec7/gwas_search_j5v9g102/gwas_search_shortlists.json",
+      "shortlists_xlsx_path": "/recorded-session/workspace/outputs/35e7b060eec7/gwas_search_j5v9g102/gwas_search_shortlists.xlsx"
+    }
+  },
+  "details": {
+    "result_status": "ok",
+    "failure_class": null,
+    "candidate_count": 18,
+    "search_exhausted": false,
+    "search_diagnostics": {
+      "candidate_count": 18,
+      "sources_attempted": [
+        "opengwas",
+        "gwas_catalog",
+        "pan_ukb",
+        "finngen"
+      ],
+      "search_exhausted": false,
+      "preferred_sources": [],
+      "allow_source_fallback": true,
+      "source_reports": [
+        {
+          "source": "opengwas",
+          "status": "ok",
+          "n_results": 23,
+          "message": "target: searched 5 query variant(s).",
+          "metadata_endpoint": "https://api.opengwas.io/api/gwasinfo"
+        },
+        {
+          "source": "gwas_catalog",
+          "status": "partial",
+          "n_results": 16,
+          "message": "target: retained candidates; incomplete search: [{'field': 'disease_trait', 'query': 'hexadecanedioate levels', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}, {'field': 'efo_trait', 'query': 'hexadecanedioate levels', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}, {'field': 'disease_trait', 'query': 'hexadecanedioate', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}, {'field': 'efo_trait', 'query': 'hexadecanedioate', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}, {'field': 'disease_trait', 'query': 'hexadecanedioic acid', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}, {'field': 'efo_trait', 'query': 'hexadecanedioic acid', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}, {'query': 'hexadecanedioic acid', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}]",
+          "metadata_endpoint": "https://www.ebi.ac.uk/gwas/rest/api/v2/studies"
+        },
+        {
+          "source": "pan_ukb",
+          "status": "empty",
+          "n_results": 0,
+          "message": "target: no matches across 5 query variant(s).",
+          "metadata_endpoint": "https://pan-ukb-us-east-1.s3.amazonaws.com/sumstats_release/phenotype_manifest.tsv.bgz"
+        },
+        {
+          "source": "finngen",
+          "status": "empty",
+          "n_results": 0,
+          "message": "target: no matches across 5 query variant(s).",
+          "metadata_endpoint": "https://storage.googleapis.com/finngen-public-data-r12/summary_stats/finngen_R12_manifest.tsv"
+        }
+      ],
+      "source_timings": {
+        "opengwas": {
+          "status": "ok",
+          "n_results": 23,
+          "elapsed_ms": 33593,
+          "probe_total": 10,
+          "probe_success_count": 10,
+          "probe_failure_count": 0,
+          "cache_scope": "process_only",
+          "session_cache_hits": 0,
+          "session_cache_misses": 0,
+          "matched_candidate_count": 7,
+          "pre_filter_candidate_count": 329,
+          "relevance_rejected_count": 322,
+          "probe_budget_initial": 10,
+          "probe_budget_final": 10,
+          "probe_budget": 10,
+          "probe_count": 10,
+          "raw_candidate_count": 28,
+          "ancestry_filter_drop_count": 0,
+          "unique_candidate_count": 23,
+          "executable_candidate_count": 10,
+          "dedup_drop_count": 5
+        },
+        "gwas_catalog": {
+          "status": "partial",
+          "n_results": 16,
+          "elapsed_ms": 206939,
+          "probe_total": 8,
+          "probe_success_count": 8,
+          "probe_failure_count": 0,
+          "cache_scope": "process_only",
+          "session_cache_hits": 0,
+          "session_cache_misses": 0,
+          "search_complete": false,
+          "endpoint_failures": [
+            {
+              "field": "disease_trait",
+              "query": "hexadecanedioate levels",
+              "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+            },
+            {
+              "field": "efo_trait",
+              "query": "hexadecanedioate levels",
+              "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+            },
+            {
+              "field": "disease_trait",
+              "query": "hexadecanedioate",
+              "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+            },
+            {
+              "field": "efo_trait",
+              "query": "hexadecanedioate",
+              "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+            },
+            {
+              "field": "disease_trait",
+              "query": "hexadecanedioic acid",
+              "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+            },
+            {
+              "field": "efo_trait",
+              "query": "hexadecanedioic acid",
+              "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+            },
+            {
+              "query": "hexadecanedioic acid",
+              "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+            }
+          ],
+          "fallback_transport": "catalog_website",
+          "website_candidate_count": 0,
+          "matched_candidate_count": 16,
+          "matched_row_count": 16,
+          "unique_candidate_count": 16,
+          "probe_budget": 12,
+          "probe_count": 8,
+          "raw_candidate_count": 21,
+          "ancestry_filter_drop_count": 0,
+          "executable_candidate_count": 8,
+          "dedup_drop_count": 5
+        },
+        "pan_ukb": {
+          "status": "empty",
+          "n_results": 0,
+          "elapsed_ms": 958,
+          "probe_total": 0,
+          "probe_success_count": 0,
+          "probe_failure_count": 0,
+          "cache_scope": "process_only",
+          "session_cache_hits": 0,
+          "session_cache_misses": 0,
+          "manifest_path": "/recorded-session/workspace/outputs/35e7b060eec7/gwas_search_j5v9g102/pan_ukb_manifest.tsv.bgz",
+          "manifest_url": "https://pan-ukb-us-east-1.s3.amazonaws.com/sumstats_release/phenotype_manifest.tsv.bgz",
+          "downloaded_bytes": 1420758,
+          "decompressed_bytes": 7813557,
+          "rows_scanned": 7223,
+          "matched_row_count": 0,
+          "matches_found": 0,
+          "unique_candidate_count": 0,
+          "family_capped_count": 0,
+          "probe_budget": 12,
+          "probe_count": 0,
+          "raw_candidate_count": 0,
+          "ancestry_filter_drop_count": 0,
+          "executable_candidate_count": 0,
+          "dedup_drop_count": 0
+        },
+        "finngen": {
+          "status": "empty",
+          "n_results": 0,
+          "elapsed_ms": 2436,
+          "probe_total": 0,
+          "probe_success_count": 0,
+          "probe_failure_count": 0,
+          "cache_scope": "process_only",
+          "session_cache_hits": 0,
+          "session_cache_misses": 0,
+          "release": "R12",
+          "manifest_url": "https://storage.googleapis.com/finngen-public-data-r12/summary_stats/finngen_R12_manifest.tsv",
+          "rows_scanned": 2469,
+          "matched_candidate_count": 0,
+          "probe_budget": 20,
+          "probe_count": 0,
+          "search_mode": "manifest",
+          "raw_candidate_count": 0,
+          "ancestry_filter_drop_count": 0,
+          "unique_candidate_count": 0,
+          "executable_candidate_count": 0,
+          "dedup_drop_count": 0
+        }
+      }
+    }
+  },
+  "artifacts": [
+    {
+      "path": "/recorded-session/workspace/outputs/35e7b060eec7/gwas_search_j5v9g102/gwas_search_shortlists.xlsx",
+      "kind": "xlsx",
+      "summary": "gwas_search_shortlists.xlsx"
+    },
+    {
+      "path": "/recorded-session/workspace/outputs/35e7b060eec7/gwas_search_j5v9g102/gwas_search_shortlists.json",
+      "kind": "json",
+      "summary": "gwas_search_shortlists.json"
+    },
+    {
+      "path": "/recorded-session/workspace/outputs/35e7b060eec7/gwas_search_j5v9g102/gwas_search_raw.json",
+      "kind": "json",
+      "summary": "gwas_search_raw.json"
+    }
+  ]
+}

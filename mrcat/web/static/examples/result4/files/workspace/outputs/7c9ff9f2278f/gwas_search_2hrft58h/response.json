@@ -1,0 +1,390 @@
+{
+  "summary": "GWAS search completed: searched OpenGWAS, GWAS Catalog, Pan-UKB, FinnGen for trait=\"coronary artery disease\"; found 22 downloadable candidate(s) (Coronary artery disease | Major coronary heart disease event | Heart failure and coronary heart disease | 1 more).",
+  "outputs": {
+    "status": "ok",
+    "gwas_search_results": {
+      "target": {
+        "kind": "trait",
+        "value": "coronary artery disease",
+        "resolved_query": "coronary artery disease",
+        "aliases": [
+          "coronary heart disease",
+          "CAD"
+        ]
+      },
+      "sources_searched": [
+        "opengwas",
+        "gwas_catalog",
+        "pan_ukb",
+        "finngen"
+      ],
+      "search_diagnostics": {
+        "candidate_count": 22,
+        "sources_attempted": [
+          "opengwas",
+          "gwas_catalog",
+          "pan_ukb",
+          "finngen"
+        ],
+        "search_exhausted": false,
+        "preferred_sources": [],
+        "allow_source_fallback": true,
+        "source_reports": [
+          {
+            "source": "opengwas",
+            "status": "ok",
+            "n_results": 34,
+            "message": "target: searched 3 query variant(s).",
+            "metadata_endpoint": "https://api.opengwas.io/api/gwasinfo"
+          },
+          {
+            "source": "gwas_catalog",
+            "status": "partial",
+            "n_results": 99,
+            "message": "target: retained candidates; incomplete search: [{'field': 'disease_trait', 'query': 'coronary artery disease', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}, {'field': 'efo_trait', 'query': 'coronary artery disease', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}, {'field': 'disease_trait', 'query': 'coronary heart disease', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}, {'field': 'efo_trait', 'query': 'coronary heart disease', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}, {'field': 'disease_trait', 'query': 'CAD', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}, {'field': 'efo_trait', 'query': 'CAD', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}]",
+            "metadata_endpoint": "https://www.ebi.ac.uk/gwas/rest/api/v2/studies"
+          },
+          {
+            "source": "pan_ukb",
+            "status": "empty",
+            "n_results": 0,
+            "message": "target: no matches across 3 query variant(s).",
+            "metadata_endpoint": "https://pan-ukb-us-east-1.s3.amazonaws.com/sumstats_release/phenotype_manifest.tsv.bgz"
+          },
+          {
+            "source": "finngen",
+            "status": "ok",
+            "n_results": 2,
+            "message": "target: searched 3 query variant(s).",
+            "metadata_endpoint": "https://storage.googleapis.com/finngen-public-data-r12/summary_stats/finngen_R12_manifest.tsv"
+          }
+        ],
+        "source_timings": {
+          "opengwas": {
+            "status": "ok",
+            "n_results": 34,
+            "elapsed_ms": 33109,
+            "probe_total": 10,
+            "probe_success_count": 10,
+            "probe_failure_count": 0,
+            "cache_scope": "process_only",
+            "session_cache_hits": 0,
+            "session_cache_misses": 0,
+            "matched_candidate_count": 2,
+            "pre_filter_candidate_count": 46,
+            "relevance_rejected_count": 44,
+            "probe_budget_initial": 10,
+            "probe_budget_final": 10,
+            "probe_budget": 10,
+            "probe_count": 10,
+            "raw_candidate_count": 42,
+            "ancestry_filter_drop_count": 0,
+            "unique_candidate_count": 34,
+            "executable_candidate_count": 10,
+            "dedup_drop_count": 8
+          },
+          "gwas_catalog": {
+            "status": "partial",
+            "n_results": 99,
+            "elapsed_ms": 440055,
+            "probe_total": 12,
+            "probe_success_count": 10,
+            "probe_failure_count": 2,
+            "cache_scope": "process_only",
+            "session_cache_hits": 0,
+            "session_cache_misses": 0,
+            "search_complete": false,
+            "endpoint_failures": [
+              {
+                "field": "disease_trait",
+                "query": "coronary artery disease",
+                "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+              },
+              {
+                "field": "efo_trait",
+                "query": "coronary artery disease",
+                "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+              },
+              {
+                "field": "disease_trait",
+                "query": "coronary heart disease",
+                "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+              },
+              {
+                "field": "efo_trait",
+                "query": "coronary heart disease",
+                "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+              },
+              {
+                "field": "disease_trait",
+                "query": "CAD",
+                "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+              },
+              {
+                "field": "efo_trait",
+                "query": "CAD",
+                "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+              }
+            ],
+            "fallback_transport": "catalog_website",
+            "website_candidate_count": 569,
+            "matched_candidate_count": 99,
+            "matched_row_count": 99,
+            "unique_candidate_count": 99,
+            "probe_budget": 12,
+            "probe_count": 12,
+            "raw_candidate_count": 99,
+            "ancestry_filter_drop_count": 0,
+            "executable_candidate_count": 10,
+            "dedup_drop_count": 0
+          },
+          "pan_ukb": {
+            "status": "empty",
+            "n_results": 0,
+            "elapsed_ms": 896,
+            "probe_total": 0,
+            "probe_success_count": 0,
+            "probe_failure_count": 0,
+            "cache_scope": "process_only",
+            "session_cache_hits": 0,
+            "session_cache_misses": 0,
+            "manifest_path": "/recorded-session/workspace/outputs/7c9ff9f2278f/gwas_search_2hrft58h/pan_ukb_manifest.tsv.bgz",
+            "manifest_url": "https://pan-ukb-us-east-1.s3.amazonaws.com/sumstats_release/phenotype_manifest.tsv.bgz",
+            "downloaded_bytes": 1420758,
+            "decompressed_bytes": 7813557,
+            "rows_scanned": 7223,
+            "matched_row_count": 0,
+            "matches_found": 0,
+            "unique_candidate_count": 0,
+            "family_capped_count": 0,
+            "probe_budget": 12,
+            "probe_count": 0,
+            "raw_candidate_count": 0,
+            "ancestry_filter_drop_count": 0,
+            "executable_candidate_count": 0,
+            "dedup_drop_count": 0
+          },
+          "finngen": {
+            "status": "ok",
+            "n_results": 2,
+            "elapsed_ms": 3990,
+            "probe_total": 2,
+            "probe_success_count": 2,
+            "probe_failure_count": 0,
+            "cache_scope": "process_only",
+            "session_cache_hits": 0,
+            "session_cache_misses": 0,
+            "release": "R12",
+            "manifest_url": "https://storage.googleapis.com/finngen-public-data-r12/summary_stats/finngen_R12_manifest.tsv",
+            "rows_scanned": 2469,
+            "matched_candidate_count": 0,
+            "probe_budget": 20,
+            "probe_count": 2,
+            "search_mode": "manifest",
+            "raw_candidate_count": 2,
+            "ancestry_filter_drop_count": 0,
+            "unique_candidate_count": 2,
+            "executable_candidate_count": 2,
+            "dedup_drop_count": 0
+          }
+        }
+      },
+      "shortlists_path": "/recorded-session/workspace/outputs/7c9ff9f2278f/gwas_search_2hrft58h/gwas_search_shortlists.json",
+      "shortlists_xlsx_path": "/recorded-session/workspace/outputs/7c9ff9f2278f/gwas_search_2hrft58h/gwas_search_shortlists.xlsx"
+    }
+  },
+  "details": {
+    "result_status": "ok",
+    "failure_class": null,
+    "candidate_count": 22,
+    "search_exhausted": false,
+    "search_diagnostics": {
+      "candidate_count": 22,
+      "sources_attempted": [
+        "opengwas",
+        "gwas_catalog",
+        "pan_ukb",
+        "finngen"
+      ],
+      "search_exhausted": false,
+      "preferred_sources": [],
+      "allow_source_fallback": true,
+      "source_reports": [
+        {
+          "source": "opengwas",
+          "status": "ok",
+          "n_results": 34,
+          "message": "target: searched 3 query variant(s).",
+          "metadata_endpoint": "https://api.opengwas.io/api/gwasinfo"
+        },
+        {
+          "source": "gwas_catalog",
+          "status": "partial",
+          "n_results": 99,
+          "message": "target: retained candidates; incomplete search: [{'field': 'disease_trait', 'query': 'coronary artery disease', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}, {'field': 'efo_trait', 'query': 'coronary artery disease', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}, {'field': 'disease_trait', 'query': 'coronary heart disease', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}, {'field': 'efo_trait', 'query': 'coronary heart disease', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}, {'field': 'disease_trait', 'query': 'CAD', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}, {'field': 'efo_trait', 'query': 'CAD', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}]",
+          "metadata_endpoint": "https://www.ebi.ac.uk/gwas/rest/api/v2/studies"
+        },
+        {
+          "source": "pan_ukb",
+          "status": "empty",
+          "n_results": 0,
+          "message": "target: no matches across 3 query variant(s).",
+          "metadata_endpoint": "https://pan-ukb-us-east-1.s3.amazonaws.com/sumstats_release/phenotype_manifest.tsv.bgz"
+        },
+        {
+          "source": "finngen",
+          "status": "ok",
+          "n_results": 2,
+          "message": "target: searched 3 query variant(s).",
+          "metadata_endpoint": "https://storage.googleapis.com/finngen-public-data-r12/summary_stats/finngen_R12_manifest.tsv"
+        }
+      ],
+      "source_timings": {
+        "opengwas": {
+          "status": "ok",
+          "n_results": 34,
+          "elapsed_ms": 33109,
+          "probe_total": 10,
+          "probe_success_count": 10,
+          "probe_failure_count": 0,
+          "cache_scope": "process_only",
+          "session_cache_hits": 0,
+          "session_cache_misses": 0,
+          "matched_candidate_count": 2,
+          "pre_filter_candidate_count": 46,
+          "relevance_rejected_count": 44,
+          "probe_budget_initial": 10,
+          "probe_budget_final": 10,
+          "probe_budget": 10,
+          "probe_count": 10,
+          "raw_candidate_count": 42,
+          "ancestry_filter_drop_count": 0,
+          "unique_candidate_count": 34,
+          "executable_candidate_count": 10,
+          "dedup_drop_count": 8
+        },
+        "gwas_catalog": {
+          "status": "partial",
+          "n_results": 99,
+          "elapsed_ms": 440055,
+          "probe_total": 12,
+          "probe_success_count": 10,
+          "probe_failure_count": 2,
+          "cache_scope": "process_only",
+          "session_cache_hits": 0,
+          "session_cache_misses": 0,
+          "search_complete": false,
+          "endpoint_failures": [
+            {
+              "field": "disease_trait",
+              "query": "coronary artery disease",
+              "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+            },
+            {
+              "field": "efo_trait",
+              "query": "coronary artery disease",
+              "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+            },
+            {
+              "field": "disease_trait",
+              "query": "coronary heart disease",
+              "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+            },
+            {
+              "field": "efo_trait",
+              "query": "coronary heart disease",
+              "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+            },
+            {
+              "field": "disease_trait",
+              "query": "CAD",
+              "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+            },
+            {
+              "field": "efo_trait",
+              "query": "CAD",
+              "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+            }
+          ],
+          "fallback_transport": "catalog_website",
+          "website_candidate_count": 569,
+          "matched_candidate_count": 99,
+          "matched_row_count": 99,
+          "unique_candidate_count": 99,
+          "probe_budget": 12,
+          "probe_count": 12,
+          "raw_candidate_count": 99,
+          "ancestry_filter_drop_count": 0,
+          "executable_candidate_count": 10,
+          "dedup_drop_count": 0
+        },
+        "pan_ukb": {
+          "status": "empty",
+          "n_results": 0,
+          "elapsed_ms": 896,
+          "probe_total": 0,
+          "probe_success_count": 0,
+          "probe_failure_count": 0,
+          "cache_scope": "process_only",
+          "session_cache_hits": 0,
+          "session_cache_misses": 0,
+          "manifest_path": "/recorded-session/workspace/outputs/7c9ff9f2278f/gwas_search_2hrft58h/pan_ukb_manifest.tsv.bgz",
+          "manifest_url": "https://pan-ukb-us-east-1.s3.amazonaws.com/sumstats_release/phenotype_manifest.tsv.bgz",
+          "downloaded_bytes": 1420758,
+          "decompressed_bytes": 7813557,
+          "rows_scanned": 7223,
+          "matched_row_count": 0,
+          "matches_found": 0,
+          "unique_candidate_count": 0,
+          "family_capped_count": 0,
+          "probe_budget": 12,
+          "probe_count": 0,
+          "raw_candidate_count": 0,
+          "ancestry_filter_drop_count": 0,
+          "executable_candidate_count": 0,
+          "dedup_drop_count": 0
+        },
+        "finngen": {
+          "status": "ok",
+          "n_results": 2,
+          "elapsed_ms": 3990,
+          "probe_total": 2,
+          "probe_success_count": 2,
+          "probe_failure_count": 0,
+          "cache_scope": "process_only",
+          "session_cache_hits": 0,
+          "session_cache_misses": 0,
+          "release": "R12",
+          "manifest_url": "https://storage.googleapis.com/finngen-public-data-r12/summary_stats/finngen_R12_manifest.tsv",
+          "rows_scanned": 2469,
+          "matched_candidate_count": 0,
+          "probe_budget": 20,
+          "probe_count": 2,
+          "search_mode": "manifest",
+          "raw_candidate_count": 2,
+          "ancestry_filter_drop_count": 0,
+          "unique_candidate_count": 2,
+          "executable_candidate_count": 2,
+          "dedup_drop_count": 0
+        }
+      }
+    }
+  },
+  "artifacts": [
+    {
+      "path": "/recorded-session/workspace/outputs/7c9ff9f2278f/gwas_search_2hrft58h/gwas_search_shortlists.xlsx",
+      "kind": "xlsx",
+      "summary": "gwas_search_shortlists.xlsx"
+    },
+    {
+      "path": "/recorded-session/workspace/outputs/7c9ff9f2278f/gwas_search_2hrft58h/gwas_search_shortlists.json",
+      "kind": "json",
+      "summary": "gwas_search_shortlists.json"
+    },
+    {
+      "path": "/recorded-session/workspace/outputs/7c9ff9f2278f/gwas_search_2hrft58h/gwas_search_raw.json",
+      "kind": "json",
+      "summary": "gwas_search_raw.json"
+    }
+  ]
+}

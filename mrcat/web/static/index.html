@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>MRCAT</title>
-    <link rel="stylesheet" href="/static/styles.css?v=mrcat-frontend-cleanup-20261102" />
+    <link rel="stylesheet" href="/static/styles.css?v=result4-20261109" />
   </head>
   <body>
     <main class="app-shell">
@@ -16,6 +16,10 @@
 
         <section class="sidebar-tools">
           <button id="new-chat-button" class="primary-button" type="button">New Chat</button>
+          <button id="result4-example-button" class="example-entry" type="button">
+            <strong>Result 4 · Hexadecanedioate → CAD</strong>
+            <span>View a completed session · No API key needed</span>
+          </button>
           <button id="fork-session-button" type="button" disabled
             title="Copy this session and its files. Continue independently while preserving the original.">Continue in a copy</button>
           <label for="provider-select">Model provider</label>
@@ -60,6 +64,8 @@
           </div>
           <div id="status-chip" class="status-chip">idle</div>
         </header>
+
+        <nav id="example-navigation" class="example-navigation" aria-label="Example stages" hidden></nav>
 
         <article id="study-setup-panel" class="panel study-setup-panel is-collapsed">
           <div class="panel-head">
@@ -146,7 +152,8 @@
     <script src="/static/primary-scatter.js?v=mrcat-readable-20261029"></script>
     <script src="/static/replication-forest.js?v=mrcat-readable-20261029"></script>
     <script src="/static/qc-explorer.js?v=mrcat-readable-20261029"></script>
-    <script src="/static/notebook.js?v=mrcat-session-api-20261102"></script>
-    <script src="/static/app.js?v=mrcat-frontend-cleanup-20261102"></script>
+    <script src="/static/notebook.js?v=mrcat-png-only-20261109"></script>
+    <script src="/static/examples.js?v=result4-20261109"></script>
+    <script src="/static/app.js?v=result4-20261109"></script>
   </body>
 </html>

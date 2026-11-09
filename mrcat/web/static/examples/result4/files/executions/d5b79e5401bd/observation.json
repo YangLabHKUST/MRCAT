@@ -1,0 +1,53 @@
+{
+  "execution_id": "d5b79e5401bd",
+  "language": "python",
+  "status": "exited",
+  "returncode": 0,
+  "stdout": "Using primary result record: /recorded-session/workspace/outputs/cc5ac7326e22/mr_primary_tizeuu7q/reports/mr_primary_result_record.json\n[analysis-sensitivity] Running standard sensitivity diagnostics on instruments=10.\n[analysis-sensitivity] Steiger status=unavailable; exp: specify type as quantitative or binary; filtering=not_requested.\n[analysis-sensitivity] Running MR-PRESSO: requested simulations=1000; NbDistribution=1000; SignifThreshold=0.05; seed=1234.\nnull device \n          1 \n[analysis-sensitivity] Completed successfully.\n\nSummary:\nanalysis-sensitivity completed: instruments=10; heterogeneity_tests=2; egger_intercept_p=0.249776799773281; mr_presso_outlier_status=not_tested; mr_presso_outliers=NA; mr_presso_simulations_requested=1000; mr_presso_simulations_used=1000; steiger=unavailable; steiger_filtering=not_requested; detailed_plots_skipped=0.\n\nSensitivity output keys: ['method', 'input_scale', 'selected_mrdat_path', 'primary_result_record_path', 'heterogeneity', 'pleiotropy', 'leave_one_out', 'mr_presso', 'steiger', 'reports', 'plot_manifest', 'result_record_path']\nSteiger status: unavailable\nResult record path: /recorded-session/workspace/outputs/d5b79e5401bd/analysis_sensitivity_d0xk5hvh/reports/mr_sensitivity_result_record.json\nArtifacts:\n - {'path': '/recorded-session/workspace/outputs/d5b79e5401bd/analysis_sensitivity_d0xk5hvh/reports/mr_sensitivity_result_record.json', 'kind': 'json', 'summary': 'MR sensitivity result record'}\n - {'path': '/recorded-session/workspace/outputs/d5b79e5401bd/analysis_sensitivity_d0xk5hvh/reports/sensitivity_mr_presso_raw.rds', 'kind': 'rds', 'summary': 'Unmodified MR-PRESSO package result'}\n - {'path': '/recorded-session/workspace/outputs/d5b79e5401bd/analysis_sensitivity_d0xk5hvh/reports/sensitivity_heterogeneity.tsv', 'kind': 'tsv', 'summary': 'heterogeneity sensitivity report'}\n - {'path': '/recorded-session/workspace/outputs/d5b79e5401bd/analysis_sensitivity_d0xk5hvh/reports/sensitivity_pleiotropy.tsv', 'kind': 'tsv', 'summary': 'pleiotropy sensitivity report'}\n - {'path': '/recorded-session/workspace/outputs/d5b79e5401bd/analysis_sensitivity_d0xk5hvh/reports/sensitivity_leave_one_out.tsv', 'kind': 'tsv', 'summary': 'leave_one_out sensitivity report'}\n - {'path': '/recorded-session/workspace/outputs/d5b79e5401bd/analysis_sensitivity_d0xk5hvh/reports/sensitivity_single_snp.tsv', 'kind': 'tsv', 'summary': 'single_snp sensitivity report'}\n - {'path': '/recorded-session/workspace/outputs/d5b79e5401bd/analysis_sensitivity_d0xk5hvh/reports/sensitivity_mr_presso.tsv', 'kind': 'tsv', 'summary': 'mr_presso sensitivity report'}\n - {'path': '/recorded-session/workspace/outputs/d5b79e5401bd/analysis_sensitivity_d0xk5hvh/plots/sensitivity_single_snp_forest.png', 'kind': 'png', 'summary': 'Single-SNP forest plot'}\n - {'path': '/recorded-session/workspace/outputs/d5b79e5401bd/analysis_sensitivity_d0xk5hvh/plots/sensitivity_funnel.png', 'kind': 'png', 'summary': 'Funnel plot'}\n - {'path': '/recorded-session/workspace/outputs/d5b79e5401bd/analysis_sensitivity_d0xk5hvh/plots/sensitivity_leave_one_out.png', 'kind': 'png', 'summary': 'Leave-one-out plot'}\n - {'path': '/recorded-session/workspace/outputs/d5b79e5401bd/analysis_sensitivity_d0xk5hvh/plots/sensitivity_presso_outlier.png', 'kind': 'png', 'summary': 'MR-PRESSO outlier plot'}\n",
+  "stderr": "Warning messages:\n1: package ‘data.table’ was built under R version 4.4.3 \n2: package ‘jsonlite’ was built under R version 4.4.3 \n3: package ‘ggplot2’ was built under R version 4.4.3 \nWarning message:\nIn MRPRESSO::mr_presso(BetaOutcome = \"b.out\", BetaExposure = \"b.exp\",  :\n  No outlier were identified, therefore the results for the outlier-corrected MR are set to NA\n`height` was translated to `width`.\nWarning message:\n`geom_errorbarh()` was deprecated in ggplot2 4.0.0.\nℹ Please use the `orientation` argument of `geom_errorbar()` instead. \nWarning message:\nRemoved 1 row containing missing values or values outside the scale range\n(`geom_point()`). \n",
+  "source_path": "executions/d5b79e5401bd/code.py",
+  "stdout_path": "executions/d5b79e5401bd/stdout.log",
+  "stderr_path": "executions/d5b79e5401bd/stderr.log",
+  "duration_seconds": 17.025,
+  "working_directory": "/recorded-session/workspace",
+  "generated_files": [
+    "workspace/outputs/d5b79e5401bd/analysis_sensitivity_d0xk5hvh/mr_sensitivity_input.json",
+    "workspace/outputs/d5b79e5401bd/analysis_sensitivity_d0xk5hvh/response.json",
+    "workspace/outputs/d5b79e5401bd/analysis_sensitivity_d0xk5hvh/reports/sensitivity_mr_presso.tsv",
+    "workspace/outputs/d5b79e5401bd/analysis_sensitivity_d0xk5hvh/reports/sensitivity_mr_presso_raw.rds",
+    "workspace/outputs/d5b79e5401bd/analysis_sensitivity_d0xk5hvh/reports/mr_sensitivity_result_record.json",
+    "workspace/outputs/d5b79e5401bd/analysis_sensitivity_d0xk5hvh/reports/sensitivity_heterogeneity.tsv",
+    "workspace/outputs/d5b79e5401bd/analysis_sensitivity_d0xk5hvh/reports/sensitivity_pleiotropy.tsv",
+    "workspace/outputs/d5b79e5401bd/analysis_sensitivity_d0xk5hvh/reports/sensitivity_leave_one_out.tsv",
+    "workspace/outputs/d5b79e5401bd/analysis_sensitivity_d0xk5hvh/reports/mr_sensitivity_output.json",
+    "workspace/outputs/d5b79e5401bd/analysis_sensitivity_d0xk5hvh/reports/sensitivity_single_snp.tsv",
+    "workspace/outputs/d5b79e5401bd/analysis_sensitivity_d0xk5hvh/plots/sensitivity_leave_one_out.png",
+    "workspace/outputs/d5b79e5401bd/analysis_sensitivity_d0xk5hvh/plots/sensitivity_funnel.png",
+    "workspace/outputs/d5b79e5401bd/analysis_sensitivity_d0xk5hvh/plots/sensitivity_presso_outlier.png",
+    "workspace/outputs/d5b79e5401bd/analysis_sensitivity_d0xk5hvh/plots/sensitivity_single_snp_forest.png"
+  ],
+  "tool_results": [
+    {
+      "path": "workspace/outputs/d5b79e5401bd/analysis_sensitivity_d0xk5hvh/response.json",
+      "status": "ok",
+      "failure_class": null,
+      "summary": "analysis-sensitivity completed: instruments=10; heterogeneity_tests=2; egger_intercept_p=0.249776799773281; mr_presso_outlier_status=not_tested; mr_presso_outliers=NA; mr_presso_simulations_requested=1000; mr_presso_simulations_used=1000; steiger=unavailable; steiger_filtering=not_requested; detailed_plots_skipped=0.",
+      "message": ""
+    }
+  ],
+  "result_refs": [
+    {
+      "ref": "$ref:analysis_sensitivity_1969d82fae52",
+      "fields": [
+        "status",
+        "mr_sensitivity_result"
+      ],
+      "status": "ok",
+      "tool": "analysis_sensitivity",
+      "input_identity": {
+        "primary_result_record_path": "/recorded-session/workspace/outputs/cc5ac7326e22/mr_primary_tizeuu7q/reports/mr_primary_result_record.json"
+      },
+      "response_path": "/recorded-session/workspace/outputs/d5b79e5401bd/analysis_sensitivity_d0xk5hvh/response.json"
+    }
+  ]
+}

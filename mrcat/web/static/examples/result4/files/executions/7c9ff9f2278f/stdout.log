@@ -1,0 +1,161 @@
+[gwas-search] Starting trait target search: trait=coronary artery disease; query=coronary artery disease; sources=opengwas,gwas_catalog,pan_ukb,finngen.
+[gwas-search] Searching target.
+[gwas-search] Searching target in opengwas: query variants=3.
+[gwas-search] Fetching OpenGWAS metadata for query="coronary artery disease".
+[gwas-search] Fetched OpenGWAS metadata for query="coronary artery disease": results=50066.
+[gwas-search] Fetching OpenGWAS metadata for query="coronary heart disease".
+[gwas-search] Fetched OpenGWAS metadata for query="coronary heart disease": results=50066.
+[gwas-search] Fetching OpenGWAS metadata for query="CAD".
+[gwas-search] Fetched OpenGWAS metadata for query="CAD": results=50066.
+[gwas-search] Probing URL: [REDACTED_DOWNLOAD_URL]
+[gwas-search] URL probe ok with HTTP 200 in 904 ms: [REDACTED_DOWNLOAD_URL]
+[gwas-search] Probing URL: [REDACTED_DOWNLOAD_URL]
+[gwas-search] URL probe ok with HTTP 200 in 240 ms: [REDACTED_DOWNLOAD_URL]
+[gwas-search] Probing URL: [REDACTED_DOWNLOAD_URL]
+[gwas-search] URL probe ok with HTTP 200 in 240 ms: [REDACTED_DOWNLOAD_URL]
+[gwas-search] Probing URL: [REDACTED_DOWNLOAD_URL]
+[gwas-search] URL probe ok with HTTP 200 in 228 ms: [REDACTED_DOWNLOAD_URL]
+[gwas-search] Probing URL: [REDACTED_DOWNLOAD_URL]
+[gwas-search] URL probe ok with HTTP 200 in 248 ms: [REDACTED_DOWNLOAD_URL]
+[gwas-search] Probing URL: [REDACTED_DOWNLOAD_URL]
+[gwas-search] URL probe ok with HTTP 200 in 226 ms: [REDACTED_DOWNLOAD_URL]
+[gwas-search] Probing URL: [REDACTED_DOWNLOAD_URL]
+[gwas-search] URL probe ok with HTTP 200 in 240 ms: [REDACTED_DOWNLOAD_URL]
+[gwas-search] Probing URL: [REDACTED_DOWNLOAD_URL]
+[gwas-search] URL probe ok with HTTP 200 in 230 ms: [REDACTED_DOWNLOAD_URL]
+[gwas-search] Probing URL: [REDACTED_DOWNLOAD_URL]
+[gwas-search] URL probe ok with HTTP 200 in 236 ms: [REDACTED_DOWNLOAD_URL]
+[gwas-search] Probing URL: [REDACTED_DOWNLOAD_URL]
+[gwas-search] URL probe ok with HTTP 200 in 224 ms: [REDACTED_DOWNLOAD_URL]
+[gwas-search] Finished target in opengwas: candidates=34; probes=10; downloadable=10; elapsed_ms=33109.
+[gwas-search] Searching target in gwas_catalog: query variants=3.
+[gwas-search] Fetching GWAS Catalog studies for query="coronary artery disease".
+[gwas-search] Catalog REST lookup failed; searching the website with unchanged query="coronary artery disease".
+[gwas-search] Fetched GWAS Catalog studies for query="coronary artery disease": results=392.
+[gwas-search] Fetching GWAS Catalog studies for query="coronary heart disease".
+[gwas-search] Catalog REST lookup failed; searching the website with unchanged query="coronary heart disease".
+[gwas-search] Fetched GWAS Catalog studies for query="coronary heart disease": results=72.
+[gwas-search] Fetching GWAS Catalog studies for query="CAD".
+[gwas-search] Catalog REST lookup failed; searching the website with unchanged query="CAD".
+[gwas-search] Fetched GWAS Catalog studies for query="CAD": results=569.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90132001-GCST90133000/GCST90132315/GCST90132315_buildGRCh38.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 823 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90132001-GCST90133000/GCST90132315/GCST90132315_buildGRCh38.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90132001-GCST90133000/GCST90132315/GCST90132315_buildGRCh37.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 823 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90132001-GCST90133000/GCST90132315/GCST90132315_buildGRCh37.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90132001-GCST90133000/GCST90132315/GCST90132315.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 824 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90132001-GCST90133000/GCST90132315/GCST90132315.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90132001-GCST90133000/GCST90132315/GCST90132315_buildGRCh37.tsv.
+[gwas-search] URL probe ok with HTTP 200 in 202 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90132001-GCST90133000/GCST90132315/GCST90132315_buildGRCh37.tsv.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90132001-GCST90133000/GCST90132314/GCST90132314_buildGRCh38.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 407 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90132001-GCST90133000/GCST90132314/GCST90132314_buildGRCh38.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90132001-GCST90133000/GCST90132314/GCST90132314_buildGRCh37.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 823 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90132001-GCST90133000/GCST90132314/GCST90132314_buildGRCh37.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90132001-GCST90133000/GCST90132314/GCST90132314.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 1021 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90132001-GCST90133000/GCST90132314/GCST90132314.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90132001-GCST90133000/GCST90132314/GCST90132314_buildGRCh37.tsv.
+[gwas-search] URL probe ok with HTTP 200 in 202 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90132001-GCST90133000/GCST90132314/GCST90132314_buildGRCh37.tsv.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST005001-GCST006000/GCST005195/GCST005195_buildGRCh38.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 407 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST005001-GCST006000/GCST005195/GCST005195_buildGRCh38.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST005001-GCST006000/GCST005195/GCST005195_buildGRCh37.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 826 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST005001-GCST006000/GCST005195/GCST005195_buildGRCh37.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST005001-GCST006000/GCST005195/GCST005195.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 825 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST005001-GCST006000/GCST005195/GCST005195.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST005001-GCST006000/GCST005195/harmonised/29212778-GCST005195-EFO_0000378.h.tsv.gz.
+[gwas-search] URL probe ok with HTTP 200 in 203 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST005001-GCST006000/GCST005195/harmonised/29212778-GCST005195-EFO_0000378.h.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90837001-GCST90838000/GCST90837195/GCST90837195_buildGRCh38.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 407 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90837001-GCST90838000/GCST90837195/GCST90837195_buildGRCh38.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90837001-GCST90838000/GCST90837195/GCST90837195_buildGRCh37.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 825 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90837001-GCST90838000/GCST90837195/GCST90837195_buildGRCh37.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90837001-GCST90838000/GCST90837195/GCST90837195.tsv.gz.
+[gwas-search] URL probe ok with HTTP 200 in 626 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90837001-GCST90838000/GCST90837195/GCST90837195.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST010001-GCST011000/GCST010479/GCST010479_buildGRCh38.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 407 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST010001-GCST011000/GCST010479/GCST010479_buildGRCh38.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST010001-GCST011000/GCST010479/GCST010479_buildGRCh37.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 823 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST010001-GCST011000/GCST010479/GCST010479_buildGRCh37.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST010001-GCST011000/GCST010479/GCST010479.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 827 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST010001-GCST011000/GCST010479/GCST010479.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST005001-GCST006000/GCST005194/GCST005194_buildGRCh38.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 407 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST005001-GCST006000/GCST005194/GCST005194_buildGRCh38.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST005001-GCST006000/GCST005194/GCST005194_buildGRCh37.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 823 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST005001-GCST006000/GCST005194/GCST005194_buildGRCh37.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST005001-GCST006000/GCST005194/GCST005194.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 827 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST005001-GCST006000/GCST005194/GCST005194.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST005001-GCST006000/GCST005194/harmonised/29212778-GCST005194-EFO_0000378.h.tsv.gz.
+[gwas-search] URL probe ok with HTTP 200 in 204 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST005001-GCST006000/GCST005194/harmonised/29212778-GCST005194-EFO_0000378.h.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90081001-GCST90082000/GCST90081466/GCST90081466_buildGRCh38.tsv.gz.
+[gwas-search] URL probe ok with HTTP 200 in 205 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90081001-GCST90082000/GCST90081466/GCST90081466_buildGRCh38.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST003001-GCST004000/GCST003116/GCST003116_buildGRCh38.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 406 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST003001-GCST004000/GCST003116/GCST003116_buildGRCh38.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST003001-GCST004000/GCST003116/GCST003116_buildGRCh37.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 826 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST003001-GCST004000/GCST003116/GCST003116_buildGRCh37.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST003001-GCST004000/GCST003116/GCST003116.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 824 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST003001-GCST004000/GCST003116/GCST003116.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST003001-GCST004000/GCST003116/cad.add.160614.website.txt.
+[gwas-search] URL probe ok with HTTP 200 in 202 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST003001-GCST004000/GCST003116/cad.add.160614.website.txt.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST010001-GCST011000/GCST010480/GCST010480_buildGRCh38.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 407 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST010001-GCST011000/GCST010480/GCST010480_buildGRCh38.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST010001-GCST011000/GCST010480/GCST010480_buildGRCh37.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 825 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST010001-GCST011000/GCST010480/GCST010480_buildGRCh37.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST010001-GCST011000/GCST010480/GCST010480.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 827 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST010001-GCST011000/GCST010480/GCST010480.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90727001-GCST90728000/GCST90727255/GCST90727255_buildGRCh38.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 409 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90727001-GCST90728000/GCST90727255/GCST90727255_buildGRCh38.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90727001-GCST90728000/GCST90727255/GCST90727255_buildGRCh37.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 824 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90727001-GCST90728000/GCST90727255/GCST90727255_buildGRCh37.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90727001-GCST90728000/GCST90727255/GCST90727255.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 822 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90727001-GCST90728000/GCST90727255/GCST90727255.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90727001-GCST90728000/GCST90727255/GCST90727255.tsv.
+[gwas-search] URL probe ok with HTTP 200 in 203 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90727001-GCST90728000/GCST90727255/GCST90727255.tsv.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90012001-GCST90013000/GCST90012176/GCST90012176_buildGRCh38.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 407 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90012001-GCST90013000/GCST90012176/GCST90012176_buildGRCh38.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90012001-GCST90013000/GCST90012176/GCST90012176_buildGRCh37.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 824 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90012001-GCST90013000/GCST90012176/GCST90012176_buildGRCh37.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90012001-GCST90013000/GCST90012176/GCST90012176.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 823 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90012001-GCST90013000/GCST90012176/GCST90012176.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90012001-GCST90013000/GCST90012176/GCST90012176_buildNCBI36.tsv.gz.
+[gwas-search] URL probe ok with HTTP 200 in 203 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90012001-GCST90013000/GCST90012176/GCST90012176_buildNCBI36.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST000001-GCST001000/GCST000998/GCST000998_buildGRCh38.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 409 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST000001-GCST001000/GCST000998/GCST000998_buildGRCh38.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST000001-GCST001000/GCST000998/GCST000998_buildGRCh37.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 821 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST000001-GCST001000/GCST000998/GCST000998_buildGRCh37.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST000001-GCST001000/GCST000998/GCST000998.tsv.gz.
+[gwas-search] URL probe failed with HTTP 404 in 821 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST000001-GCST001000/GCST000998/GCST000998.tsv.gz.
+[gwas-search] Probing URL: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST000001-GCST001000/GCST000998/cardiogram_gwas_results.zip.
+[gwas-search] URL probe ok with HTTP 200 in 202 ms: https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST000001-GCST001000/GCST000998/cardiogram_gwas_results.zip.
+[gwas-search] Finished target in gwas_catalog: candidates=99; probes=12; downloadable=10; elapsed_ms=440055.
+[gwas-search] Searching target in pan_ukb: query variants=3.
+[gwas-search] Downloading Pan-UKB manifest.
+[gwas-search] Downloading Pan-UKB manifest: 1.4 MiB / 1.4 MiB (100.0%).
+[gwas-search] Completed download Pan-UKB manifest: 1.4 MiB.
+[gwas-search] Decompressing Pan-UKB manifest.
+[gwas-search] Decompressed Pan-UKB manifest: 7.5 MiB in 79 ms.
+[gwas-search] Scanning Pan-UKB manifest.
+[gwas-search] Scanned Pan-UKB manifest: rows=7223 in 187 ms.
+[gwas-search] Scanned Pan-UKB candidates: rows=7223; matches=0; elapsed_ms=3351.
+[gwas-search] Scanned Pan-UKB candidates: rows=7223; matches=0; elapsed_ms=941.
+[gwas-search] Scanned Pan-UKB candidates: rows=7223; matches=0; elapsed_ms=896.
+[gwas-search] Finished target in pan_ukb: candidates=0; probes=0; downloadable=0; elapsed_ms=5214.
+[gwas-search] Searching target in finngen: query variants=3.
+[gwas-search] Downloading FinnGen R12 manifest.
+[gwas-search] Downloading FinnGen R12 manifest: 0.7 MiB / 0.7 MiB (100.0%).
+[gwas-search] Completed download FinnGen R12 manifest: 0.7 MiB.
+[gwas-search] Decompressing FinnGen R12 manifest.
+[gwas-search] Decompressed FinnGen R12 manifest: 0.7 MiB in 2 ms.
+[gwas-search] Scanning FinnGen R12 manifest.
+[gwas-search] Scanned FinnGen R12 manifest: rows=2469 in 15 ms.
+[gwas-search] Probing URL: https://storage.googleapis.com/finngen-public-data-r12/summary_stats/release/finngen_R12_I9_CHD.gz.
+[gwas-search] URL probe ok with HTTP 200 in 327 ms: https://storage.googleapis.com/finngen-public-data-r12/summary_stats/release/finngen_R12_I9_CHD.gz.
+[gwas-search] Probing URL: https://storage.googleapis.com/finngen-public-data-r12/summary_stats/release/finngen_R12_I9_HEARTFAIL_AND_CHD.gz.
+[gwas-search] URL probe ok with HTTP 200 in 1469 ms: https://storage.googleapis.com/finngen-public-data-r12/summary_stats/release/finngen_R12_I9_HEARTFAIL_AND_CHD.gz.
+[gwas-search] Finished target in finngen: candidates=2; probes=2; downloadable=2; elapsed_ms=3990.
+[gwas-search] Finished target: downloadable_candidates=22.
+[gwas-search] Writing shortlist artifact: /recorded-session/workspace/outputs/7c9ff9f2278f/gwas_search_2hrft58h/gwas_search_shortlists.json.
+[gwas-search] Writing human-readable shortlist workbook: /recorded-session/workspace/outputs/7c9ff9f2278f/gwas_search_2hrft58h/gwas_search_shortlists.xlsx.
+[gwas-search] Writing raw search artifact: /recorded-session/workspace/outputs/7c9ff9f2278f/gwas_search_2hrft58h/gwas_search_raw.json.
+[gwas-search] Completed target search: kind=trait; value=coronary artery disease; candidates=22.
+GWAS search completed: searched OpenGWAS, GWAS Catalog, Pan-UKB, FinnGen for trait="coronary artery disease"; found 22 downloadable candidate(s) (Coronary artery disease | Major coronary heart disease event | Heart failure and coronary heart disease | 1 more).
+Candidate count: 22
+[{"source": "gwas_catalog", "study_id": "GCST90132315", "trait": "Coronary artery disease", "sample_size": 1378170, "ancestry": "multi_ancestry", "downloadable": true}, {"source": "gwas_catalog", "study_id": "GCST90132314", "trait": "Coronary artery disease", "sample_size": 1165690, "ancestry": "european", "downloadable": true}, {"source": "gwas_catalog", "study_id": "GCST005195", "trait": "Coronary artery disease", "sample_size": 547261, "ancestry": "unknown", "downloadable": true}, {"source": "opengwas", "study_id": "ebi-a-GCST005195", "trait": "Coronary artery disease", "sample_size": 547261, "ancestry": "unknown", "downloadable": true}, {"source": "finngen", "study_id": "finngen_R12_I9_CHD", "trait": "Major coronary heart disease event", "sample_size": 500348, "ancestry": "finnish", "downloadable": true}, {"source": "finngen", "study_id": "finngen_R12_I9_HEARTFAIL_AND_CHD", "trait": "Heart failure and coronary heart disease", "sample_size": 461230, "ancestry": "finnish", "downloadable": true}, {"source": "gwas_catalog", "study_id": "GCST90837195", "trait": "Coronary artery disease", "sample_size": 457512, "ancestry": "european", "downloadable": true}, {"source": "opengwas", "study_id": "ukb-d-I9_CHD", "trait": "Major coronary heart disease event", "sample_size": 361194, "ancestry": "european", "downloadable": true}, {"source": "gwas_catalog", "study_id": "GCST005194", "trait": "Coronary artery disease", "sample_size": 296525, "ancestry": "unknown", "downloadable": true}, {"source": "opengwas", "study_id": "ebi-a-GCST005194", "trait": "Coronary artery disease", "sample_size": 296525, "ancestry": "unknown", "downloadable": true}, {"source": "gwas_catalog", "study_id": "GCST90081466", "trait": "Coronary artery disease", "sample_size": 283203, "ancestry": "european", "downloadable": true}, {"source": "opengwas", "study_id": "bbj-a-159", "trait": "Coronary artery disease", "sample_size": 212453, "ancestry": "east_asian", "downloadable": true}, {"source": "opengwas", "study_id": "ieu-a-9", "trait": "Coronary heart disease", "sample_size": 194427, "ancestry": "multi_ancestry", "downloadable": true}, {"source": "gwas_catalog", "study_id": "GCST003116", "trait": "Coronary artery disease", "sample_size": 187599, "ancestry": "multi_ancestry", "downloadable": true}, {"source": "opengwas", "study_id": "ieu-a-7", "trait": "Coronary heart disease", "sample_size": 184305, "ancestry": "multi_ancestry", "downloadable": true}, {"source": "opengwas", "study_id": "ebi-a-GCST003116", "trait": "Coronary artery disease", "sample_size": 141217, "ancestry": "european", "downloadable": true}, {"source": "gwas_catalog", "study_id": "GCST000998", "trait": "Coronary heart disease", "sample_size": 86995, "ancestry": "european", "downloadable": true}, {"source": "opengwas", "study_id": "ebi-a-GCST000998", "trait": "Coronary heart disease", "sample_size": 86995, "ancestry": "european", "downloadable": true}, {"source": "opengwas", "study_id": "ieu-a-8", "trait": "Coronary heart disease", "sample_size": 86995, "ancestry": "european", "downloadable": true}, {"source": "gwas_catalog", "study_id": "GCST90727255", "trait": "Coronary artery disease", "sample_size": 44026, "ancestry": "central_south_asian", "downloadable": true}]
+Shortlist: /recorded-session/workspace/outputs/7c9ff9f2278f/gwas_search_2hrft58h/gwas_search_shortlists.json
+XLSX: /recorded-session/workspace/outputs/7c9ff9f2278f/gwas_search_2hrft58h/gwas_search_shortlists.xlsx
+Artifacts: [{'path': '/recorded-session/workspace/outputs/7c9ff9f2278f/gwas_search_2hrft58h/gwas_search_shortlists.xlsx', 'kind': 'xlsx', 'summary': 'gwas_search_shortlists.xlsx'}, {'path': '/recorded-session/workspace/outputs/7c9ff9f2278f/gwas_search_2hrft58h/gwas_search_shortlists.json', 'kind': 'json', 'summary': 'gwas_search_shortlists.json'}, {'path': '/recorded-session/workspace/outputs/7c9ff9f2278f/gwas_search_2hrft58h/gwas_search_raw.json', 'kind': 'json', 'summary': 'gwas_search_raw.json'}]

@@ -1,0 +1,101 @@
+{
+  "method": "mr_sensitivity",
+  "input_scale": "standardize",
+  "selected_mrdat_path": "/recorded-session/workspace/outputs/32e9f140fc83/mr_primary_m8lrhgrn/reports/selected_mrdat.tsv",
+  "primary_result_record_path": "/recorded-session/workspace/outputs/32e9f140fc83/mr_primary_m8lrhgrn/reports/mr_primary_result_record.json",
+  "heterogeneity": [
+    {
+      "method": "MR Egger",
+      "q": 18.2117583330494,
+      "df": 8,
+      "pval": 0.0196937421087678,
+      "detected": true
+    },
+    {
+      "method": "Inverse variance weighted",
+      "q": 19.5660482096806,
+      "df": 9,
+      "pval": 0.0207877012064813,
+      "detected": true
+    }
+  ],
+  "pleiotropy": {
+    "intercept": 0.00227534216296831,
+    "se": 0.00294999883397559,
+    "pval": 0.462698310287103,
+    "detected": false
+  },
+  "leave_one_out": {
+    "most_influential_snp": "rs11045885",
+    "max_abs_change_percent": 94.1809383576344,
+    "influential_count": 5,
+    "direction_reversed": false
+  },
+  "mr_presso": {
+    "global_pval": 0.018,
+    "global_rss": 23.7368742840675,
+    "detected": true,
+    "outlier_status": "detected",
+    "outlier_count": 1,
+    "outlier_snps": [
+      "rs11045885"
+    ],
+    "raw_beta": -0.00856171529298656,
+    "corrected_beta": -0.00049821149054273,
+    "distortion_pval": 0.016,
+    "distortion_detected": true,
+    "nb_distribution_requested": 1000,
+    "nb_distribution_used": 1000,
+    "raw_result_path": "/recorded-session/workspace/outputs/81bb521130c4/analysis_sensitivity_bae6cb4m/reports/sensitivity_mr_presso_raw.rds"
+  },
+  "steiger": {
+    "status": "unavailable",
+    "reason": "exp: specify type as quantitative or binary",
+    "nsnp": 10,
+    "filtering": {
+      "requested": false,
+      "status": "not_requested"
+    }
+  },
+  "reports": {
+    "heterogeneity": "/recorded-session/workspace/outputs/81bb521130c4/analysis_sensitivity_bae6cb4m/reports/sensitivity_heterogeneity.tsv",
+    "pleiotropy": "/recorded-session/workspace/outputs/81bb521130c4/analysis_sensitivity_bae6cb4m/reports/sensitivity_pleiotropy.tsv",
+    "leave_one_out": "/recorded-session/workspace/outputs/81bb521130c4/analysis_sensitivity_bae6cb4m/reports/sensitivity_leave_one_out.tsv",
+    "single_snp": "/recorded-session/workspace/outputs/81bb521130c4/analysis_sensitivity_bae6cb4m/reports/sensitivity_single_snp.tsv",
+    "mr_presso": "/recorded-session/workspace/outputs/81bb521130c4/analysis_sensitivity_bae6cb4m/reports/sensitivity_mr_presso.tsv"
+  },
+  "plot_manifest": {
+    "plots": [
+      {
+        "plot_id": "sensitivity_single_snp_forest",
+        "path": "/recorded-session/workspace/outputs/81bb521130c4/analysis_sensitivity_bae6cb4m/plots/sensitivity_single_snp_forest.png",
+        "title": "Single-SNP forest plot",
+        "source": "mr_sensitivity_result",
+        "explanation_path": "/local/jyxProject/MRCAT-langgraph/skills/analysis-sensitivity/plot_explanations/sensitivity_single_snp_forest.md"
+      },
+      {
+        "plot_id": "sensitivity_funnel",
+        "path": "/recorded-session/workspace/outputs/81bb521130c4/analysis_sensitivity_bae6cb4m/plots/sensitivity_funnel.png",
+        "title": "Funnel plot",
+        "source": "mr_sensitivity_result",
+        "explanation_path": "/local/jyxProject/MRCAT-langgraph/skills/analysis-sensitivity/plot_explanations/sensitivity_funnel.md"
+      },
+      {
+        "plot_id": "sensitivity_leave_one_out",
+        "path": "/recorded-session/workspace/outputs/81bb521130c4/analysis_sensitivity_bae6cb4m/plots/sensitivity_leave_one_out.png",
+        "title": "Leave-one-out plot",
+        "source": "mr_sensitivity_result",
+        "explanation_path": "/local/jyxProject/MRCAT-langgraph/skills/analysis-sensitivity/plot_explanations/sensitivity_leave_one_out.md"
+      },
+      {
+        "plot_id": "sensitivity_presso_outlier",
+        "path": "/recorded-session/workspace/outputs/81bb521130c4/analysis_sensitivity_bae6cb4m/plots/sensitivity_presso_outlier.png",
+        "title": "MR-PRESSO outlier plot",
+        "source": "mr_sensitivity_result",
+        "explanation_path": "/local/jyxProject/MRCAT-langgraph/skills/analysis-sensitivity/plot_explanations/sensitivity_presso_outlier.md"
+      }
+    ],
+    "skipped": []
+  },
+  "result_record_path": "/recorded-session/workspace/outputs/81bb521130c4/analysis_sensitivity_bae6cb4m/reports/mr_sensitivity_result_record.json"
+}

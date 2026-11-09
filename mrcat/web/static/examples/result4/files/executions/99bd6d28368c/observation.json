@@ -1,0 +1,45 @@
+{
+  "execution_id": "99bd6d28368c",
+  "language": "python",
+  "status": "exited",
+  "returncode": 0,
+  "stdout": "[mr-primary] Reading upstream harmonized and clumped MRdat: /recorded-session/workspace/outputs/274ede89701c/gwas_pair_prepare_lhj8b0pf/intermediate/gwas_pair_mrdat_clumped.tsv.gz\n[input-scale] standardize: 31/31 rows have usable effects; no scale fallback\n[mr-primary] Instrument selection: pval.exp <= 5e-08; valid instruments=3; minimum required=4; action=blocked.\nmr-primary blocked: method-level pvalue_threshold path on already-clumped MRdat: p<=5e-08 retained 3; no attempted threshold reached min_instruments=4. Analysis blocked; use a stronger or larger exposure GWAS dataset.\noutputs.status: blocked\nfailure details: {'failure_class': 'insufficient_instruments'}\n",
+  "stderr": "Warning messages:\n1: package ‘data.table’ was built under R version 4.4.3 \n2: package ‘jsonlite’ was built under R version 4.4.3 \n3: package ‘ggplot2’ was built under R version 4.4.3 \n",
+  "source_path": "executions/99bd6d28368c/code.py",
+  "stdout_path": "executions/99bd6d28368c/stdout.log",
+  "stderr_path": "executions/99bd6d28368c/stderr.log",
+  "duration_seconds": 4.075,
+  "working_directory": "/recorded-session/workspace",
+  "generated_files": [
+    "workspace/outputs/99bd6d28368c/mr_primary_lk59qd_9/response.json",
+    "workspace/outputs/99bd6d28368c/mr_primary_lk59qd_9/mr_primary_input.json",
+    "workspace/outputs/99bd6d28368c/mr_primary_lk59qd_9/reports/mr_primary_output.json"
+  ],
+  "tool_results": [
+    {
+      "path": "workspace/outputs/99bd6d28368c/mr_primary_lk59qd_9/response.json",
+      "status": "blocked",
+      "failure_class": "insufficient_instruments",
+      "summary": "mr-primary blocked: method-level pvalue_threshold path on already-clumped MRdat: p<=5e-08 retained 3; no attempted threshold reached min_instruments=4. Analysis blocked; use a stronger or larger exposure GWAS dataset.",
+      "message": ""
+    }
+  ],
+  "result_refs": [
+    {
+      "ref": "$ref:mr_primary_b6e430baaa39",
+      "fields": [
+        "status",
+        "failure_class",
+        "nsnp",
+        "min_instruments",
+        "Threshold"
+      ],
+      "status": "blocked",
+      "tool": "mr_primary",
+      "input_identity": {
+        "mrdat_path": "/recorded-session/workspace/outputs/274ede89701c/gwas_pair_prepare_lhj8b0pf/intermediate/gwas_pair_mrdat_clum"
+      },
+      "response_path": "/recorded-session/workspace/outputs/99bd6d28368c/mr_primary_lk59qd_9/response.json"
+    }
+  ]
+}

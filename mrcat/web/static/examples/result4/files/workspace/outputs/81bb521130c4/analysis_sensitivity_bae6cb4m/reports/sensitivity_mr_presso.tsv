@@ -1,0 +1,10 @@
+metric	value
+global_rss	23.7368742840675
+global_pval	0.018
+outlier_status	detected
+outlier_count	1
+outlier_snps	rs11045885
+raw_beta	-0.00856171529298656
+corrected_beta	-0.00049821149054273
+distortion_pval	0.016
+nb_distribution_used	1000

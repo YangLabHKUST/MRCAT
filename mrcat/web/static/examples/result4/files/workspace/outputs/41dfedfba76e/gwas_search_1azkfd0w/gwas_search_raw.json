@@ -1,0 +1,132 @@
+{
+  "target": {
+    "kind": "trait",
+    "value": "coronary artery disease",
+    "resolved_query": "coronary artery disease",
+    "aliases": [
+      "coronary heart disease",
+      "CAD"
+    ]
+  },
+  "raw_results": [
+    {
+      "side": "target",
+      "trait": "Major coronary heart disease event",
+      "study_id": "finngen_R12_I9_CHD",
+      "source": "finngen",
+      "matched_query": "coronary heart disease",
+      "matched_fields": [
+        "phenotype"
+      ],
+      "downloadable": true,
+      "download_descriptor": {
+        "source": "finngen",
+        "study_id": "finngen_R12_I9_CHD",
+        "status": "ready",
+        "method": "url",
+        "requires_auth": false,
+        "url": "https://storage.googleapis.com/finngen-public-data-r12/summary_stats/release/finngen_R12_I9_CHD.gz"
+      },
+      "downloadability_reason": "confirmed_url",
+      "download_check": {
+        "method": "HEAD",
+        "ok": true,
+        "status_code": 200,
+        "content_type": "application/octet-stream",
+        "content_length": "819094853",
+        "final_url": "https://storage.googleapis.com/finngen-public-data-r12/summary_stats/release/finngen_R12_I9_CHD.gz"
+      },
+      "raw_record": {
+        "phenocode": "I9_CHD",
+        "phenotype": "Major coronary heart disease event",
+        "category": "IX Diseases of the circulatory system (I9_)",
+        "num_cases": "56650",
+        "num_controls": "443698",
+        "path_bucket": "gs://finngen-public-data-r12/summary_stats/release/finngen_R12_I9_CHD.gz",
+        "path_https": "https://storage.googleapis.com/finngen-public-data-r12/summary_stats/release/finngen_R12_I9_CHD.gz"
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Heart failure and coronary heart disease",
+      "study_id": "finngen_R12_I9_HEARTFAIL_AND_CHD",
+      "source": "finngen",
+      "matched_query": "coronary heart disease",
+      "matched_fields": [
+        "phenotype"
+      ],
+      "downloadable": true,
+      "download_descriptor": {
+        "source": "finngen",
+        "study_id": "finngen_R12_I9_HEARTFAIL_AND_CHD",
+        "status": "ready",
+        "method": "url",
+        "requires_auth": false,
+        "url": "https://storage.googleapis.com/finngen-public-data-r12/summary_stats/release/finngen_R12_I9_HEARTFAIL_AND_CHD.gz"
+      },
+      "downloadability_reason": "confirmed_url",
+      "download_check": {
+        "method": "HEAD",
+        "ok": true,
+        "status_code": 200,
+        "content_type": "application/octet-stream",
+        "content_length": "814957943",
+        "final_url": "https://storage.googleapis.com/finngen-public-data-r12/summary_stats/release/finngen_R12_I9_HEARTFAIL_AND_CHD.gz"
+      },
+      "raw_record": {
+        "phenocode": "I9_HEARTFAIL_AND_CHD",
+        "phenotype": "Heart failure and coronary heart disease",
+        "category": "Cardiometabolic endpoints",
+        "num_cases": "17532",
+        "num_controls": "443698",
+        "path_bucket": "gs://finngen-public-data-r12/summary_stats/release/finngen_R12_I9_HEARTFAIL_AND_CHD.gz",
+        "path_https": "https://storage.googleapis.com/finngen-public-data-r12/summary_stats/release/finngen_R12_I9_HEARTFAIL_AND_CHD.gz"
+      }
+    }
+  ],
+  "search_diagnostics": {
+    "candidate_count": 2,
+    "sources_attempted": [
+      "finngen"
+    ],
+    "search_exhausted": false,
+    "preferred_sources": [
+      "finngen"
+    ],
+    "allow_source_fallback": false,
+    "source_reports": [
+      {
+        "source": "finngen",
+        "status": "ok",
+        "n_results": 2,
+        "message": "target: searched 3 query variant(s).",
+        "metadata_endpoint": "https://storage.googleapis.com/finngen-public-data-r12/summary_stats/finngen_R12_manifest.tsv"
+      }
+    ],
+    "source_timings": {
+      "finngen": {
+        "status": "ok",
+        "n_results": 2,
+        "elapsed_ms": 2146,
+        "probe_total": 2,
+        "probe_success_count": 2,
+        "probe_failure_count": 0,
+        "cache_scope": "process_only",
+        "session_cache_hits": 0,
+        "session_cache_misses": 0,
+        "release": "R12",
+        "manifest_url": "https://storage.googleapis.com/finngen-public-data-r12/summary_stats/finngen_R12_manifest.tsv",
+        "rows_scanned": 2469,
+        "matched_candidate_count": 0,
+        "probe_budget": 20,
+        "probe_count": 2,
+        "search_mode": "manifest",
+        "raw_candidate_count": 2,
+        "ancestry_filter_drop_count": 0,
+        "unique_candidate_count": 2,
+        "executable_candidate_count": 2,
+        "dedup_drop_count": 0
+      }
+    }
+  }
+}

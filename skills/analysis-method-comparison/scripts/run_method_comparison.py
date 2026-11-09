@@ -514,11 +514,11 @@ def save_summary_plot(
         fontweight="bold",
     )
     interval_label = comparison_interval_label(rows)
-    forest_ax.set_xlabel("MR estimate (β)")
+    forest_ax.set_xlabel("MR estimate ($\\hat{\\beta}$)")
     forest_ax.set_title(f"Effect ({interval_label})", loc="left", fontsize=14, fontweight="bold", pad=14)
     style_axis(forest_ax)
 
-    configure_text_column(effect_ax, title=rf"$\beta$ ({interval_label})")
+    configure_text_column(effect_ax, title=rf"$\hat{{\beta}}$ ({interval_label})")
     configure_text_column(iv_ax, title="#IV")
     fig.subplots_adjust(left=0.23, right=0.98, top=0.88, bottom=0.14)
     save_figure(fig, plt, path)
@@ -592,7 +592,7 @@ def save_slope_overlay(
     for index, row in enumerate(rows):
         color = PALETTE[index % len(PALETTE)]
         beta = row["beta.hat"]
-        label = f"{row['display_label']}: beta={beta:.3g}"
+        label = f"{row['display_label']}: $\\hat{{\\beta}}$={beta:.3g}"
         ax.plot(line_x, [beta * value for value in line_x], color=color, linewidth=2.4, label=label)
         for interval in ci_ranges(row):
             lower = interval["lower"]
@@ -872,8 +872,6 @@ def configure_plot_style(plt: Any) -> None:
             "font.family": "sans-serif",
             "font.sans-serif": ["Arial", "Helvetica", "DejaVu Sans", "Liberation Sans", "sans-serif"],
             "font.weight": "bold",
-            "svg.fonttype": "none",
-            "pdf.fonttype": 42,
             "figure.facecolor": "white",
             "axes.facecolor": "white",
             "axes.edgecolor": "#272727",
@@ -906,16 +904,7 @@ def style_axis(ax: Any) -> None:
 
 
 def save_figure(fig: Any, plt: Any, path: Path) -> None:
-    fig.savefig(path.with_suffix(".svg"), bbox_inches="tight", facecolor="white")
-    fig.savefig(path.with_suffix(".pdf"), bbox_inches="tight", facecolor="white")
     fig.savefig(path, dpi=600, bbox_inches="tight", facecolor="white")
-    fig.savefig(
-        path.with_suffix(".tiff"),
-        dpi=600,
-        bbox_inches="tight",
-        facecolor="white",
-        pil_kwargs={"compression": "tiff_lzw"},
-    )
     plt.close(fig)
 
 

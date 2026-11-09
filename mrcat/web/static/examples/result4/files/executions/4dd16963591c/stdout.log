@@ -1,0 +1,76 @@
+[gwas-qc] Canonicalizing one GWAS: /recorded-session/cache/gwas-download/gwas_catalog/GCST90132314/88763fd2db35d60c/GCST90132314_buildGRCh37.tsv
+[gwas-qc] Starting study canonicalization: raw_path=/recorded-session/cache/gwas-download/gwas_catalog/GCST90132314/88763fd2db35d60c/GCST90132314_buildGRCh37.tsv
+[gwas-qc] study preview started.
+[gwas-qc] study preview done: format=table; header_fields=22; sample_rows=50.
+[gwas-qc] study sample input written: /recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/samples/study.sample.txt
+[gwas-qc] study counting input rows.
+[gwas-qc] study input rows counted: rows=20073070.
+[gwas-qc] study LLM codegen attempt 1/3 started.
+[gwas-qc] study LLM code written for attempt 1: /recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/generated_code/study_attempt_1.py
+[gwas-qc] study sample execution attempt 1 started: rows=50.
+[gwas-qc] study sample execution attempt 1 finished: exit_code=0.
+[gwas-qc] study sample validation attempt 1 started.
+[gwas-qc] study sample validation attempt 1 passed: rows=50; snp_counts={'rsid': 0, 'coordinate': 0, 'other': 0, 'missing': 50}.
+[gwas-qc] study full execution started: rows=20073070; code=/recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/generated_code/study_attempt_1.py.
+[gwas-qc] study full execution finished: exit_code=0.
+[gwas-qc] study pre-mapping validation started.
+[gwas-qc] study pre-mapping validation passed: rows=20073070; snp_counts={'rsid': 0, 'coordinate': 0, 'other': 0, 'missing': 20073070}.
+[gwas-qc] study genome build coordinate check started.
+[gwas-qc] study genome build coordinate check done: {'checked': 1000, 'grch37_matches': 365, 'grch38_matches': 1}.
+[gwas-qc] study genome build LLM inference started.
+[gwas-qc] study genome build inferred: genome_build=grch37; reason=Study metadata explicitly states genome_assembly GRCh37 and file notes state base_pair_location is according to GRCh37; coordinate_check matched 365 sampled positions to GRCh37 versus 1 to GRCh38.
+[gwas-qc] study HM3 rsID mapping started: genome_build=grch37.
+[gwas-qc] study HM3 rsID mapping done: {'raw_rsid_retained': 0, 'hm3_rsid_mapped': 1184393, 'unmapped_rows': 18888677, 'rows': 20073070, 'genome_build': 'grch37', 'enabled': True}.
+[gwas-qc] study final strict validation started.
+[gwas-qc] study final strict validation passed: rows=20073070; snp_counts={'rsid': 1184393, 'coordinate': 0, 'other': 0, 'missing': 18888677}.
+[gwas-qc] study canonical output ready: /recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/canonical/study.canonical.tsv.gz
+[gwas-qc] Formatting and filtering the canonical study.
+[gwas-qc] Loaded MR-APSS references; min_freq=0.05.
+[gwas-qc] Reading study canonical GWAS: /recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/canonical/study.canonical.tsv.gz
+[gwas-qc] Loaded study canonical GWAS: rows=20073070; sample_size=1165690; min_freq=0.05.
+[gwas-qc] Sample size decision for study: source=row_level_n; detail=canonical n column; n_col=n; n_cases_col=n_cases; n_controls_col=none; side_sample_size=1165690.
+[gwas-qc] Formatting study with MRAPSS::format_data.
+[gwas-qc] Completed study formatting: input rows=20073070; retained rows=1096194.
+[gwas-qc] Sample size used for study: source=row_level_n (canonical n column); final formatted N varies by row: min=1037860, median=1159040, max=1165720, rows=1096194.
+[gwas-qc] mrcat_format_data study message: Begin formatting ....
+[gwas-qc] mrcat_format_data study message: The raw data set has 20073070 dat lines
+[gwas-qc] mrcat_format_data study message: Remove ambiguous SNPs ..., remaining 17235956 SNPs.
+[gwas-qc] mrcat_format_data study message: Remove SNPs in MHC region ..., remaining 17235956 SNPs.
+[gwas-qc] mrcat_format_data study message: Remove duplicated SNPs ..., remaining 1184393 SNPs.
+[gwas-qc] mrcat_format_data study message: Merge SNPs with the hapmap3 snplist ..., remaining 1184393 SNPs.
+[gwas-qc] mrcat_format_data study message: infer b column from log(or)...
+[gwas-qc] mrcat_format_data study message: Remove SNPs with MAF less than0.05, remaining 1099272 SNPs.
+[gwas-qc] mrcat_format_data study message: Remove SNPs with p-value < 0 or p-value > 1, remaining 1099272 SNPs.
+[gwas-qc] mrcat_format_data study message: Remove missing values, remaining 1099272 SNPs.
+[gwas-qc] mrcat_format_data study message: Remove SNPs with sample size 5 standard deviations away from the mean, remaining 1096197 SNPs.
+[gwas-qc] mrcat_format_data study message: Remove SNPs with chi2 > chi2_max ... , remaining 1096194 SNPs.
+[gwas-qc] mrcat_format_data study message: The formatted data has 1096194 dat lines.
+[gwas-qc] Formatting evidence for study: removed_rows=18976876; log_pval=FALSE; beta_from_or=FALSE; n_from_case_control=FALSE; formatted_P_range=[2.72e-221, 1e+00]; formatted_Z_range=[-3.17549e+01, 3.12197e+01]; formatted_N_range=[1.03786e+06, 1.16572e+06]; messages=Begin formatting .... 
+ | The raw data set has 20073070 dat lines
+ | Remove ambiguous SNPs ..., remaining 17235956 SNPs.
+ | Remove SNPs in MHC region ..., remaining 17235956 SNPs.
+ | Remove duplicated SNPs ..., remaining 1184393 SNPs.
+ | Merge SNPs with the hapmap3 snplist ..., remaining 1184393 SNPs.
+ | infer b column from log(or)...
+ | Remove SNPs with MAF less than0.05, remaining 1099272 SNPs.
+ | Remove SNPs with p-value < 0 or p-value > 1, remaining 1099272 SNPs.
+ | Remove missing values, remaining 1099272 SNPs.
+ | Remove SNPs with sample size 5 standard deviations away from the mean, remaining 1096197 SNPs.
+ | Remove SNPs with chi2 > chi2_max ... , remaining 1096194 SNPs.
+ | The formatted data has 1096194 dat lines. 
+
+.
+[gwas-qc] Writing study formatted GWAS: /recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/formatted/study.mrapss.tsv.gz
+[gwas-qc] Completed successfully.
+[gwas-qc] Completed successfully: canonical_rows=20073070; formatted_rows=1096194; genome_build=grch37; genome_build_reason=Study metadata explicitly states genome_assembly GRCh37 and file notes state base_pair_location is according to GRCh37; coordinate_check matched 365 sampled positions to GRCh37 versus 1 to GRCh38.
+gwas-qc completed: canonical_rows=20073070, formatted_rows=1096194. genome_build=grch37, genome_build_reason=Study metadata explicitly states genome_assembly GRCh37 and file notes state base_pair_location is according to GRCh37; coordinate_check matched 365 sampled positions to GRCh37 versus 1 to GRCh38. gwas-qc formatting completed: min_freq=0.05; rows input=20073070, formatted=1096194, removed=18976876; input_rows=20073070, ambiguous_removed=2837114, mhc_removed=0, duplicate_removed=16051563, hapmap_reference_removed=0, invalid_pvalue_removed=0, missing_value_removed=0, sample_size_outlier_removed=3075, chi_square_outlier_removed=3, formatted_rows=1096194, input_effect_field=beta, beta_from_or=false, formatted_effect_representation=source_beta; report=/recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/reports/gwas_qc_format_report.json.
+outputs.status: ok
+label: Coronary artery disease
+ancestry: european
+sample_size: 1165690.0
+genome_build: grch37
+canonical_path: /recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/canonical/study.canonical.tsv.gz
+formatted_path: /recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/formatted/study.mrapss.tsv.gz
+report_path: /recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/reports/gwas_qc_report.json
+explanation_path: /recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/reports/gwas_qc_explanation.md
+artifacts: [{'path': '/recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/canonical/study.canonical.tsv.gz', 'kind': 'tsv', 'summary': 'validated canonical GWAS'}, {'path': '/recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/generated_code/study_attempt_1.py', 'kind': 'py', 'summary': 'validated GWAS canonicalization transform'}, {'path': '/recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/formatted/study.mrapss.tsv.gz', 'kind': 'tsv', 'summary': 'analysis-ready formatted GWAS'}, {'path': '/recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/reports/gwas_qc_report.json', 'kind': 'json', 'summary': 'GWAS QC report'}, {'path': '/recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/reports/gwas_qc_explanation.md', 'kind': 'md', 'summary': 'human-readable GWAS QC explanation'}]

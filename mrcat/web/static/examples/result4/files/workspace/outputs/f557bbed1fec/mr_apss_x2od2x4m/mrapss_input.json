@@ -1,0 +1,8 @@
+{
+  "mrdat_path": "/recorded-session/workspace/outputs/a78b9cb9eed8/gwas_pair_prepare_2qwobvze/intermediate/gwas_pair_mrdat_clumped.tsv.gz",
+  "c_path": "/recorded-session/workspace/outputs/a78b9cb9eed8/gwas_pair_prepare_2qwobvze/intermediate/gwas_pair_C.tsv",
+  "omega_path": "/recorded-session/workspace/outputs/a78b9cb9eed8/gwas_pair_prepare_2qwobvze/intermediate/gwas_pair_Omega.tsv",
+  "exposure_label": "Hexadecanedioate levels",
+  "outcome_label": "Major coronary heart disease event",
+  "input_scale": "standardize"
+}

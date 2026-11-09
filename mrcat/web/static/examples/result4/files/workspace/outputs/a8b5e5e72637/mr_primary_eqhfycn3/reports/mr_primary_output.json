@@ -1,0 +1,14 @@
+{
+  "summary": "mr-primary blocked: method-level pvalue_threshold path on already-clumped MRdat: p<=5e-07 retained 3; no attempted threshold reached min_instruments=4. Analysis blocked; use a stronger or larger exposure GWAS dataset.",
+  "outputs": {
+    "status": "blocked",
+    "failure_class": "insufficient_instruments",
+    "nsnp": 3,
+    "min_instruments": 4,
+    "Threshold": 5e-07
+  },
+  "details": {
+    "failure_class": "insufficient_instruments"
+  },
+  "artifacts": []
+}

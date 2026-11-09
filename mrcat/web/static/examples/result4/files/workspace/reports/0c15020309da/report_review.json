@@ -1,0 +1,37 @@
+{
+  "status": "accepted",
+  "policy": {
+    "evidence_priority": [
+      "original_analysis_evidence",
+      "verified_literature_evidence",
+      "last_validated_draft",
+      "judge_findings"
+    ],
+    "judge_may_supply_replacement_numbers": false,
+    "judge_feedback_is_evidence": false,
+    "max_judge_passes": 4,
+    "max_revisions": 3,
+    "stop_on_no_progress": true
+  },
+  "initial_judgement": {
+    "decision": "accept",
+    "issues": []
+  },
+  "revision_attempted": false,
+  "revision_attempts": 0,
+  "revision_history": [],
+  "max_revisions_reached": false,
+  "revision_rejected": null,
+  "final_judgement": {
+    "decision": "accept",
+    "issues": []
+  },
+  "judge_failure": null,
+  "literature_status": "completed",
+  "rendering": {
+    "html_generated": true,
+    "published_as_final": true,
+    "standalone": true,
+    "embedded_figure_count": 9
+  }
+}

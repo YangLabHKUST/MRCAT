@@ -1,0 +1,58 @@
+{
+  "summary": "Parameters used: pair_ancestry=european, ldscore_dir=/local/jyxProject/MRCAT/database/ldsc/eur_w_ld_chr, M=null, h2_fix_intercept=FALSE, iv_threshold=5e-05, clump_r2=0.001, clump_kb=10000, clump_p=0.999, clump_mode=api, pop=EUR, bfile=null, plink_bin=null, MRdat_selection_bias_threshold=5e-05. LD reference used: mode=api; population=EUR. Reference usage: pair_ancestry=european. LD clumping used the OpenGWAS API population reference pop=EUR because no local bfile was supplied; bfile and plink_bin were not used. LDSC background estimation independently used ldscore_dir=/local/jyxProject/MRCAT/database/ldsc/eur_w_ld_chr. Final interpretation must compare both the clumping population/reference and LDSC reference with pair_ancestry and report any mismatch as a limitation. gwas-pair-prepare completed: mdat_rows=1020665, clumped_rows=31, LDSC rg=0.106984248249376; C=/recorded-session/workspace/outputs/274ede89701c/gwas_pair_prepare_lhj8b0pf/intermediate/gwas_pair_C.tsv; Omega=/recorded-session/workspace/outputs/274ede89701c/gwas_pair_prepare_lhj8b0pf/intermediate/gwas_pair_Omega.tsv.",
+  "outputs": {
+    "status": "ok",
+    "gwas_pair_prepare_result": {
+      "clumping_reference": {
+        "mode": "api",
+        "population": "EUR",
+        "bfile": null,
+        "plink_bin": null,
+        "fallback_reason": null
+      },
+      "working_scale": "standardize",
+      "native_usable_rows": 31,
+      "mdat_path": "/recorded-session/workspace/outputs/274ede89701c/gwas_pair_prepare_lhj8b0pf/intermediate/gwas_pair_mdat.tsv.gz",
+      "mrdat_path": "/recorded-session/workspace/outputs/274ede89701c/gwas_pair_prepare_lhj8b0pf/intermediate/gwas_pair_mrdat_clumped.tsv.gz",
+      "c_path": "/recorded-session/workspace/outputs/274ede89701c/gwas_pair_prepare_lhj8b0pf/intermediate/gwas_pair_C.tsv",
+      "omega_path": "/recorded-session/workspace/outputs/274ede89701c/gwas_pair_prepare_lhj8b0pf/intermediate/gwas_pair_Omega.tsv",
+      "ldsc_result_path": "/recorded-session/workspace/outputs/274ede89701c/gwas_pair_prepare_lhj8b0pf/reports/gwas_pair_ldsc_result.json",
+      "exposure_label": "Hexadecanedioate levels",
+      "outcome_label": "Coronary artery disease",
+      "ancestry": "european",
+      "result_record_path": "/recorded-session/workspace/outputs/274ede89701c/gwas_pair_prepare_lhj8b0pf/reports/gwas_pair_prepare_record.json"
+    }
+  },
+  "details": {
+    "result_status": "ok",
+    "failure_class": null,
+    "reference_usage": "LD reference used: mode=api; population=EUR."
+  },
+  "artifacts": [
+    {
+      "path": "/recorded-session/workspace/outputs/274ede89701c/gwas_pair_prepare_lhj8b0pf/intermediate/gwas_pair_mdat.tsv.gz",
+      "kind": "tsv",
+      "summary": "Harmonized pair-level Mdat"
+    },
+    {
+      "path": "/recorded-session/workspace/outputs/274ede89701c/gwas_pair_prepare_lhj8b0pf/intermediate/gwas_pair_mrdat_clumped.tsv.gz",
+      "kind": "tsv",
+      "summary": "Shared clumped MRdat"
+    },
+    {
+      "path": "/recorded-session/workspace/outputs/274ede89701c/gwas_pair_prepare_lhj8b0pf/intermediate/gwas_pair_C.tsv",
+      "kind": "tsv",
+      "summary": "Pair-level C background matrix"
+    },
+    {
+      "path": "/recorded-session/workspace/outputs/274ede89701c/gwas_pair_prepare_lhj8b0pf/intermediate/gwas_pair_Omega.tsv",
+      "kind": "tsv",
+      "summary": "Pair-level Omega background matrix"
+    },
+    {
+      "path": "/recorded-session/workspace/outputs/274ede89701c/gwas_pair_prepare_lhj8b0pf/reports/gwas_pair_ldsc_result.json",
+      "kind": "json",
+      "summary": "Pair-level LDSC result"
+    }
+  ]
+}

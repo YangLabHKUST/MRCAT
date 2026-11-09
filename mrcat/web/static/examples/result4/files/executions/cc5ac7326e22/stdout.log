@@ -1,0 +1,31 @@
+[mr-primary] Reading upstream harmonized and clumped MRdat: /recorded-session/workspace/outputs/274ede89701c/gwas_pair_prepare_lhj8b0pf/intermediate/gwas_pair_mrdat_clumped.tsv.gz
+[input-scale] standardize: 31/31 rows have usable effects; no scale fallback
+[mr-primary] Instrument selection: pval.exp <= 5e-06; valid instruments=10; minimum required=4; action=selected.
+[mr-primary] Instrument strength: SNP=rs10770126; F=2.20323e+01; pval.exp=2.681e-06.
+[mr-primary] Instrument strength: SNP=rs11045885; F=3.16065e+01; pval.exp=1.888e-08.
+[mr-primary] Instrument strength: SNP=rs11045975; F=7.98293e+01; pval.exp=4.082e-19.
+[mr-primary] Instrument strength: SNP=rs11720619; F=2.08901e+01; pval.exp=4.864e-06.
+[mr-primary] Instrument strength: SNP=rs12464103; F=2.43018e+01; pval.exp=8.236e-07.
+[mr-primary] Instrument strength: SNP=rs4646487; F=3.8031e+01; pval.exp=6.963e-10.
+[mr-primary] Instrument strength: SNP=rs4972811; F=2.11618e+01; pval.exp=4.221e-06.
+[mr-primary] Instrument strength: SNP=rs7023732; F=2.48039e+01; pval.exp=6.347e-07.
+[mr-primary] Instrument strength: SNP=rs7523522; F=2.33895e+01; pval.exp=1.323e-06.
+[mr-primary] Instrument strength: SNP=rs9304337; F=2.23577e+01; pval.exp=2.263e-06.
+[mr-primary] Instrument strength summary: approximate per-SNP F=(b.exp/se.exp)^2: min=2.08901e+01, median=2.38457e+01, mean=3.08404e+01, max=7.98293e+01, F<10=0/10.
+[mr-primary] Fitting method: IVW.
+[mr-primary] Completed method: IVW; beta=-0.00877503934156128; se=0.0059768865785; pval=0.142060151406819.
+[mr-primary] Fitting method: MR-Egger.
+[mr-primary] Completed method: MR-Egger; beta=-0.0393964274516033; se=0.0253493444212965; pval=0.158757590345491.
+[mr-primary] Fitting method: Weighted median.
+[mr-primary] Completed method: Weighted median; beta=-0.0131300643345956; se=0.00620854820629253; pval=0.0344438851315121.
+[mr-primary] Fitting method: Weighted mode.
+[mr-primary] Completed method: Weighted mode; beta=-0.0175270809988976; se=0.0189442944019554; pval=0.379006247645994.
+[mr-primary] Completed successfully.
+summary: mr-primary completed: pvalue_threshold=5e-06; instruments=10; methods=IVW, MR-Egger, Weighted median, Weighted mode; plots=2.
+outputs.status: ok
+result keys: ['input_scale', 'scale_excluded_rows', 'method', 'methods', 'selected_mrdat_path', 'diagnostics', 'interpretation', 'plot_manifest', 'result_record_path']
+selected_mrdat_path: /recorded-session/workspace/outputs/cc5ac7326e22/mr_primary_tizeuu7q/reports/selected_mrdat.tsv
+input_scale: standardize
+pvalue_threshold: None
+diagnostics: {'pvalue_threshold': 5e-06, 'nsnp': 10}
+artifacts: [{'path': '/recorded-session/workspace/outputs/cc5ac7326e22/mr_primary_tizeuu7q/reports/mr_primary_result_record.json', 'kind': 'json', 'summary': 'primary MR result record'}, {'path': '/recorded-session/workspace/outputs/cc5ac7326e22/mr_primary_tizeuu7q/reports/selected_mrdat.tsv', 'kind': 'tsv', 'summary': 'selected instruments used by primary MR'}, {'path': '/recorded-session/workspace/outputs/cc5ac7326e22/mr_primary_tizeuu7q/plots/primary_scatter.png', 'kind': 'png', 'summary': 'Primary MR scatter plot'}, {'path': '/recorded-session/workspace/outputs/cc5ac7326e22/mr_primary_tizeuu7q/plots/primary_estimates_forest.png', 'kind': 'png', 'summary': 'Primary MR estimates forest plot'}]

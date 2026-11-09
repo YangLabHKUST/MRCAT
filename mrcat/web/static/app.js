@@ -2,6 +2,7 @@ const state = {
   sessions: [],
   currentSessionId: null,
   snapshot: null,
+  example: null,
   eventSource: null,
   activityConnection: "connecting",
   expandedSearchReportSections: new Set(),
@@ -196,6 +197,9 @@ const PANEL_RESIZE_LIMITS = {
 };
 
 async function requestJson(url, options = {}) {
+  if (state.example && options.method && !["GET", "HEAD"].includes(options.method.toUpperCase())) {
+    throw new Error("This example is read only. Start a new chat to run your own analysis.");
+  }
   const response = await fetch(url, options);
   const payload = await response.json().catch(() => ({}));
   if (!response.ok) {
@@ -661,6 +665,7 @@ function resizeMainColumns(event, gridRect, start) {
 }
 
 async function refreshSessions() {
+  if (REPLAY_ONLY) return;
   const payload = await requestJson("/api/sessions");
   state.sessions = Array.isArray(payload.sessions) ? payload.sessions : [];
   renderSessions();
@@ -706,6 +711,7 @@ function renderSessions() {
 
 async function selectSession(sessionId) {
   if (!sessionId) return;
+  leaveExample();
   const preservePendingNewSession = Boolean(
     state.pendingUserMessage
     && !state.currentSessionId
@@ -736,6 +742,7 @@ async function selectSession(sessionId) {
 }
 
 function newChat() {
+  leaveExample();
   state.currentSessionId = null;
   window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
   state.snapshot = null;
@@ -763,7 +770,7 @@ function newChat() {
 }
 
 async function loadSnapshot() {
-  if (!state.currentSessionId) return;
+  if (!state.currentSessionId || state.example) return;
   const sessionId = state.currentSessionId;
   const before = state.snapshot;
   const snapshot = await requestJson(`/api/sessions/${encodeURIComponent(sessionId)}`);
@@ -783,7 +790,7 @@ function resetStudySetupDraft() {
 }
 
 function connectEvents() {
-  if (!state.currentSessionId) return;
+  if (!state.currentSessionId || state.example) return;
   if (state.eventSource) {
     state.eventSource.close();
     state.eventSource = null;
@@ -882,6 +889,11 @@ function sessionActivity(snapshot, clock = Date.now()) {
 
 function renderActivity(snapshot) {
   const panel = document.getElementById("session-activity");
+  if (state.example) {
+    panel.hidden = true;
+    els.statusChip.textContent = "Read only";
+    return;
+  }
   const activity = sessionActivity(snapshot);
   const disconnected = state.activityConnection === "reconnecting";
   panel.hidden = !activity && !(snapshot && disconnected);
@@ -2264,7 +2276,7 @@ function buildSkillDataPreview(views, snapshot, options = {}) {
 
 function loadJsonArtifact(snapshot, path, phase = "mr", version = "") {
   const baseUrl = artifactRawUrl(snapshot, path, phase);
-  const url = baseUrl && version ? `${baseUrl}&v=${encodeURIComponent(version)}` : baseUrl;
+  const url = baseUrl && version ? `${baseUrl}${baseUrl.includes("?") ? "&" : "?"}v=${encodeURIComponent(version)}` : baseUrl;
   if (!url) return Promise.reject(new Error("Artifact URL is unavailable."));
   const cached = state.jsonArtifactCache.get(url);
   if (cached) return cached;
@@ -2432,6 +2444,7 @@ function artifactKind(path) {
 }
 
 function artifactRawUrl(snapshot, path, phase = "mr") {
+  if (state.example) return exampleArtifactUrl(path);
   const sessionId = text(state.currentSessionId || snapshot?.session_id || snapshot?.state?.session_id);
   const summary = text(path);
   if (!sessionId || !summary) return "";
@@ -2445,6 +2458,7 @@ function artifactRawUrl(snapshot, path, phase = "mr") {
 }
 
 function artifactSpreadsheetUrl(snapshot, summary) {
+  if (state.example) return exampleArtifactUrl(summary, true);
   const sessionId = text(state.currentSessionId || snapshot?.session_id || snapshot?.state?.session_id);
   const runId = text(snapshot?.mr?.run_id);
   let url = `/api/sessions/${encodeURIComponent(sessionId)}/artifacts/spreadsheet?phase=mr&summary=${encodeURIComponent(summary)}`;
@@ -3299,7 +3313,7 @@ function formatParameterValue(value) {
 
 function updateComposer() {
   const running = Boolean(state.snapshot?.active_job);
-  const locked = state.busy || running;
+  const locked = state.busy || running || Boolean(state.example);
   els.newChatButton.disabled = state.busy;
   els.forkSessionButton.disabled = locked || !state.snapshot;
   els.replyInput.disabled = locked; els.replyButton.disabled = locked;
@@ -3309,7 +3323,8 @@ function updateComposer() {
   els.stopJobButton.hidden = !running; els.stopJobButton.disabled = state.busy || !running;
   els.providerSelect.disabled = state.busy || Boolean(state.currentSessionId);
   els.replyButton.textContent = state.currentSessionId ? "Send" : "Start";
-  els.replyInput.placeholder = running ? `${sessionActivity(state.snapshot).title} · see progress above` : "Describe what you want to do";
+  els.replyInput.placeholder = state.example ? "Recorded example · Start a new chat to run an analysis" : running ? `${sessionActivity(state.snapshot).title} · see progress above` : "Describe what you want to do";
+  document.querySelectorAll("[data-report-action]").forEach(button => { button.disabled = locked; });
 }
 
 async function forkCurrentSession() {
@@ -3422,6 +3437,7 @@ async function sendReply(event, request = null) {
 }
 
 async function submitStudySetup() {
+  if (state.example) return;
   const draft = state.studySetupDraft;
   if (!studySetupReady(draft)) return;
   const form = new FormData();
@@ -3697,12 +3713,21 @@ function bindEvents() {
 async function bootstrap() {
   restoreSessionStatusVisibility();
   bindEvents();
+  document.getElementById("result4-example-button").addEventListener("click", openResult4Example);
   setSessionsSidebarCollapsed(false);
   setStudySetupCollapsed(true);
   resetExecutionNotebook();
+  if (REPLAY_ONLY) {
+    await openResult4Example();
+    return;
+  }
   await loadStudyMethodOptions();
   await refreshSessions();
-  if (state.sessions.length > 0) {
+  if (state.example) {
+    // A user may open the example while the initial session list is loading.
+  } else if (window.location.hash.slice(1) === RESULT4_EXAMPLE_ID) {
+    await openResult4Example();
+  } else if (state.sessions.length > 0) {
     const selectedId = window.location.hash.slice(1);
     const selected = state.sessions.find(session => session.session_id === selectedId) || state.sessions[0];
     await selectSession(selected.session_id);

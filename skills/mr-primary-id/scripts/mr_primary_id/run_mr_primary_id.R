@@ -89,14 +89,13 @@ save_estimates_forest <- function(path, rows) {
   bounds <- t(vapply(rows, function(row) mr_ci_bounds(row$ci), numeric(2)))
   lower <- bounds[, "lower"]
   upper <- bounds[, "upper"]
-  measure <- "Beta"
   null_value <- 0
   plot_data <- data.frame(method = factor(method, levels = rev(method)), estimate = beta, lower = lower, upper = upper)
   plot <- ggplot2::ggplot(plot_data, ggplot2::aes(x = estimate, y = method)) +
     ggplot2::geom_vline(xintercept = null_value, linetype = "dashed", color = "grey55") +
     ggplot2::geom_errorbarh(ggplot2::aes(xmin = lower, xmax = upper), height = 0.18, color = "#4C78A8") +
     ggplot2::geom_point(size = 2.7, color = "#1F4E79") +
-    ggplot2::labs(x = paste0(measure, " (95% CI)"), y = NULL, title = "Primary MR estimates") +
+    ggplot2::labs(x = expression(hat(beta)~"(95% CI)"), y = NULL, title = "Primary MR estimates") +
     ggplot2::theme_minimal()
   ggplot2::ggsave(path, plot, width = 7, height = 4.5, dpi = 300)
   normalizePath(path, winslash = "/", mustWork = TRUE)

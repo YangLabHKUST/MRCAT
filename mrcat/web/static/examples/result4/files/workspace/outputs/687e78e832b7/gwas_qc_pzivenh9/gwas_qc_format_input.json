@@ -1,0 +1,9 @@
+{
+  "canonical_path": "/recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/canonical/study.canonical.tsv.gz",
+  "label": "Hexadecanedioate levels",
+  "sample_size": 6887,
+  "ancestry": "european",
+  "min_freq": 0.05,
+  "hm3_path": "/local/jyxProject/MRCAT/database/hapmap3/w_hm3.snplist.rda",
+  "mhc_path": "/local/jyxProject/MRCAT/database/hapmap3/MHC.SNPs.rda"
+}

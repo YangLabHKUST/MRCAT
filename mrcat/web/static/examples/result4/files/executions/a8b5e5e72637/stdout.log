@@ -1,0 +1,7 @@
+[mr-primary] Reading upstream harmonized and clumped MRdat: /recorded-session/workspace/outputs/a78b9cb9eed8/gwas_pair_prepare_2qwobvze/intermediate/gwas_pair_mrdat_clumped.tsv.gz
+[input-scale] standardize: 31/31 rows have usable effects; no scale fallback
+[mr-primary] Instrument selection: pval.exp <= 5e-07; valid instruments=3; minimum required=4; action=blocked.
+mr-primary blocked: method-level pvalue_threshold path on already-clumped MRdat: p<=5e-07 retained 3; no attempted threshold reached min_instruments=4. Analysis blocked; use a stronger or larger exposure GWAS dataset.
+status: blocked
+details: {'failure_class': 'insufficient_instruments'}
+artifacts: []

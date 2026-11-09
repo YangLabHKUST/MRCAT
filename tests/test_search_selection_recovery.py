@@ -75,6 +75,7 @@ def test_catalog_partial_search_retains_rows_but_never_caches_as_complete(monkey
             raise ReadTimeout('xxx endpoint timeout')
         return [{'accession_id': 'xxx'}] if has_rows else []
     monkeypatch.setattr(searcher, '_study_pages', pages)
+    monkeypatch.setattr(searcher, '_search_web_studies', lambda query: [])
     if has_rows:
         assert searcher._search_studies('xxx') == [{'accession_id': 'xxx'}]
     else:
@@ -93,6 +94,7 @@ def test_partial_diagnostics_survive_candidate_conversion_and_probe(monkeypatch)
             raise ReadTimeout('xxx')
         return [{'accession_id': 'xxx'}]
     monkeypatch.setattr(searcher, '_study_pages', pages)
+    monkeypatch.setattr(searcher, '_search_web_studies', lambda query: [])
     monkeypatch.setattr(searcher, '_candidate_from_study', lambda *a: dict(candidate(), source='gwas_catalog'))
     monkeypatch.setattr(searcher, '_resolve_summary_stats_url', lambda *a: ('https://example.org/xxx', {'ok': True}))
     monkeypatch.setitem(side.SEARCHERS, 'gwas_catalog', lambda: searcher)

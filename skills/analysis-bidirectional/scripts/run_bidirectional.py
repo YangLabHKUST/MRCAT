@@ -91,8 +91,6 @@ def _configure_plot_style(plt: Any) -> None:
             "font.family": "sans-serif",
             "font.sans-serif": ["Arial", "Helvetica", "DejaVu Sans", "Liberation Sans", "sans-serif"],
             "font.weight": "bold",
-            "svg.fonttype": "none",
-            "pdf.fonttype": 42,
             "font.size": 12,
             "axes.titlesize": 16,
             "axes.labelsize": 13,
@@ -112,16 +110,7 @@ def _configure_plot_style(plt: Any) -> None:
 
 
 def _save_publication_figure(figure: Any, plt: Any, path: Path) -> None:
-    figure.savefig(path.with_suffix(".svg"), bbox_inches="tight", facecolor="white")
-    figure.savefig(path.with_suffix(".pdf"), bbox_inches="tight", facecolor="white")
     figure.savefig(path, dpi=600, bbox_inches="tight", facecolor="white")
-    figure.savefig(
-        path.with_suffix(".tiff"),
-        dpi=600,
-        bbox_inches="tight",
-        facecolor="white",
-        pil_kwargs={"compression": "tiff_lzw"},
-    )
     plt.close(figure)
 
 
@@ -526,8 +515,8 @@ def _mirrored_plot(
     ):
         direction = fill(f"{exposure} → {outcome}", width=30, break_long_words=False, break_on_hyphens=False)
         axis.set_title(f"{title}\n{direction}", color=color, fontsize=11, fontweight="bold", pad=14)
-    forward_axis.set_xlabel("MR estimate (β)", fontsize=10.5, fontweight="normal")
-    reverse_axis.set_xlabel("MR estimate (β)", fontsize=10.5, fontweight="normal")
+    forward_axis.set_xlabel("MR estimate ($\\hat{\\beta}$)", fontsize=10.5, fontweight="normal")
+    reverse_axis.set_xlabel("MR estimate ($\\hat{\\beta}$)", fontsize=10.5, fontweight="normal")
     figure.suptitle(f"{pair['trait_x']} ↔ {pair['trait_y']}", fontsize=16, fontweight="bold", y=0.98)
     _save_publication_figure(figure, plt, path)
 

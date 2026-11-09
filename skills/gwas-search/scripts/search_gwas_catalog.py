@@ -5,10 +5,12 @@ import sys
 
 import re
 from html.parser import HTMLParser
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Iterator, List, Optional
 from urllib.parse import quote, unquote, urlencode, urljoin, urlparse
 
 from requests import HTTPError, RequestException
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 from .common import (
     BaseSearcher,
@@ -73,6 +75,15 @@ class GWASCatalogSearcher(BaseSearcher):
         super().__init__(timeout=timeout)
         config = source_config(self.source_name)
         self.base_api = "https://www.ebi.ac.uk/gwas/rest/api/v2"
+        self.web_api = "https://www.ebi.ac.uk/gwas/api/v2"
+        # Recover through the website instead of repeating a broken REST route.
+        self.session.mount(self.base_api + "/", HTTPAdapter(max_retries=0))
+        self.session.mount(self.web_api + "/", HTTPAdapter(max_retries=Retry(
+            total=1, connect=1, read=1, status=1,
+            status_forcelist=(429, 500, 502, 503, 504),
+            allowed_methods=frozenset({"GET"}),
+            respect_retry_after_header=False,
+        )))
         self.primary_endpoint = str(config.get("metadata_endpoint") or f"{self.base_api}/studies").strip()
         self.summary_statistics_base = str(config.get("summary_statistics_base") or "").rstrip("/")
         patterns = config.get("summary_statistics_patterns") or []
@@ -260,7 +271,9 @@ class GWASCatalogSearcher(BaseSearcher):
         sample_size = parse_initial_sample_size(raw_study.get("initial_sample_size"))
         ancestry_value = raw_study.get("discovery_ancestry") or raw_study.get("initial_sample_size")
         flattened_trait = disease_trait or reported_trait or query
-        publication = self._publication(raw_study.get("pubmed_id"))
+        publication = raw_study.get("publication")
+        if not isinstance(publication, dict):
+            publication = self._publication(raw_study.get("pubmed_id"))
         return build_candidate(
             side=None,
             trait=flattened_trait,
@@ -384,6 +397,16 @@ class GWASCatalogSearcher(BaseSearcher):
             search_complete=not failures,
             endpoint_failures=[{"field": field, "query": query, "error": str(exc)} for field, exc in failures],
         )
+        if failures:
+            log_step(f'Catalog REST lookup failed; searching the website with unchanged query="{query}".')
+            self.last_source_stats["fallback_transport"] = "catalog_website"
+            try:
+                for study in self._search_web_studies(query):
+                    by_id.setdefault(study["accession_id"], study)
+            except (RequestException, SearchError) as exc:
+                self.last_source_stats["endpoint_failures"].append(
+                    {"field": "website", "query": query, "error": str(exc)}
+                )
         if failures and not by_id:
             # A successful empty branch cannot establish absence when another failed.
             raise failures[0][1]
@@ -391,6 +414,70 @@ class GWASCatalogSearcher(BaseSearcher):
         if not failures:
             self.cached_json_set("v2_study_search", cache_key, studies)
         return studies
+
+    def _web_study_pages(self, path: str, **filters: str) -> Iterator[dict[str, Any]]:
+        """Read the paginated JSON used by the Catalog website tables."""
+        page = 0
+        while True:
+            url = f"{self.web_api}/{path}?{urlencode({**filters, 'size': 20, 'page': page})}"
+            data = self.get_json(url)
+            if not isinstance(data, dict) or data.get("error"):
+                raise SearchError("Invalid Catalog website response", metadata_endpoint=url)
+            pagination = data.get("page") or {}
+            total = pagination.get("totalPages")
+            if not isinstance(total, int) or total < 0 or pagination.get("number") != page:
+                raise SearchError("Invalid Catalog website pagination", metadata_endpoint=url)
+            batch = data.get("_embedded", {}).get("studies", [])
+            if (not isinstance(batch, list)
+                    or any(not isinstance(row, dict) or not row.get("accessionId") for row in batch)
+                    or (not batch and pagination.get("totalElements") != 0)):
+                raise SearchError("Catalog website response lacks valid studies", metadata_endpoint=url)
+            yield from batch
+            page += 1
+            if page >= total:
+                return
+
+    def _search_web_studies(self, query: str) -> list[dict[str, Any]]:
+        # The website study table includes sample metadata and download
+        # directories. Preserve both the query and reported/ontology coverage.
+        by_id = {}
+        failures = []
+        for field in ("reportedTrait", "efoTrait"):
+            try:
+                rows = self._web_study_pages(
+                    "studies", **{field: query}, includeChildTraits="false", includeBgTraits="false"
+                )
+                for row in rows:
+                    by_id.setdefault(row["accessionId"], row)
+            except (RequestException, SearchError) as exc:
+                failures.append(exc)
+                self.last_source_stats.setdefault("endpoint_failures", []).append(
+                    {"field": "website_" + field, "query": query, "error": str(exc)}
+                )
+        if failures and not by_id:
+            raise failures[0]
+        self.last_source_stats["website_candidate_count"] = len(by_id)
+        return [self._web_study_record(row) for row in by_id.values()]
+
+    @staticmethod
+    def _web_study_record(row: dict[str, Any]) -> dict[str, Any]:
+        def text(value: Any) -> str:
+            return "; ".join(str(item) for item in value) if isinstance(value, list) else str(value or "")
+
+        return {
+            "accession_id": row["accessionId"],
+            "disease_trait": row.get("reportedTrait"),
+            "efo_traits": [{"efo_trait": trait.get("label"), "efo_id": trait.get("key")}
+                           for trait in row.get("efoTraits", [])],
+            "initial_sample_size": text(row.get("initialSampleDescription")),
+            "replication_sample_size": text(row.get("replicateSampleDescription")),
+            "discovery_ancestry": text(row.get("discoverySampleAncestry")),
+            "full_summary_stats_available": bool(row.get("summaryStatistics") and row["summaryStatistics"] != "NA"),
+            "pubmed_id": row.get("pubmedId"),
+            "publication": {"title": row.get("title"), "publication_date": row.get("publicationDate"),
+                            "author": row.get("firstAuthor"), "journal": row.get("journal")},
+            "website_record": row,
+        }
 
     def _fetch_study_by_accession(self, study_id: str) -> dict[str, Any] | None:
         cache_key = self.stable_hash({"study_id": study_id})

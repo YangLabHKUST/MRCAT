@@ -63,7 +63,6 @@ class DeepSeekWebSearchProvider:
             os.environ.get("DEEPSEEK_MODEL", "deepseek-v4-pro"),
         )
         client = self._client or Anthropic(
-            api_key=api_key,
             auth_token=api_key,
             base_url=_anthropic_base_url(os.environ.get("DEEPSEEK_BASE_URL")),
             timeout=float(LLM_TIMEOUT_SECONDS),

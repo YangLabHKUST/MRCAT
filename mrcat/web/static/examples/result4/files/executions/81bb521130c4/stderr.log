@@ -1,0 +1,11 @@
+Warning messages:
+1: package ‘data.table’ was built under R version 4.4.3 
+2: package ‘jsonlite’ was built under R version 4.4.3 
+3: package ‘ggplot2’ was built under R version 4.4.3 
+`height` was translated to `width`.
+Warning message:
+`geom_errorbarh()` was deprecated in ggplot2 4.0.0.
+ℹ Please use the `orientation` argument of `geom_errorbar()` instead. 
+Warning message:
+Removed 1 row containing missing values or values outside the scale range
+(`geom_point()`). 

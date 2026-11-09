@@ -248,7 +248,7 @@ function appendCodeExecutionFile(section, file, snapshot, events) {
   if (artifactBasename(file.path) === "gwas_search_shortlists.json") {
     section.appendChild(buildNotebookSearchResults(file, snapshot, events));
   }
-  if (file.kind === "image") {
+  if (notebookPngPath(file.path)) {
     const image = notebookElement("img", "notebook-figure-image");
     image.src = artifactRawUrl(snapshot, file.path);
     image.alt = file.summary || artifactBasename(file.path);
@@ -558,7 +558,7 @@ function appendCodeExecutionOutputs(cell, files, snapshot, events, version) {
     data.appendChild(buildSkillDataPreview(views, snapshot));
     cell.appendChild(data);
   }
-  const images = files.filter(file => file.kind === "image" || notebookImagePath(file.path));
+  const images = files.filter(file => notebookPngPath(file.path));
   if (images.length) {
     const figures = notebookSection("Figures");
     figures.classList.add("codeact-figures");
@@ -735,8 +735,8 @@ function setNotebookCellCollapsed(cell, collapsed) {
   toggle.title = collapsed ? "Expand cell" : "Collapse cell";
 }
 
-function notebookImagePath(path) {
-  return /\.(png|jpe?g|svg|webp|gif)$/i.test(text(path));
+function notebookPngPath(path) {
+  return /\.png$/i.test(text(path));
 }
 
 function notebookPreviewKind(artifact) {
@@ -912,21 +912,18 @@ function buildNotebookFigure(plot, snapshot) {
   caption.appendChild(notebookElement("strong", "", title));
   caption.appendChild(buildExternalLink(url, "Open full size ↗"));
   figure.appendChild(caption);
-  if (/\.(png|jpe?g|svg|webp|gif)$/i.test(path)) {
-    const link = buildExternalLink(url, "");
-    link.className = "notebook-figure-link";
-    const image = notebookElement("img");
-    image.src = url;
-    image.alt = title;
-    image.loading = "lazy";
-    image.addEventListener("error", () => {
-      image.remove();
-      link.textContent = "Preview unavailable · open the figure file";
-    });
-    link.appendChild(image);
-    figure.appendChild(link);
-
-  }
+  const link = buildExternalLink(url, "");
+  link.className = "notebook-figure-link";
+  const image = notebookElement("img");
+  image.src = url;
+  image.alt = title;
+  image.loading = "lazy";
+  image.addEventListener("error", () => {
+    image.remove();
+    link.textContent = "Preview unavailable · open the figure file";
+  });
+  link.appendChild(image);
+  figure.appendChild(link);
   if (plot.explanation_path) figure.appendChild(buildNotebookFile({ path: plot.explanation_path }, snapshot));
   return figure;
 }

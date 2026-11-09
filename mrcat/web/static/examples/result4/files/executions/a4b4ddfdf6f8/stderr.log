@@ -1,0 +1,5 @@
+Warning messages:
+1: package ‘data.table’ was built under R version 4.4.3 
+2: package ‘jsonlite’ was built under R version 4.4.3 
+3: package ‘ggplot2’ was built under R version 4.4.3 
+Estimate of beta=-0.00901668509042803, se of beta=0.00621574651963823, P-value=0.146885753486633.

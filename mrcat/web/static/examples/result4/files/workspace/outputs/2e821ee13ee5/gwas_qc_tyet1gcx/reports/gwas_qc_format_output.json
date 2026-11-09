@@ -1,0 +1,38 @@
+{
+  "summary": "gwas-qc formatting completed: min_freq=0.05; rows input=21327062, formatted=1056297, removed=20270765; input_rows=21327062, ambiguous_removed=3034718, mhc_removed=50133, duplicate_removed=832839, hapmap_reference_removed=16214000, hapmap_allele_mismatch_removed=37, low_maf_removed=139025, invalid_pvalue_removed=0, missing_value_removed=0, sample_size_outlier_removed=0, chi_square_outlier_removed=13, formatted_rows=1056297, input_effect_field=beta, beta_from_or=false, formatted_effect_representation=source_beta; report=/recorded-session/workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/reports/gwas_qc_format_report.json.",
+  "outputs": {
+    "status": "ok",
+    "gwas_qc_format_result": {
+      "formatted_path": "/recorded-session/workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/formatted/study.mrapss.tsv.gz",
+      "format_report_path": "/recorded-session/workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/reports/gwas_qc_format_report.json",
+      "label": "Major coronary heart disease event",
+      "ancestry": "finnish",
+      "n_input": 21327062,
+      "n_final": 1056297,
+      "n_removed": 20270765,
+      "diagnostics": {
+        "min_freq": 0.05,
+        "formatted_rows": 1056297,
+        "input_rows": 21327062,
+        "removed_rows": 20270765,
+        "format_report_path": "/recorded-session/workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/reports/gwas_qc_format_report.json"
+      }
+    }
+  },
+  "details": {
+    "result_status": "ok",
+    "failure_class": null
+  },
+  "artifacts": [
+    {
+      "path": "/recorded-session/workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/formatted/study.mrapss.tsv.gz",
+      "kind": "tsv",
+      "summary": "analysis-ready formatted GWAS"
+    },
+    {
+      "path": "/recorded-session/workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/reports/gwas_qc_format_report.json",
+      "kind": "json",
+      "summary": "GWAS format report"
+    }
+  ]
+}

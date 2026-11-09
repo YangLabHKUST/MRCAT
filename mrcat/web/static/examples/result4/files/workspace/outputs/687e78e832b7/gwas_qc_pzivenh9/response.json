@@ -1,0 +1,49 @@
+{
+  "summary": "gwas-qc completed: canonical_rows=2545171, formatted_rows=1026635. genome_build=unknown, genome_build_reason=Source metadata explicitly states genome_assembly is NCBI36, which is neither GRCh37 nor GRCh38, so the build cannot be classified as grch37 or grch38. gwas-qc formatting completed: min_freq=0.05; rows input=2545171, formatted=1026635, removed=1518536; input_rows=2545171, ambiguous_removed=391175, mhc_removed=10448, duplicate_removed=0, hapmap_reference_removed=1009261, hapmap_allele_mismatch_removed=38, low_maf_removed=107558, invalid_pvalue_removed=0, missing_value_removed=0, sample_size_outlier_removed=0, chi_square_outlier_removed=56, formatted_rows=1026635, input_effect_field=beta, beta_from_or=false, formatted_effect_representation=source_beta; report=/recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/reports/gwas_qc_format_report.json.",
+  "outputs": {
+    "status": "ok",
+    "gwas_qc_result": {
+      "canonical_path": "/recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/canonical/study.canonical.tsv.gz",
+      "formatted_path": "/recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/formatted/study.mrapss.tsv.gz",
+      "report_path": "/recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/reports/gwas_qc_report.json",
+      "explanation_path": "/recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/reports/gwas_qc_explanation.md",
+      "genome_build": "unknown",
+      "genome_build_reason": "Source metadata explicitly states genome_assembly is NCBI36, which is neither GRCh37 nor GRCh38, so the build cannot be classified as grch37 or grch38.",
+      "sample_size": 6887.0,
+      "label": "Hexadecanedioate levels",
+      "ancestry": "european"
+    }
+  },
+  "details": {
+    "result_status": "ok",
+    "failure_class": null,
+    "risk_notes": []
+  },
+  "artifacts": [
+    {
+      "path": "/recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/canonical/study.canonical.tsv.gz",
+      "kind": "tsv",
+      "summary": "validated canonical GWAS"
+    },
+    {
+      "path": "/recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/generated_code/study_attempt_1.py",
+      "kind": "py",
+      "summary": "validated GWAS canonicalization transform"
+    },
+    {
+      "path": "/recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/formatted/study.mrapss.tsv.gz",
+      "kind": "tsv",
+      "summary": "analysis-ready formatted GWAS"
+    },
+    {
+      "path": "/recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/reports/gwas_qc_report.json",
+      "kind": "json",
+      "summary": "GWAS QC report"
+    },
+    {
+      "path": "/recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/reports/gwas_qc_explanation.md",
+      "kind": "md",
+      "summary": "human-readable GWAS QC explanation"
+    }
+  ]
+}

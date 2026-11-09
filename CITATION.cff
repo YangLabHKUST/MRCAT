@@ -3,11 +3,6 @@ message: "Please cite MRCAT and record the exact software commit used in your an
 type: software
 title: "MRCAT: A skill-guided agent for Mendelian randomization analysis"
 version: 0.1.0
-repository-code: "https://github.com/77JULIE/MRCAT"
-keywords:
-  - Mendelian randomization
-  - GWAS
-  - LangGraph
 authors:
   - name: MRCAT contributors
 license: BSD-3-Clause

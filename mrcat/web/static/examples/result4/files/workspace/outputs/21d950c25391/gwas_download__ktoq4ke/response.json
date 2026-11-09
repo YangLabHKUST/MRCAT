@@ -1,0 +1,37 @@
+{
+  "summary": "GWAS download completed: downloaded finngen:finngen_R12_I9_CHD to /recorded-session/cache/gwas-download/finngen/finngen_R12_I9_CHD/476be6a631a2a14b/finngen_R12_I9_CHD.gz.",
+  "outputs": {
+    "status": "ok",
+    "gwas_download_result": {
+      "downloaded_study": {
+        "raw_path": "/recorded-session/cache/gwas-download/finngen/finngen_R12_I9_CHD/476be6a631a2a14b/finngen_R12_I9_CHD.gz",
+        "file_size": 819094853,
+        "label": "Major coronary heart disease event",
+        "study_id": "finngen_R12_I9_CHD",
+        "source": "finngen",
+        "ancestry": "finnish",
+        "ancestry_raw": "Finnish",
+        "sample_size": 500348,
+        "n_cases": 56650,
+        "n_controls": 443698,
+        "study_metadata": {
+          "num_cases": "56650",
+          "num_controls": "443698",
+          "phenocode": "I9_CHD",
+          "release": "R12",
+          "endpoint": "I9_CHD",
+          "endpoint_code": "I9_CHD",
+          "population": "Finnish",
+          "filename": "finngen_R12_I9_CHD.gz"
+        }
+      }
+    }
+  },
+  "details": {
+    "result_status": "ok",
+    "failure_class": null,
+    "study_id": "finngen_R12_I9_CHD",
+    "source": "finngen",
+    "output_dir": "/recorded-session/workspace/outputs/21d950c25391/gwas_download__ktoq4ke/downloads"
+  }
+}

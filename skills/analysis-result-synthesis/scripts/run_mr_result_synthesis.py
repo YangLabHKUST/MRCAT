@@ -241,8 +241,6 @@ def _configure_plot_style(plt: Any) -> None:
             "font.family": "sans-serif",
             "font.sans-serif": ["Arial", "Helvetica", "DejaVu Sans", "Liberation Sans", "sans-serif"],
             "font.weight": "bold",
-            "svg.fonttype": "none",
-            "pdf.fonttype": 42,
             "font.size": 12,
             "axes.titlesize": 17,
             "axes.labelsize": 13,
@@ -263,16 +261,7 @@ def _configure_plot_style(plt: Any) -> None:
 
 
 def _save_publication_figure(figure: Any, plt: Any, path: Path) -> None:
-    figure.savefig(path.with_suffix(".svg"), bbox_inches="tight", facecolor="white")
-    figure.savefig(path.with_suffix(".pdf"), bbox_inches="tight", facecolor="white")
     figure.savefig(path, dpi=600, bbox_inches="tight", facecolor="white")
-    figure.savefig(
-        path.with_suffix(".tiff"),
-        dpi=600,
-        bbox_inches="tight",
-        facecolor="white",
-        pil_kwargs={"compression": "tiff_lzw"},
-    )
     plt.close(figure)
 
 
@@ -311,7 +300,7 @@ def _forest_plot(
         fontsize=11,
         fontweight="bold",
     )
-    axis.set_xlabel("Reported causal-effect estimate (β)")
+    axis.set_xlabel("Reported causal-effect estimate ($\\hat{\\beta}$)")
     axis.set_title(title, fontsize=17, fontweight="bold", pad=16)
     axis.grid(axis="x", color="#D8DDE3", linewidth=0.75)
     axis.tick_params(width=1.1, length=5)

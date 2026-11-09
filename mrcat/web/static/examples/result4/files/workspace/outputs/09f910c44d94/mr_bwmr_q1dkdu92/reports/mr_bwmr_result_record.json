@@ -1,0 +1,53 @@
+{
+  "input_scale": "standardize",
+  "scale_excluded_rows": 0,
+  "selected_mrdat_path": "/recorded-session/workspace/outputs/09f910c44d94/mr_bwmr_q1dkdu92/reports/selected_mrdat.tsv",
+  "method": "mr_bwmr",
+  "methods": [
+    {
+      "method": "BWMR",
+      "Threshold": 5e-06,
+      "nsnp": 10,
+      "beta.hat": -0.00884466048690903,
+      "se": 0.0102344576501453,
+      "pval": 0.387475768286607,
+      "ci": {
+        "level": 0.95,
+        "ranges": [
+          {
+            "lower": -0.0289041974811938,
+            "upper": 0.0112148765073758
+          }
+        ]
+      }
+    }
+  ],
+  "diagnostics": {
+    "mrdat_rows": 31,
+    "pvalue_threshold": 5e-06,
+    "nsnp": 10,
+    "weak_instrument_count": 0,
+    "posterior_weight_min": 0.999613595805145,
+    "posterior_weight_median": 0.999966296431556,
+    "tau": 0.00153573286417451,
+    "sigma": 0.065599689864428,
+    "implementation_commit": "c00e8186f12ed25899aaf85b7ac5c98c6d86c24c"
+  },
+  "interpretation": {
+    "summary": "canonicalized/formatted counts: completed upstream and reused; input MRdat: already constructed and LD-clumped upstream, rows=31; method-level pvalue_threshold instrument selection/QC on already-clumped MRdat: method-level pvalue_threshold path on already-clumped MRdat: p<=5e-06 retained 10; selected p<=5e-06 with nsnp=10 (min_instruments=4); approximate per-SNP F=(b.exp/se.exp)^2: min=2.08901e+01, median=2.38457e+01, mean=3.08404e+01, max=7.98293e+01, F<10=0/10; selection note: selected at the requested method-level pvalue_threshold p<=5e-06; no selected instruments have F<10; fitted method: BWMR beta=-0.00884466048690903; posterior weights: min=0.999614, median=0.999966; artifacts/plots: result_record=1, weights_table=1, plots=1.",
+    "recommendations": []
+  },
+  "plot_manifest": {
+    "plots": [
+      {
+        "plot_id": "bwmr_weighted_fit",
+        "path": "/recorded-session/workspace/outputs/09f910c44d94/mr_bwmr_q1dkdu92/plots/bwmr_weighted_fit.png",
+        "title": "BWMR weighted causal fit",
+        "source": "mr_bwmr_result",
+        "explanation_path": "/local/jyxProject/MRCAT-langgraph/skills/mr-bwmr/plot_explanations/bwmr_weighted_fit.md"
+      }
+    ]
+  },
+  "weights_path": "/recorded-session/workspace/outputs/09f910c44d94/mr_bwmr_q1dkdu92/reports/bwmr_weights.tsv",
+  "result_record_path": "/recorded-session/workspace/outputs/09f910c44d94/mr_bwmr_q1dkdu92/reports/mr_bwmr_result_record.json"
+}

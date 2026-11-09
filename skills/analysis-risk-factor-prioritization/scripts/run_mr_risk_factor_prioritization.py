@@ -364,8 +364,6 @@ def _configure_plot_style(plt: Any) -> None:
             "font.family": "sans-serif",
             "font.sans-serif": ["Arial", "Helvetica", "DejaVu Sans", "Liberation Sans", "sans-serif"],
             "font.weight": "normal",
-            "svg.fonttype": "none",
-            "pdf.fonttype": 42,
             "font.size": 12,
             "axes.titlesize": 15,
             "axes.labelsize": 13,
@@ -387,16 +385,7 @@ def _configure_plot_style(plt: Any) -> None:
 
 
 def _save_publication_figure(figure: Any, plt: Any, path: Path) -> None:
-    figure.savefig(path.with_suffix(".svg"), bbox_inches="tight", facecolor="white")
-    figure.savefig(path.with_suffix(".pdf"), bbox_inches="tight", facecolor="white")
     figure.savefig(path, dpi=600, bbox_inches="tight", facecolor="white")
-    figure.savefig(
-        path.with_suffix(".tiff"),
-        dpi=600,
-        bbox_inches="tight",
-        facecolor="white",
-        pil_kwargs={"compression": "tiff_lzw"},
-    )
     plt.close(figure)
 
 
@@ -519,7 +508,7 @@ def _forest_plot(
     forest_axis.margins(x=0.06)
     forest_axis.grid(axis="x", color="#D8DDE3", linewidth=0.75, zorder=1)
     forest_axis.set_xlabel(
-        f"Reported causal-effect estimate (β)\nOutcome: {outcome}",
+        f"Reported causal-effect estimate ($\\hat{{\\beta}}$)\nOutcome: {outcome}",
         labelpad=8,
     )
 
@@ -557,8 +546,8 @@ def _forest_plot(
             spine.set_visible(False)
 
     legend_handles = [
-        Line2D([0], [0], marker="o", linestyle="", markerfacecolor=POSITIVE, markeredgecolor=POSITIVE, markersize=7.5, label="Positive β"),
-        Line2D([0], [0], marker="o", linestyle="", markerfacecolor=NEGATIVE, markeredgecolor=NEGATIVE, markersize=7.5, label="Negative β"),
+        Line2D([0], [0], marker="o", linestyle="", markerfacecolor=POSITIVE, markeredgecolor=POSITIVE, markersize=7.5, label="Positive $\\hat{\\beta}$"),
+        Line2D([0], [0], marker="o", linestyle="", markerfacecolor=NEGATIVE, markeredgecolor=NEGATIVE, markersize=7.5, label="Negative $\\hat{\\beta}$"),
         Line2D([0], [0], marker="o", linestyle="", markerfacecolor="#555555", markeredgecolor="#555555", markersize=7.5, label="Filled: within-method BH q < 0.05"),
         Line2D([0], [0], marker="o", linestyle="", markerfacecolor="white", markeredgecolor="#555555", markeredgewidth=1.8, markersize=7.5, label="Open: BH q ≥ 0.05 or unavailable"),
     ]
@@ -651,8 +640,8 @@ def _matrix_plot(
     axis.grid(which="minor", color="#E8E8E8", linewidth=0.8)
     axis.grid(False, which="major")
     legend = [
-        Line2D([0], [0], marker="^", linestyle="", markerfacecolor=POSITIVE, markeredgecolor=POSITIVE, markersize=9, label="Positive beta"),
-        Line2D([0], [0], marker="v", linestyle="", markerfacecolor=NEGATIVE, markeredgecolor=NEGATIVE, markersize=9, label="Negative beta"),
+        Line2D([0], [0], marker="^", linestyle="", markerfacecolor=POSITIVE, markeredgecolor=POSITIVE, markersize=9, label="Positive $\\hat{\\beta}$"),
+        Line2D([0], [0], marker="v", linestyle="", markerfacecolor=NEGATIVE, markeredgecolor=NEGATIVE, markersize=9, label="Negative $\\hat{\\beta}$"),
         Line2D([0], [0], marker="o", linestyle="", markerfacecolor="white", markeredgecolor="#111111", markeredgewidth=2, markersize=9, label="BH q < 0.05 outline"),
         Line2D([0], [0], marker="x", linestyle="", color="#C7C7C7", markersize=8, label="No completed result"),
     ]

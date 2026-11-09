@@ -6,11 +6,9 @@ writes reports grounded in saved results. Conversations can reuse saved evidence
 
 ## Install
 
-Linux and Python 3.11 or newer are required:
+Linux and Python 3.11 or newer are required. From the repository root:
 
 ```bash
-git clone https://github.com/77JULIE/MRCAT.git
-cd MRCAT
 conda env create -f environment.yml
 conda activate mrcat
 Rscript scripts/install_r_dependencies.R
@@ -35,6 +33,32 @@ python -m pip install .
 
 The distribution includes Skills, prompts, Python/R wrappers and Web assets.
 Python installation alone does not install R libraries or reference data.
+
+## Reference data
+
+MRCAT provides one complete reference-data set: HapMap3/MHC lists, European
+LDSC files, the European GRCh37 panel, EUR/AFR/EAS/SAS GRCh38 panels and the
+PLINK executable. It downloads about 2.92 GB and installs about 12.86 GB.
+GWAS study inputs are separate.
+
+**The reference data are prepared locally and have not been published.**
+Before publication, install the maintainer-provided local archives with:
+
+```bash
+python scripts/download_database.py --from-dir /path/to/database-bundles
+```
+
+After publication, one command will download, verify and install the complete set:
+
+```bash
+python scripts/download_database.py
+```
+
+Existing verified files are reused. Use `python scripts/download_database.py
+--check` to verify the complete installation without changing files.
+Non-European PLINK panels do not change the workflow's European LDSC background
+reference. See [data preparation](docs/data.md) for sources, platform restrictions
+and storage requirements.
 
 ## Start
 
@@ -108,7 +132,22 @@ print(result["summary"])
 This requires the prepared input contract and R environment in
 [mr-primary](skills/mr-primary/SKILL.md).
 
-## Offline installation example
+## Examples
+
+Start `mrcat-web --port 7869` and select **Result 4 · Hexadecanedioate → CAD**
+in the sidebar. The included read-only recording shows the original MR analysis,
+FinnGen replication and final scientific report, including failed attempts and
+subsequent corrections. Viewing it makes no model calls and requires no API key.
+Inspect the plans, code, tables and plots in the Conversation and Execution
+Notebook. See the [Result 4 guide](examples/result4/README.md) for provenance and
+static-site export. The recording contains selected small outputs, not the
+original GWAS files or a resumable session database.
+
+The [BMI → T2D tutorial](examples/bmi_t2d/README.md) describes literature search,
+online-data analysis, local-file analysis and follow-up MR-APSS analysis.
+Its demonstration run is incomplete; no BMI → T2D recording is included.
+
+## Offline installation check
 
 ```bash
 python examples/offline_smoke.py
@@ -123,16 +162,16 @@ experiment. Scientific analysis requires the real dependencies and inputs above.
 ```text
 mrcat/       Agent, model gateway, state, results, reporting and Web console
 skills/      Skill guides, Python/R analysis wrappers and plot explanations
-scripts/     R dependency installation
+scripts/     R dependency installation and reference-data download/verification
 examples/    Small software usage examples
 tests/       Product behavior, method output and browser regressions
 docs/        Architecture, installation resources and user documentation
 ```
 
-This repository contains the MRCAT software and its usage examples. Paper
-benchmark inputs, experiment runners and result archives are maintained
-separately and are not included here. The offline example above checks software
-installation; it does not reproduce the manuscript experiments.
+Full paper experiment inputs, runners and results are maintained separately and
+are not bundled with this software. The selected read-only example above is
+included for inspection. Development audit scripts and records, private settings,
+session stores and reference databases are excluded from the source distribution.
 
 ## Development
 

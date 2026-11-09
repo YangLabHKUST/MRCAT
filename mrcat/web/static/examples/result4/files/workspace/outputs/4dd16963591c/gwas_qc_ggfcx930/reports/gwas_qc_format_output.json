@@ -1,0 +1,38 @@
+{
+  "summary": "gwas-qc formatting completed: min_freq=0.05; rows input=20073070, formatted=1096194, removed=18976876; input_rows=20073070, ambiguous_removed=2837114, mhc_removed=0, duplicate_removed=16051563, hapmap_reference_removed=0, invalid_pvalue_removed=0, missing_value_removed=0, sample_size_outlier_removed=3075, chi_square_outlier_removed=3, formatted_rows=1096194, input_effect_field=beta, beta_from_or=false, formatted_effect_representation=source_beta; report=/recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/reports/gwas_qc_format_report.json.",
+  "outputs": {
+    "status": "ok",
+    "gwas_qc_format_result": {
+      "formatted_path": "/recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/formatted/study.mrapss.tsv.gz",
+      "format_report_path": "/recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/reports/gwas_qc_format_report.json",
+      "label": "Coronary artery disease",
+      "ancestry": "european",
+      "n_input": 20073070,
+      "n_final": 1096194,
+      "n_removed": 18976876,
+      "diagnostics": {
+        "min_freq": 0.05,
+        "formatted_rows": 1096194,
+        "input_rows": 20073070,
+        "removed_rows": 18976876,
+        "format_report_path": "/recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/reports/gwas_qc_format_report.json"
+      }
+    }
+  },
+  "details": {
+    "result_status": "ok",
+    "failure_class": null
+  },
+  "artifacts": [
+    {
+      "path": "/recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/formatted/study.mrapss.tsv.gz",
+      "kind": "tsv",
+      "summary": "analysis-ready formatted GWAS"
+    },
+    {
+      "path": "/recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/reports/gwas_qc_format_report.json",
+      "kind": "json",
+      "summary": "GWAS format report"
+    }
+  ]
+}

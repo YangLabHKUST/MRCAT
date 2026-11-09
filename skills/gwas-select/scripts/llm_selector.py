@@ -83,7 +83,7 @@ def _download_descriptor(item: Candidate) -> dict[str, Any]:
     }
 
 
-def _compact_candidate(item: Candidate) -> Candidate:
+def _compact_candidate(item: Candidate, target: dict[str, Any] | None = None) -> Candidate:
     metadata = (
         item.get("study_metadata")
         if isinstance(item.get("study_metadata"), dict)
@@ -93,6 +93,11 @@ def _compact_candidate(item: Candidate) -> Candidate:
         "study_id": item.get("study_id"),
         "source": item.get("source"),
         "trait": item.get("trait"),
+        "reported_trait_matches_request": (
+            " ".join(str(item.get("trait") or "").casefold().split())
+            == " ".join(str(target.get("value") or "").casefold().split())
+            if target and target.get("kind") == "trait" and target.get("value") else None
+        ),
         "ancestry": item.get("ancestry"),
         "ancestry_raw": item.get("ancestry_raw"),
         "downloadable": bool(item.get("downloadable")),
@@ -168,11 +173,20 @@ def build_prompt_package(
         sections["Memory"] = memory_text
     sections["Candidate Pool"] = {
         target_key: [
-            _compact_candidate(item)
+            _compact_candidate(item, target_specs.get(target_key))
             for item in candidates
         ]
         for target_key, candidates in candidates_by_target.items()
     }
+    sections["Selection Priorities"] = (
+        "Preserve explicit user constraints and reject incompatible endpoint definitions. "
+        "Then compare each eligible candidate's reported trait with the original Target Specs value, "
+        "not just its search aliases. Prefer the full requested trait over a shortened or synonymous "
+        "label before ranking sample size or metadata completeness. Download format, ready VCFs, "
+        "familiar APIs and extra build/unit metadata must not overturn this preference without "
+        "evidence that the closer candidate cannot meet a requested requirement. Explain the "
+        "trait comparison against the closest alternative in selection_reason."
+    )
     return assembler.build_structured_prompt(
         role_name="gwas_select",
         stage="selector",
@@ -327,11 +341,12 @@ def select_shortlists(
             system=prompt_package.system_prompt,
             user=prompt_package.user_prompt,
             example={
-                "selected_studies": example_selected,
                 "selection_reason": (
-                    "Selected one semantically matched, executable study per "
-                    "target; ancestry and source compatibility were preferred."
+                    "For each target, compare the full requested trait with the closest "
+                    "eligible candidates and explain which best preserves its definition "
+                    "and wording, subject to explicit study and population constraints."
                 ),
+                "selected_studies": example_selected,
             },
             validator=lambda payload: validate_selection(
                 payload,

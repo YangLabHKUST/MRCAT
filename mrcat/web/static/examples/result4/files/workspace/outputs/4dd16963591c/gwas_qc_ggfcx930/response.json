@@ -1,0 +1,49 @@
+{
+  "summary": "gwas-qc completed: canonical_rows=20073070, formatted_rows=1096194. genome_build=grch37, genome_build_reason=Study metadata explicitly states genome_assembly GRCh37 and file notes state base_pair_location is according to GRCh37; coordinate_check matched 365 sampled positions to GRCh37 versus 1 to GRCh38. gwas-qc formatting completed: min_freq=0.05; rows input=20073070, formatted=1096194, removed=18976876; input_rows=20073070, ambiguous_removed=2837114, mhc_removed=0, duplicate_removed=16051563, hapmap_reference_removed=0, invalid_pvalue_removed=0, missing_value_removed=0, sample_size_outlier_removed=3075, chi_square_outlier_removed=3, formatted_rows=1096194, input_effect_field=beta, beta_from_or=false, formatted_effect_representation=source_beta; report=/recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/reports/gwas_qc_format_report.json.",
+  "outputs": {
+    "status": "ok",
+    "gwas_qc_result": {
+      "canonical_path": "/recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/canonical/study.canonical.tsv.gz",
+      "formatted_path": "/recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/formatted/study.mrapss.tsv.gz",
+      "report_path": "/recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/reports/gwas_qc_report.json",
+      "explanation_path": "/recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/reports/gwas_qc_explanation.md",
+      "genome_build": "grch37",
+      "genome_build_reason": "Study metadata explicitly states genome_assembly GRCh37 and file notes state base_pair_location is according to GRCh37; coordinate_check matched 365 sampled positions to GRCh37 versus 1 to GRCh38.",
+      "sample_size": 1165690.0,
+      "label": "Coronary artery disease",
+      "ancestry": "european"
+    }
+  },
+  "details": {
+    "result_status": "ok",
+    "failure_class": null,
+    "risk_notes": []
+  },
+  "artifacts": [
+    {
+      "path": "/recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/canonical/study.canonical.tsv.gz",
+      "kind": "tsv",
+      "summary": "validated canonical GWAS"
+    },
+    {
+      "path": "/recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/generated_code/study_attempt_1.py",
+      "kind": "py",
+      "summary": "validated GWAS canonicalization transform"
+    },
+    {
+      "path": "/recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/formatted/study.mrapss.tsv.gz",
+      "kind": "tsv",
+      "summary": "analysis-ready formatted GWAS"
+    },
+    {
+      "path": "/recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/reports/gwas_qc_report.json",
+      "kind": "json",
+      "summary": "GWAS QC report"
+    },
+    {
+      "path": "/recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/reports/gwas_qc_explanation.md",
+      "kind": "md",
+      "summary": "human-readable GWAS QC explanation"
+    }
+  ]
+}

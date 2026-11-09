@@ -1,0 +1,57 @@
+{
+  "execution_id": "ab1a0916e40f",
+  "language": "python",
+  "status": "exited",
+  "returncode": 0,
+  "stdout": "analysis-method-comparison completed: compared 6 method estimates and generated 4 plots. Compared 6 MR estimates. All supplied point estimates were negative. Interpret direction, uncertainty intervals, instrument selection, and diagnostics under each method's assumptions; method-specific p-values are not votes and may test different null hypotheses.\nstatus: ok\ncomparison_table_path : /recorded-session/workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/reports/method_comparison_estimates.tsv\nresult_record_path : /recorded-session/workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/reports/method_comparison_result_record.json\nplot_manifest : {'plots': [{'plot_id': 'method_comparison_summary', 'path': '/recorded-session/workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/plots/method_comparison_summary.png', 'title': 'MR effect and instrument summary', 'source': 'method_comparison_result', 'explanation_path': '/local/jyxProject/MRCAT-langgraph/skills/analysis-method-comparison/plot_explanations/method_comparison_summary.md'}, {'plot_id': 'method_comparison_pvalues', 'path': '/recorded-session/workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/plots/method_comparison_pvalues.png', 'title': 'MR p-value comparison', 'source': 'method_comparison_result', 'explanation_path': '/local/jyxProject/MRCAT-langgraph/skills/analysis-method-comparison/plot_explanations/method_comparison_pvalues.md'}, {'plot_id': 'method_comparison_slope_overlay', 'path': '/recorded-session/workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/plots/method_comparison_slope_overlay.png', 'title': 'SNP effects with method slope comparison', 'source': 'method_comparison_result', 'explanation_path': '/local/jyxProject/MRCAT-langgraph/skills/analysis-method-comparison/plot_explanations/method_comparison_slope_overlay.md'}, {'plot_id': 'method_comparison_funnel', 'path': '/recorded-session/workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/plots/method_comparison_funnel.png', 'title': 'SNP-level method comparison funnel', 'source': 'method_comparison_result', 'explanation_path': '/local/jyxProject/MRCAT-langgraph/skills/analysis-method-comparison/plot_explanations/method_comparison_funnel.md'}], 'standard_bundle': {'expected_plot_ids': ['method_comparison_pvalues', 'method_comparison_summary'], 'generated_plot_ids': ['method_comparison_funnel', 'method_comparison_pvalues', 'method_comparison_slope_overlay', 'method_comparison_summary'], 'missing_plot_ids': [], 'degraded': False}}\nartifacts: [{'path': '/recorded-session/workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/reports/method_comparison_estimates.tsv', 'kind': 'tsv', 'summary': 'Normalized MR method comparison table'}, {'path': '/recorded-session/workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/reports/method_comparison_result_record.json', 'kind': 'json', 'summary': 'MR method comparison result record'}, {'path': '/recorded-session/workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/plots/method_comparison_summary.png', 'kind': 'png', 'summary': 'MR effect and instrument summary'}, {'path': '/recorded-session/workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/plots/method_comparison_pvalues.png', 'kind': 'png', 'summary': 'MR p-value comparison'}, {'path': '/recorded-session/workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/plots/method_comparison_slope_overlay.png', 'kind': 'png', 'summary': 'SNP effects with method slope comparison'}, {'path': '/recorded-session/workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/plots/method_comparison_funnel.png', 'kind': 'png', 'summary': 'SNP-level method comparison funnel'}]\n",
+  "stderr": "",
+  "source_path": "executions/ab1a0916e40f/code.py",
+  "stdout_path": "executions/ab1a0916e40f/stdout.log",
+  "stderr_path": "executions/ab1a0916e40f/stderr.log",
+  "duration_seconds": 14.743,
+  "working_directory": "/recorded-session/workspace",
+  "generated_files": [
+    "workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/response.json",
+    "workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/.matplotlib/fontlist-v390.json",
+    "workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/reports/method_comparison_result_record.json",
+    "workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/reports/method_comparison_estimates.tsv",
+    "workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/plots/method_comparison_summary.pdf",
+    "workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/plots/method_comparison_funnel.tiff",
+    "workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/plots/method_comparison_funnel.svg",
+    "workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/plots/method_comparison_summary.tiff",
+    "workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/plots/method_comparison_pvalues.png",
+    "workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/plots/method_comparison_slope_overlay.tiff",
+    "workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/plots/method_comparison_summary.png",
+    "workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/plots/method_comparison_slope_overlay.pdf",
+    "workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/plots/method_comparison_slope_overlay.svg",
+    "workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/plots/method_comparison_funnel.png",
+    "workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/plots/method_comparison_pvalues.tiff",
+    "workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/plots/method_comparison_pvalues.svg",
+    "workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/plots/method_comparison_pvalues.pdf",
+    "workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/plots/method_comparison_summary.svg",
+    "workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/plots/method_comparison_slope_overlay.png",
+    "workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/plots/method_comparison_funnel.pdf"
+  ],
+  "tool_results": [
+    {
+      "path": "workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/response.json",
+      "status": "ok",
+      "failure_class": null,
+      "summary": "analysis-method-comparison completed: compared 6 method estimates and generated 4 plots. Compared 6 MR estimates. All supplied point estimates were negative. Interpret direction, uncertainty intervals, instrument selection, and diagnostics under each method's assumptions; method-specific p-values are not votes and may test different null hypotheses.",
+      "message": ""
+    }
+  ],
+  "result_refs": [
+    {
+      "ref": "$ref:analysis_method_comparison_65635ee21220",
+      "fields": [
+        "status",
+        "method_comparison_result"
+      ],
+      "status": "ok",
+      "tool": "analysis_method_comparison",
+      "input_identity": {},
+      "response_path": "/recorded-session/workspace/outputs/ab1a0916e40f/analysis_method_comparison_x4nfwg_r/response.json"
+    }
+  ]
+}

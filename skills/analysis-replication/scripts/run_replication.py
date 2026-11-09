@@ -91,8 +91,6 @@ def _configure_plot_style(plt: Any) -> None:
             "font.family": "sans-serif",
             "font.sans-serif": ["Arial", "Helvetica", "DejaVu Sans", "Liberation Sans", "sans-serif"],
             "font.weight": "bold",
-            "svg.fonttype": "none",
-            "pdf.fonttype": 42,
             "font.size": 12,
             "axes.titlesize": 15,
             "axes.labelsize": 12,
@@ -112,16 +110,7 @@ def _configure_plot_style(plt: Any) -> None:
 
 
 def _save_publication_figure(figure: Any, plt: Any, path: Path) -> None:
-    figure.savefig(path.with_suffix(".svg"), bbox_inches="tight", facecolor="white")
-    figure.savefig(path.with_suffix(".pdf"), bbox_inches="tight", facecolor="white")
     figure.savefig(path, dpi=600, bbox_inches="tight", facecolor="white")
-    figure.savefig(
-        path.with_suffix(".tiff"),
-        dpi=600,
-        bbox_inches="tight",
-        facecolor="white",
-        pil_kwargs={"compression": "tiff_lzw"},
-    )
     plt.close(figure)
 
 
@@ -564,7 +553,7 @@ def _forest_matrix(
 
     figure.text(
         0.59, 0.055,
-        "MR estimate (β)",
+        "MR estimate ($\\hat{\\beta}$)",
         fontsize=10.5, fontweight="bold", color="#111111", ha="center", va="bottom",
     )
     _save_publication_figure(figure, plt, path)

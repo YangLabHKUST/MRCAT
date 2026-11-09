@@ -1,0 +1,209 @@
+{
+  "method": "method_comparison",
+  "input_scale": "standardize",
+  "methods": [
+    {
+      "method": "IVW",
+      "display_label": "IVW",
+      "source_result_path": "/recorded-session/workspace/outputs/cc5ac7326e22/mr_primary_tizeuu7q/reports/mr_primary_result_record.json",
+      "input_scale": "standardize",
+      "endpoint": "mr_primary",
+      "Threshold": 5e-06,
+      "selection_threshold": 5e-06,
+      "nsnp": 10,
+      "nvalid": null,
+      "beta.hat": -0.00877503934156128,
+      "se": 0.0059768865785,
+      "pval": 0.142060151406819,
+      "ci": {
+        "level": 0.95,
+        "ranges": [
+          {
+            "lower": -0.0204895217751021,
+            "upper": 0.00293944309197954
+          }
+        ]
+      }
+    },
+    {
+      "method": "MR-Egger",
+      "display_label": "MR-Egger",
+      "source_result_path": "/recorded-session/workspace/outputs/cc5ac7326e22/mr_primary_tizeuu7q/reports/mr_primary_result_record.json",
+      "input_scale": "standardize",
+      "endpoint": "mr_primary",
+      "Threshold": 5e-06,
+      "selection_threshold": 5e-06,
+      "nsnp": 10,
+      "nvalid": null,
+      "beta.hat": -0.0393964274516033,
+      "se": 0.0253493444212965,
+      "pval": 0.158757590345491,
+      "ci": {
+        "level": 0.95,
+        "ranges": [
+          {
+            "lower": -0.0978521205118276,
+            "upper": 0.019059265608621
+          }
+        ]
+      }
+    },
+    {
+      "method": "Weighted median",
+      "display_label": "Weighted median",
+      "source_result_path": "/recorded-session/workspace/outputs/cc5ac7326e22/mr_primary_tizeuu7q/reports/mr_primary_result_record.json",
+      "input_scale": "standardize",
+      "endpoint": "mr_primary",
+      "Threshold": 5e-06,
+      "selection_threshold": 5e-06,
+      "nsnp": 10,
+      "nvalid": null,
+      "beta.hat": -0.0131300643345956,
+      "se": 0.00620854820629253,
+      "pval": 0.0344438851315121,
+      "ci": {
+        "level": 0.95,
+        "ranges": [
+          {
+            "lower": -0.0252985952152097,
+            "upper": -0.000961533453981518
+          }
+        ]
+      }
+    },
+    {
+      "method": "Weighted mode",
+      "display_label": "Weighted mode",
+      "source_result_path": "/recorded-session/workspace/outputs/cc5ac7326e22/mr_primary_tizeuu7q/reports/mr_primary_result_record.json",
+      "input_scale": "standardize",
+      "endpoint": "mr_primary",
+      "Threshold": 5e-06,
+      "selection_threshold": 5e-06,
+      "nsnp": 10,
+      "nvalid": null,
+      "beta.hat": -0.0175270809988976,
+      "se": 0.0189442944019554,
+      "pval": 0.379006247645994,
+      "ci": {
+        "level": 0.95,
+        "ranges": [
+          {
+            "lower": -0.0603820522744389,
+            "upper": 0.0253278902766438
+          }
+        ]
+      }
+    },
+    {
+      "method": "MR-APSS",
+      "display_label": "MR-APSS",
+      "source_result_path": "/recorded-session/workspace/outputs/f2ed685faa65/mr_apss_sqnnzrer/reports/mrapss_result_record.json",
+      "input_scale": "standardize",
+      "endpoint": "mrapss",
+      "Threshold": 5e-05,
+      "selection_threshold": null,
+      "nsnp": 31,
+      "nvalid": 9.59970046518117,
+      "beta.hat": -0.0148554543367293,
+      "se": 0.00997435147238598,
+      "pval": 0.13639,
+      "ci": {
+        "level": 0.95,
+        "ranges": [
+          {
+            "lower": -0.0344051832226058,
+            "upper": 0.00469427454914721
+          }
+        ]
+      }
+    },
+    {
+      "method": "BWMR",
+      "display_label": "BWMR",
+      "source_result_path": "/recorded-session/workspace/outputs/a4b4ddfdf6f8/mr_bwmr_82v_7hvf/reports/mr_bwmr_result_record.json",
+      "input_scale": "standardize",
+      "endpoint": "mr_bwmr",
+      "Threshold": 5e-06,
+      "selection_threshold": 5e-06,
+      "nsnp": 10,
+      "nvalid": null,
+      "beta.hat": -0.00901668509042803,
+      "se": 0.00621574651963823,
+      "pval": 0.146885753486633,
+      "ci": {
+        "level": 0.95,
+        "ranges": [
+          {
+            "lower": -0.0211995482689189,
+            "upper": 0.00316617808806289
+          }
+        ]
+      }
+    }
+  ],
+  "comparison_table_path": "/recorded-session/workspace/outputs/9e6d6ea63abf/analysis_method_comparison_tdn4785n/reports/method_comparison_estimates.tsv",
+  "diagnostics": {
+    "source_result_count": 3,
+    "source_result_paths": [
+      "/recorded-session/workspace/outputs/a4b4ddfdf6f8/mr_bwmr_82v_7hvf/reports/mr_bwmr_result_record.json",
+      "/recorded-session/workspace/outputs/cc5ac7326e22/mr_primary_tizeuu7q/reports/mr_primary_result_record.json",
+      "/recorded-session/workspace/outputs/f2ed685faa65/mr_apss_sqnnzrer/reports/mrapss_result_record.json"
+    ],
+    "estimate_count": 6,
+    "valid_pvalue_count": 6,
+    "mrdat_points_read": 10,
+    "snp_points_plotted": 10,
+    "warnings": []
+  },
+  "interpretation": {
+    "summary": "Compared 6 MR estimates. All supplied point estimates were negative. Interpret direction, uncertainty intervals, instrument selection, and diagnostics under each method's assumptions; method-specific p-values are not votes and may test different null hypotheses.",
+    "recommendations": []
+  },
+  "plot_manifest": {
+    "plots": [
+      {
+        "plot_id": "method_comparison_summary",
+        "path": "/recorded-session/workspace/outputs/9e6d6ea63abf/analysis_method_comparison_tdn4785n/plots/method_comparison_summary.png",
+        "title": "MR effect and instrument summary",
+        "source": "method_comparison_result",
+        "explanation_path": "/local/jyxProject/MRCAT-langgraph/skills/analysis-method-comparison/plot_explanations/method_comparison_summary.md"
+      },
+      {
+        "plot_id": "method_comparison_pvalues",
+        "path": "/recorded-session/workspace/outputs/9e6d6ea63abf/analysis_method_comparison_tdn4785n/plots/method_comparison_pvalues.png",
+        "title": "MR p-value comparison",
+        "source": "method_comparison_result",
+        "explanation_path": "/local/jyxProject/MRCAT-langgraph/skills/analysis-method-comparison/plot_explanations/method_comparison_pvalues.md"
+      },
+      {
+        "plot_id": "method_comparison_slope_overlay",
+        "path": "/recorded-session/workspace/outputs/9e6d6ea63abf/analysis_method_comparison_tdn4785n/plots/method_comparison_slope_overlay.png",
+        "title": "SNP effects with method slope comparison",
+        "source": "method_comparison_result",
+        "explanation_path": "/local/jyxProject/MRCAT-langgraph/skills/analysis-method-comparison/plot_explanations/method_comparison_slope_overlay.md"
+      },
+      {
+        "plot_id": "method_comparison_funnel",
+        "path": "/recorded-session/workspace/outputs/9e6d6ea63abf/analysis_method_comparison_tdn4785n/plots/method_comparison_funnel.png",
+        "title": "SNP-level method comparison funnel",
+        "source": "method_comparison_result",
+        "explanation_path": "/local/jyxProject/MRCAT-langgraph/skills/analysis-method-comparison/plot_explanations/method_comparison_funnel.md"
+      }
+    ],
+    "standard_bundle": {
+      "expected_plot_ids": [
+        "method_comparison_pvalues",
+        "method_comparison_summary"
+      ],
+      "generated_plot_ids": [
+        "method_comparison_funnel",
+        "method_comparison_pvalues",
+        "method_comparison_slope_overlay",
+        "method_comparison_summary"
+      ],
+      "missing_plot_ids": [],
+      "degraded": false
+    }
+  },
+  "result_record_path": "/recorded-session/workspace/outputs/9e6d6ea63abf/analysis_method_comparison_tdn4785n/reports/method_comparison_result_record.json"
+}

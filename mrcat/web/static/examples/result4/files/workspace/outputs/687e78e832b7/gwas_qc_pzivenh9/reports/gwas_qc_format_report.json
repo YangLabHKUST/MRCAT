@@ -1,0 +1,14 @@
+{
+  "min_freq": 0.05,
+  "study": {
+    "trait": "",
+    "formatted_path": "/recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/formatted/study.mrapss.tsv.gz",
+    "format_report_path": "/recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/reports/mrapss_format_study.json",
+    "n_input": 2545171,
+    "n_final": 1026635,
+    "n_removed": 1518536,
+    "messages": ["Begin formatting .... \n", "The raw data set has 2545171 dat lines\n", "Remove ambiguous SNPs ..., remaining 2153996 SNPs.\n", "Remove SNPs in MHC region ..., remaining 2143548 SNPs.\n", "Remove duplicated SNPs ..., remaining 2143548 SNPs.\n", "Merge SNPs with the hapmap3 snplist ..., remaining 1134287 SNPs.\n", "Remove SNPs with alleles not matched with the hapmap3 snplist, remaining 1134249 SNPs.\n", "Remove SNPs with MAF less than0.05, remaining 1026691 SNPs.\n", "Generating sample size from specified sample size\n", "Remove SNPs with p-value < 0 or p-value > 1, remaining 1026691 SNPs.\n", "Remove missing values, remaining 1026691 SNPs.\n", "Remove SNPs with sample size 5 standard deviations away from the mean, remaining 1026691 SNPs.\n", "Remove SNPs with chi2 > chi2_max ... , remaining 1026635 SNPs.\n", "The formatted data has 1026635 dat lines. \n\n"]
+  },
+  "total_input": 2545171,
+  "total_final": 1026635
+}

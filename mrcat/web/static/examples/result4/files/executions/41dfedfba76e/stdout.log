@@ -1,0 +1,86 @@
+[gwas-search] Starting trait target search: trait=coronary artery disease; query=coronary artery disease; sources=finngen.
+[gwas-search] Searching target.
+[gwas-search] Searching target in finngen: query variants=3.
+[gwas-search] Downloading FinnGen R12 manifest.
+[gwas-search] Downloading FinnGen R12 manifest: 0.7 MiB / 0.7 MiB (100.0%).
+[gwas-search] Completed download FinnGen R12 manifest: 0.7 MiB.
+[gwas-search] Decompressing FinnGen R12 manifest.
+[gwas-search] Decompressed FinnGen R12 manifest: 0.7 MiB in 3 ms.
+[gwas-search] Scanning FinnGen R12 manifest.
+[gwas-search] Scanned FinnGen R12 manifest: rows=2469 in 17 ms.
+[gwas-search] Probing URL: https://storage.googleapis.com/finngen-public-data-r12/summary_stats/release/finngen_R12_I9_CHD.gz.
+[gwas-search] URL probe ok with HTTP 200 in 1356 ms: https://storage.googleapis.com/finngen-public-data-r12/summary_stats/release/finngen_R12_I9_CHD.gz.
+[gwas-search] Probing URL: https://storage.googleapis.com/finngen-public-data-r12/summary_stats/release/finngen_R12_I9_HEARTFAIL_AND_CHD.gz.
+[gwas-search] URL probe ok with HTTP 200 in 370 ms: https://storage.googleapis.com/finngen-public-data-r12/summary_stats/release/finngen_R12_I9_HEARTFAIL_AND_CHD.gz.
+[gwas-search] Finished target in finngen: candidates=2; probes=2; downloadable=2; elapsed_ms=2146.
+[gwas-search] Finished target: downloadable_candidates=2.
+[gwas-search] Writing shortlist artifact: /recorded-session/workspace/outputs/41dfedfba76e/gwas_search_1azkfd0w/gwas_search_shortlists.json.
+[gwas-search] Writing human-readable shortlist workbook: /recorded-session/workspace/outputs/41dfedfba76e/gwas_search_1azkfd0w/gwas_search_shortlists.xlsx.
+[gwas-search] Writing raw search artifact: /recorded-session/workspace/outputs/41dfedfba76e/gwas_search_1azkfd0w/gwas_search_raw.json.
+[gwas-search] Completed target search: kind=trait; value=coronary artery disease; candidates=2.
+GWAS search completed: searched FinnGen for trait="coronary artery disease"; found 2 downloadable candidate(s) (Major coronary heart disease event | Heart failure and coronary heart disease).
+Shortlist path: /recorded-session/workspace/outputs/41dfedfba76e/gwas_search_1azkfd0w/gwas_search_shortlists.json
+Candidate count: 2
+[
+  {
+    "source": "finngen",
+    "study_id": "finngen_R12_I9_CHD",
+    "trait": "Major coronary heart disease event",
+    "sample_size": 500348,
+    "ancestry": "finnish",
+    "downloadable": true
+  },
+  {
+    "source": "finngen",
+    "study_id": "finngen_R12_I9_HEARTFAIL_AND_CHD",
+    "trait": "Heart failure and coronary heart disease",
+    "sample_size": 461230,
+    "ancestry": "finnish",
+    "downloadable": true
+  }
+]
+Diagnostics: {
+  "candidate_count": 2,
+  "sources_attempted": [
+    "finngen"
+  ],
+  "search_exhausted": false,
+  "preferred_sources": [
+    "finngen"
+  ],
+  "allow_source_fallback": false,
+  "source_reports": [
+    {
+      "source": "finngen",
+      "status": "ok",
+      "n_results": 2,
+      "message": "target: searched 3 query variant(s).",
+      "metadata_endpoint": "https://storage.googleapis.com/finngen-public-data-r12/summary_stats/finngen_R12_manifest.tsv"
+    }
+  ],
+  "source_timings": {
+    "finngen": {
+      "status": "ok",
+      "n_results": 2,
+      "elapsed_ms": 2146,
+      "probe_total": 2,
+      "probe_success_count": 2,
+      "probe_failure_count": 0,
+      "cache_scope": "process_only",
+      "session_cache_hits": 0,
+      "session_cache_misses": 0,
+      "release": "R12",
+      "manifest_url": "https://storage.googleapis.com/finngen-public-data-r12/summary_stats/finngen_R12_manifest.tsv",
+      "rows_scanned": 2469,
+      "matched_candidate_count": 0,
+      "probe_budget": 20,
+      "probe_count": 2,
+      "search_mode": "manifest",
+      "raw_candidate_count": 2,
+      "ancestry_filter_drop_count": 0,
+      "unique_candidate_count": 2,
+      "executable_candidate_count": 2,
+      "dedup_drop_count": 0
+    }
+  }
+}

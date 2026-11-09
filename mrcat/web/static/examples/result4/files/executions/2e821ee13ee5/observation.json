@@ -1,0 +1,61 @@
+{
+  "execution_id": "2e821ee13ee5",
+  "language": "python",
+  "status": "exited",
+  "returncode": 0,
+  "stdout": "[gwas-qc] Canonicalizing one GWAS: /recorded-session/cache/gwas-download/finngen/finngen_R12_I9_CHD/476be6a631a2a14b/finngen_R12_I9_CHD.gz\n[gwas-qc] Starting study canonicalization: raw_path=/recorded-session/cache/gwas-download/finngen/finngen_R12_I9_CHD/476be6a631a2a14b/finngen_R12_I9_CHD.gz\n[gwas-qc] study preview started.\n[gwas-qc] study preview done: format=table; header_fields=13; sample_rows=50.\n[gwas-qc] study sample input written: /recorded-session/workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/samples/study.sample.txt.gz\n[gwas-qc] study counting input rows.\n[gwas-qc] study input rows counted: rows=21327062.\n[gwas-qc] study LLM codegen attempt 1/3 started.\n[gwas-qc] study LLM code written for attempt 1: /recorded-session/workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/generated_code/study_attempt_1.py\n[gwas-qc] study sample execution attempt 1 started: rows=50.\n[gwas-qc] study sample execution attempt 1 finished: exit_code=0.\n[gwas-qc] study sample validation attempt 1 started.\n[gwas-qc] study sample validation attempt 1 passed: rows=50; snp_counts={'rsid': 48, 'coordinate': 0, 'other': 0, 'missing': 2}.\n[gwas-qc] study full execution started: rows=21327062; code=/recorded-session/workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/generated_code/study_attempt_1.py.\n[gwas-qc] study full execution finished: exit_code=0.\n[gwas-qc] study pre-mapping validation started.\n[gwas-qc] study pre-mapping validation passed: rows=21327062; snp_counts={'rsid': 20603728, 'coordinate': 0, 'other': 0, 'missing': 723334}.\n[gwas-qc] study genome build coordinate check started.\n[gwas-qc] study genome build coordinate check done: {'checked': 1000, 'grch37_matches': 1, 'grch38_matches': 316}.\n[gwas-qc] study genome build LLM inference started.\n[gwas-qc] study genome build inferred: genome_build=grch38; reason=The coordinate_check sampled 1000 variants and found 316 GRCh38 matches versus 1 GRCh37 match, indicating GRCh38 coordinates.\n[gwas-qc] study HM3 rsID mapping started: genome_build=grch38.\n[gwas-qc] study HM3 rsID mapping done: {'raw_rsid_retained': 20603728, 'hm3_rsid_mapped': 0, 'unmapped_rows': 723334, 'rows': 21327062, 'genome_build': 'grch38', 'enabled': True}.\n[gwas-qc] study final strict validation started.\n[gwas-qc] study final strict validation passed: rows=21327062; snp_counts={'rsid': 20603728, 'coordinate': 0, 'other': 0, 'missing': 723334}.\n[gwas-qc] study canonical output ready: /recorded-session/workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/canonical/study.canonical.tsv.gz\n[gwas-qc] Formatting and filtering the canonical study.\n[gwas-qc] Loaded MR-APSS references; min_freq=0.05.\n[gwas-qc] Reading study canonical GWAS: /recorded-session/workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/canonical/study.canonical.tsv.gz\n[gwas-qc] Loaded study canonical GWAS: rows=21327062; sample_size=500348; min_freq=0.05.\n[gwas-qc] Sample size decision for study: source=side_level_sample_size; detail=side-level sample_size=500348; n_col=none; n_cases_col=none; n_controls_col=none; side_sample_size=500348.\n[gwas-qc] Formatting study with MRAPSS::format_data.\n[gwas-qc] Completed study formatting: input rows=21327062; retained rows=1056297.\n[gwas-qc] Sample size used for study: source=side_level_sample_size (side-level sample_size=500348); final formatted N is fixed at 500348 for 1056297 rows.\n[gwas-qc] mrcat_format_data study message: Begin formatting ....\n[gwas-qc] mrcat_format_data study message: The raw data set has 21327062 dat lines\n[gwas-qc] mrcat_format_data study message: Remove ambiguous SNPs ..., remaining 18292344 SNPs.\n[gwas-qc] mrcat_format_data study message: Remove SNPs in MHC region ..., remaining 18242211 SNPs.\n[gwas-qc] mrcat_format_data study message: Remove duplicated SNPs ..., remaining 17409372 SNPs.\n[gwas-qc] mrcat_format_data study message: Merge SNPs with the hapmap3 snplist ..., remaining 1195372 SNPs.\n[gwas-qc] mrcat_format_data study message: Remove SNPs with alleles not matched with the hapmap3 snplist, remaining 1195335 SNPs.\n[gwas-qc] mrcat_format_data study message: Remove SNPs with MAF less than0.05, remaining 1056310 SNPs.\n[gwas-qc] mrcat_format_data study message: Generating sample size from specified sample size\n[gwas-qc] mrcat_format_data study message: Remove SNPs with p-value < 0 or p-value > 1, remaining 1056310 SNPs.\n[gwas-qc] mrcat_format_data study message: Remove missing values, remaining 1056310 SNPs.\n[gwas-qc] mrcat_format_data study message: Remove SNPs with sample size 5 standard deviations away from the mean, remaining 1056310 SNPs.\n[gwas-qc] mrcat_format_data study message: Remove SNPs with chi2 > chi2_max ... , remaining 1056297 SNPs.\n[gwas-qc] mrcat_format_data study message: The formatted data has 1056297 dat lines.\n[gwas-qc] Formatting evidence for study: removed_rows=20270765; log_pval=FALSE; beta_from_or=FALSE; n_from_case_control=FALSE; formatted_P_range=[1.57036e-110, 1e+00]; formatted_Z_range=[-1.54888e+01, 2.23383e+01]; formatted_N_range=[5.00348e+05, 5.00348e+05]; messages=Begin formatting .... \n | The raw data set has 21327062 dat lines\n | Remove ambiguous SNPs ..., remaining 18292344 SNPs.\n | Remove SNPs in MHC region ..., remaining 18242211 SNPs.\n | Remove duplicated SNPs ..., remaining 17409372 SNPs.\n | Merge SNPs with the hapmap3 snplist ..., remaining 1195372 SNPs.\n | Remove SNPs with alleles not matched with the hapmap3 snplist, remaining 1195335 SNPs.\n | Remove SNPs with MAF less than0.05, remaining 1056310 SNPs.\n | Generating sample size from specified sample size\n | Remove SNPs with p-value < 0 or p-value > 1, remaining 1056310 SNPs.\n | Remove missing values, remaining 1056310 SNPs.\n | Remove SNPs with sample size 5 standard deviations away from the mean, remaining 1056310 SNPs.\n | Remove SNPs with chi2 > chi2_max ... , remaining 1056297 SNPs.\n | The formatted data has 1056297 dat lines. \n\n.\n[gwas-qc] Writing study formatted GWAS: /recorded-session/workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/formatted/study.mrapss.tsv.gz\n[gwas-qc] Completed successfully.\n[gwas-qc] Completed successfully: canonical_rows=21327062; formatted_rows=1056297; genome_build=grch38; genome_build_reason=The coordinate_check sampled 1000 variants and found 316 GRCh38 matches versus 1 GRCh37 match, indicating GRCh38 coordinates.\ngwas-qc completed: canonical_rows=21327062, formatted_rows=1056297. genome_build=grch38, genome_build_reason=The coordinate_check sampled 1000 variants and found 316 GRCh38 matches versus 1 GRCh37 match, indicating GRCh38 coordinates. gwas-qc formatting completed: min_freq=0.05; rows input=21327062, formatted=1056297, removed=20270765; input_rows=21327062, ambiguous_removed=3034718, mhc_removed=50133, duplicate_removed=832839, hapmap_reference_removed=16214000, hapmap_allele_mismatch_removed=37, low_maf_removed=139025, invalid_pvalue_removed=0, missing_value_removed=0, sample_size_outlier_removed=0, chi_square_outlier_removed=13, formatted_rows=1056297, input_effect_field=beta, beta_from_or=false, formatted_effect_representation=source_beta; report=/recorded-session/workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/reports/gwas_qc_format_report.json.\nstatus: ok\ngwas_qc_result keys: ['ancestry', 'canonical_path', 'explanation_path', 'formatted_path', 'genome_build', 'genome_build_reason', 'label', 'report_path', 'sample_size']\ncanonical_path: /recorded-session/workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/canonical/study.canonical.tsv.gz\nformatted_path: /recorded-session/workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/formatted/study.mrapss.tsv.gz\nreport_path: /recorded-session/workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/reports/gwas_qc_report.json\nexplanation_path: /recorded-session/workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/reports/gwas_qc_explanation.md\ngenome_build: grch38\ngenome_build_reason: The coordinate_check sampled 1000 variants and found 316 GRCh38 matches versus 1 GRCh37 match, indicating GRCh38 coordinates.\nlabel: Major coronary heart disease event\nancestry: finnish\nsample_size: 500348.0\nrisk_notes: None\nmissing_requirements: None\n",
+  "stderr": "Warning messages:\n1: package ‘data.table’ was built under R version 4.4.3 \n2: package ‘jsonlite’ was built under R version 4.4.3 \n",
+  "source_path": "executions/2e821ee13ee5/code.py",
+  "stdout_path": "executions/2e821ee13ee5/stdout.log",
+  "stderr_path": "executions/2e821ee13ee5/stderr.log",
+  "duration_seconds": 2457.766,
+  "working_directory": "/recorded-session/workspace",
+  "generated_files": [
+    "workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/gwas_qc_format_input.json",
+    "workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/response.json",
+    "workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/samples/study.sample.canonical.tsv.gz",
+    "workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/samples/study.sample.txt.gz",
+    "workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/formatted/study.mrapss.tsv.gz",
+    "workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/generated_code/study_full_context.json",
+    "workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/generated_code/study_attempt_1.py",
+    "workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/generated_code/study_attempt_1.prompt.txt",
+    "workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/generated_code/study_sample_context.json",
+    "workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/generated_code/run_generated_transform.py",
+    "workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/generated_code/__pycache__/study_attempt_1.cpython-311.pyc",
+    "workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/canonical/study.canonical.tsv.gz",
+    "workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/reports/mrapss_format_study.json",
+    "workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/reports/gwas_qc_format_output.json",
+    "workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/reports/gwas_qc_format_report.json",
+    "workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/reports/gwas_qc_explanation.md",
+    "workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/reports/gwas_qc_report.json"
+  ],
+  "tool_results": [
+    {
+      "path": "workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/response.json",
+      "status": "ok",
+      "failure_class": null,
+      "summary": "gwas-qc completed: canonical_rows=21327062, formatted_rows=1056297. genome_build=grch38, genome_build_reason=The coordinate_check sampled 1000 variants and found 316 GRCh38 matches versus 1 GRCh37 match, indicating GRCh38 coordinates. gwas-qc formatting completed: min_freq=0.05; rows input=21327062, formatted=1056297, removed=20270765; input_rows=21327062, ambiguous_removed=3034718, mhc_removed=50133, duplicate_removed=832839, hapmap_reference_removed=16214000, hapmap_allele_mismatch_removed=37, low_maf_removed=139025, invalid_pvalue_removed=0, missing_value_removed=0, sample_size_outlier_removed=0, chi_square_outlier_removed=13, formatted_rows=1056297, input_effect_field=beta, beta_from_or=false, formatted_effect_representation=source_beta; report=/recorded-session/workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/reports/gwas_qc_format_report.json.",
+      "message": ""
+    }
+  ],
+  "result_refs": [
+    {
+      "ref": "$ref:gwas_qc_0dc4246501be",
+      "fields": [
+        "status",
+        "gwas_qc_result"
+      ],
+      "status": "ok",
+      "tool": "gwas_qc",
+      "input_identity": {
+        "downloaded_study.raw_path": "/recorded-session/cache/gwas-download/finngen/finngen_R12_I9_CHD/476be6a631a2a14b/finngen_R12_I9_CHD.gz",
+        "downloaded_study.label": "Major coronary heart disease event",
+        "downloaded_study.study_id": "finngen_R12_I9_CHD",
+        "downloaded_study.source": "finngen",
+        "label": "Major coronary heart disease event",
+        "source": "finngen"
+      },
+      "response_path": "/recorded-session/workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/response.json"
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "execution_id": "af0e35fde1aa",
+  "language": "python",
+  "status": "exited",
+  "returncode": 0,
+  "stdout": "\n=== mr_primary attempt: pvalue_threshold=5e-07 ===\n[mr-primary] Reading upstream harmonized and clumped MRdat: /recorded-session/workspace/outputs/274ede89701c/gwas_pair_prepare_lhj8b0pf/intermediate/gwas_pair_mrdat_clumped.tsv.gz\n[input-scale] standardize: 31/31 rows have usable effects; no scale fallback\n[mr-primary] Instrument selection: pval.exp <= 5e-07; valid instruments=3; minimum required=4; action=blocked.\nsummary: mr-primary blocked: method-level pvalue_threshold path on already-clumped MRdat: p<=5e-07 retained 3; no attempted threshold reached min_instruments=4. Analysis blocked; use a stronger or larger exposure GWAS dataset.\noutputs.status: blocked\nnsnp: 3\nfailure_class: insufficient_instruments\n\n=== mr_primary attempt: pvalue_threshold=5e-06 ===\n[mr-primary] Reading upstream harmonized and clumped MRdat: /recorded-session/workspace/outputs/274ede89701c/gwas_pair_prepare_lhj8b0pf/intermediate/gwas_pair_mrdat_clumped.tsv.gz\n[input-scale] standardize: 31/31 rows have usable effects; no scale fallback\n[mr-primary] Instrument selection: pval.exp <= 5e-06; valid instruments=10; minimum required=4; action=selected.\n[mr-primary] Instrument strength: SNP=rs10770126; F=2.20323e+01; pval.exp=2.681e-06.\n[mr-primary] Instrument strength: SNP=rs11045885; F=3.16065e+01; pval.exp=1.888e-08.\n[mr-primary] Instrument strength: SNP=rs11045975; F=7.98293e+01; pval.exp=4.082e-19.\n[mr-primary] Instrument strength: SNP=rs11720619; F=2.08901e+01; pval.exp=4.864e-06.\n[mr-primary] Instrument strength: SNP=rs12464103; F=2.43018e+01; pval.exp=8.236e-07.\n[mr-primary] Instrument strength: SNP=rs4646487; F=3.8031e+01; pval.exp=6.963e-10.\n[mr-primary] Instrument strength: SNP=rs4972811; F=2.11618e+01; pval.exp=4.221e-06.\n[mr-primary] Instrument strength: SNP=rs7023732; F=2.48039e+01; pval.exp=6.347e-07.\n[mr-primary] Instrument strength: SNP=rs7523522; F=2.33895e+01; pval.exp=1.323e-06.\n[mr-primary] Instrument strength: SNP=rs9304337; F=2.23577e+01; pval.exp=2.263e-06.\n[mr-primary] Instrument strength summary: approximate per-SNP F=(b.exp/se.exp)^2: min=2.08901e+01, median=2.38457e+01, mean=3.08404e+01, max=7.98293e+01, F<10=0/10.\n[mr-primary] Fitting method: IVW.\n[mr-primary] Completed method: IVW; beta=-0.00877503934156128; se=0.0059768865785; pval=0.142060151406819.\n[mr-primary] Fitting method: MR-Egger.\n[mr-primary] Completed method: MR-Egger; beta=-0.0393964274516033; se=0.0253493444212965; pval=0.158757590345491.\n[mr-primary] Fitting method: Weighted median.\n[mr-primary] Completed method: Weighted median; beta=-0.0131300643345956; se=0.00620674115273434; pval=0.0343914233294358.\n[mr-primary] Fitting method: Weighted mode.\n[mr-primary] Completed method: Weighted mode; beta=-0.0175270809988976; se=0.0194025847916971; pval=0.389884522780808.\n[mr-primary] Completed successfully.\nsummary: mr-primary completed: pvalue_threshold=5e-06; instruments=10; methods=IVW, MR-Egger, Weighted median, Weighted mode; plots=2.\noutputs.status: ok\nnsnp: None\nfailure_class: None\nSuccess with pvalue_threshold: 5e-06\nselected_snp_count: None\nselected_mrdat_path: /recorded-session/workspace/outputs/af0e35fde1aa/mr_primary_ott7l6ku/reports/selected_mrdat.tsv\ninput_scale: standardize\nresult_record_path: /recorded-session/workspace/outputs/af0e35fde1aa/mr_primary_ott7l6ku/reports/mr_primary_result_record.json\n",
+  "stderr": "Warning messages:\n1: package ‘data.table’ was built under R version 4.4.3 \n2: package ‘jsonlite’ was built under R version 4.4.3 \n3: package ‘ggplot2’ was built under R version 4.4.3 \nWarning messages:\n1: package ‘data.table’ was built under R version 4.4.3 \n2: package ‘jsonlite’ was built under R version 4.4.3 \n3: package ‘ggplot2’ was built under R version 4.4.3 \n`height` was translated to `width`.\nWarning message:\n`geom_errorbarh()` was deprecated in ggplot2 4.0.0.\nℹ Please use the `orientation` argument of `geom_errorbar()` instead. \n",
+  "source_path": "executions/af0e35fde1aa/code.py",
+  "stdout_path": "executions/af0e35fde1aa/stdout.log",
+  "stderr_path": "executions/af0e35fde1aa/stderr.log",
+  "duration_seconds": 8.185,
+  "working_directory": "/recorded-session/workspace",
+  "generated_files": [
+    "workspace/outputs/af0e35fde1aa/mr_primary_ecup1et2/response.json",
+    "workspace/outputs/af0e35fde1aa/mr_primary_ecup1et2/mr_primary_input.json",
+    "workspace/outputs/af0e35fde1aa/mr_primary_ecup1et2/reports/mr_primary_output.json",
+    "workspace/outputs/af0e35fde1aa/mr_primary_ott7l6ku/response.json",
+    "workspace/outputs/af0e35fde1aa/mr_primary_ott7l6ku/mr_primary_input.json",
+    "workspace/outputs/af0e35fde1aa/mr_primary_ott7l6ku/reports/mr_primary_output.json",
+    "workspace/outputs/af0e35fde1aa/mr_primary_ott7l6ku/reports/mr_primary_result_record.json",
+    "workspace/outputs/af0e35fde1aa/mr_primary_ott7l6ku/reports/selected_mrdat.tsv",
+    "workspace/outputs/af0e35fde1aa/mr_primary_ott7l6ku/plots/primary_estimates_forest.png",
+    "workspace/outputs/af0e35fde1aa/mr_primary_ott7l6ku/plots/primary_scatter.png"
+  ],
+  "tool_results": [
+    {
+      "path": "workspace/outputs/af0e35fde1aa/mr_primary_ecup1et2/response.json",
+      "status": "blocked",
+      "failure_class": "insufficient_instruments",
+      "summary": "mr-primary blocked: method-level pvalue_threshold path on already-clumped MRdat: p<=5e-07 retained 3; no attempted threshold reached min_instruments=4. Analysis blocked; use a stronger or larger exposure GWAS dataset.",
+      "message": ""
+    },
+    {
+      "path": "workspace/outputs/af0e35fde1aa/mr_primary_ott7l6ku/response.json",
+      "status": "ok",
+      "failure_class": null,
+      "summary": "mr-primary completed: pvalue_threshold=5e-06; instruments=10; methods=IVW, MR-Egger, Weighted median, Weighted mode; plots=2.",
+      "message": ""
+    }
+  ],
+  "result_refs": [
+    {
+      "ref": "$ref:mr_primary_0c086805080f",
+      "fields": [
+        "status",
+        "failure_class",
+        "nsnp",
+        "min_instruments",
+        "Threshold"
+      ],
+      "status": "blocked",
+      "tool": "mr_primary",
+      "input_identity": {
+        "mrdat_path": "/recorded-session/workspace/outputs/274ede89701c/gwas_pair_prepare_lhj8b0pf/intermediate/gwas_pair_mrdat_clum"
+      },
+      "response_path": "/recorded-session/workspace/outputs/af0e35fde1aa/mr_primary_ecup1et2/response.json"
+    },
+    {
+      "ref": "$ref:mr_primary_da28ead4fbef",
+      "fields": [
+        "status",
+        "mr_primary_result"
+      ],
+      "status": "ok",
+      "tool": "mr_primary",
+      "input_identity": {
+        "mrdat_path": "/recorded-session/workspace/outputs/274ede89701c/gwas_pair_prepare_lhj8b0pf/intermediate/gwas_pair_mrdat_clum"
+      },
+      "response_path": "/recorded-session/workspace/outputs/af0e35fde1aa/mr_primary_ott7l6ku/response.json"
+    }
+  ]
+}

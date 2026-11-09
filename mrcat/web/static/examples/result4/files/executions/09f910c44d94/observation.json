@@ -1,0 +1,46 @@
+{
+  "execution_id": "09f910c44d94",
+  "language": "python",
+  "status": "exited",
+  "returncode": 0,
+  "stdout": "[mr-bwmr] Reading upstream harmonized and clumped MRdat: /recorded-session/workspace/outputs/a78b9cb9eed8/gwas_pair_prepare_2qwobvze/intermediate/gwas_pair_mrdat_clumped.tsv.gz\n[input-scale] standardize: 31/31 rows have usable effects; no scale fallback\n[mr-bwmr] Loaded upstream MRdat: rows=31.\n[mr-bwmr] Instrument selection: pval.exp <= 5e-06; valid instruments=10; minimum required=4; action=selected.\n[mr-bwmr] Instrument strength: SNP=rs10770126; F=2.20323e+01; pval.exp=2.681e-06.\n[mr-bwmr] Instrument strength: SNP=rs11045885; F=3.16065e+01; pval.exp=1.888e-08.\n[mr-bwmr] Instrument strength: SNP=rs11045975; F=7.98293e+01; pval.exp=4.082e-19.\n[mr-bwmr] Instrument strength: SNP=rs11720619; F=2.08901e+01; pval.exp=4.864e-06.\n[mr-bwmr] Instrument strength: SNP=rs12464103; F=2.43018e+01; pval.exp=8.236e-07.\n[mr-bwmr] Instrument strength: SNP=rs4646487; F=3.8031e+01; pval.exp=6.963e-10.\n[mr-bwmr] Instrument strength: SNP=rs4972811; F=2.11618e+01; pval.exp=4.221e-06.\n[mr-bwmr] Instrument strength: SNP=rs7023732; F=2.48039e+01; pval.exp=6.347e-07.\n[mr-bwmr] Instrument strength: SNP=rs7523522; F=2.33895e+01; pval.exp=1.323e-06.\n[mr-bwmr] Instrument strength: SNP=rs9304337; F=2.23577e+01; pval.exp=2.263e-06.\n[mr-bwmr] Instrument strength summary: approximate per-SNP F=(b.exp/se.exp)^2: min=2.08901e+01, median=2.38457e+01, mean=3.08404e+01, max=7.98293e+01, F<10=0/10.\n[mr-bwmr] Fitting method: BWMR; nsnp=10; threshold=5e-06.\n[mr-bwmr] Completed method: BWMR; beta=-0.00884466048690903; se=0.0102344576501453; pval=0.387475768286607.\n[mr-bwmr] Completed successfully.\ncanonicalized/formatted counts: completed upstream and reused; input MRdat: already constructed and LD-clumped upstream, rows=31; method-level pvalue_threshold instrument selection/QC on already-clumped MRdat: method-level pvalue_threshold path on already-clumped MRdat: p<=5e-06 retained 10; selected p<=5e-06 with nsnp=10 (min_instruments=4); approximate per-SNP F=(b.exp/se.exp)^2: min=2.08901e+01, median=2.38457e+01, mean=3.08404e+01, max=7.98293e+01, F<10=0/10; selection note: selected at the requested method-level pvalue_threshold p<=5e-06; no selected instruments have F<10; fitted method: BWMR beta=-0.00884466048690903; posterior weights: min=0.999614, median=0.999966; artifacts/plots: result_record=1, weights_table=1, plots=1.\nstatus: ok\nmr_bwmr_result keys: ['input_scale', 'scale_excluded_rows', 'selected_mrdat_path', 'method', 'methods', 'diagnostics', 'interpretation', 'plot_manifest', 'weights_path', 'result_record_path']\nresult_record_path: /recorded-session/workspace/outputs/09f910c44d94/mr_bwmr_q1dkdu92/reports/mr_bwmr_result_record.json\nBWMR pvalue_threshold= 5e-06 nsnp= 10 beta.hat= -0.00884466048690903 se= 0.0102344576501453 pval= 0.387475768286607\nartifacts: [{'path': '/recorded-session/workspace/outputs/09f910c44d94/mr_bwmr_q1dkdu92/reports/mr_bwmr_result_record.json', 'kind': 'json', 'summary': 'BWMR result record'}, {'path': '/recorded-session/workspace/outputs/09f910c44d94/mr_bwmr_q1dkdu92/reports/bwmr_weights.tsv', 'kind': 'tsv', 'summary': 'BWMR posterior SNP weights'}]\n",
+  "stderr": "Warning messages:\n1: package ‘data.table’ was built under R version 4.4.3 \n2: package ‘jsonlite’ was built under R version 4.4.3 \n3: package ‘ggplot2’ was built under R version 4.4.3 \nEstimate of beta=-0.00884466048690903, se of beta=0.0102344576501453, P-value=0.387475768286607.\n",
+  "source_path": "executions/09f910c44d94/code.py",
+  "stdout_path": "executions/09f910c44d94/stdout.log",
+  "stderr_path": "executions/09f910c44d94/stderr.log",
+  "duration_seconds": 3.713,
+  "working_directory": "/recorded-session/workspace",
+  "generated_files": [
+    "workspace/outputs/09f910c44d94/mr_bwmr_q1dkdu92/mr_bwmr_input.json",
+    "workspace/outputs/09f910c44d94/mr_bwmr_q1dkdu92/response.json",
+    "workspace/outputs/09f910c44d94/mr_bwmr_q1dkdu92/reports/bwmr_weights.tsv",
+    "workspace/outputs/09f910c44d94/mr_bwmr_q1dkdu92/reports/mr_bwmr_result_record.json",
+    "workspace/outputs/09f910c44d94/mr_bwmr_q1dkdu92/reports/mr_bwmr_output.json",
+    "workspace/outputs/09f910c44d94/mr_bwmr_q1dkdu92/reports/selected_mrdat.tsv",
+    "workspace/outputs/09f910c44d94/mr_bwmr_q1dkdu92/plots/bwmr_weighted_fit.png"
+  ],
+  "tool_results": [
+    {
+      "path": "workspace/outputs/09f910c44d94/mr_bwmr_q1dkdu92/response.json",
+      "status": "ok",
+      "failure_class": null,
+      "summary": "canonicalized/formatted counts: completed upstream and reused; input MRdat: already constructed and LD-clumped upstream, rows=31; method-level pvalue_threshold instrument selection/QC on already-clumped MRdat: method-level pvalue_threshold path on already-clumped MRdat: p<=5e-06 retained 10; selected p<=5e-06 with nsnp=10 (min_instruments=4); approximate per-SNP F=(b.exp/se.exp)^2: min=2.08901e+01, median=2.38457e+01, mean=3.08404e+01, max=7.98293e+01, F<10=0/10; selection note: selected at the requested method-level pvalue_threshold p<=5e-06; no selected instruments have F<10; fitted method: BWMR beta=-0.00884466048690903; posterior weights: min=0.999614, median=0.999966; artifacts/plots: result_record=1, weights_table=1, plots=1.",
+      "message": ""
+    }
+  ],
+  "result_refs": [
+    {
+      "ref": "$ref:mr_bwmr_36808c10848b",
+      "fields": [
+        "status",
+        "mr_bwmr_result"
+      ],
+      "status": "ok",
+      "tool": "mr_bwmr",
+      "input_identity": {
+        "mrdat_path": "/recorded-session/workspace/outputs/a78b9cb9eed8/gwas_pair_prepare_2qwobvze/intermediate/gwas_pair_mrdat_clum"
+      },
+      "response_path": "/recorded-session/workspace/outputs/09f910c44d94/mr_bwmr_q1dkdu92/response.json"
+    }
+  ]
+}

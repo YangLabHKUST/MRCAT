@@ -1,0 +1,136 @@
+{
+  "status": "accepted",
+  "stages": [
+    {
+      "stage": "evidence",
+      "attempt": 1,
+      "started_at": "2026-11-09T10:26:51.577+00:00",
+      "status": "completed",
+      "duration_seconds": 86.004,
+      "finished_at": "2026-11-09T10:28:17.821+00:00"
+    },
+    {
+      "stage": "evidence_selection",
+      "attempt": 1,
+      "started_at": "2026-11-09T10:26:51.817+00:00",
+      "status": "completed",
+      "duration_seconds": 85.239,
+      "finished_at": "2026-11-09T10:28:17.103+00:00"
+    },
+    {
+      "stage": "literature",
+      "attempt": 1,
+      "started_at": "2026-11-09T10:28:17.955+00:00",
+      "status": "completed",
+      "duration_seconds": 29.684,
+      "finished_at": "2026-11-09T10:28:47.867+00:00"
+    },
+    {
+      "stage": "writer",
+      "attempt": 1,
+      "started_at": "2026-11-09T10:28:48.038+00:00",
+      "status": "completed",
+      "duration_seconds": 486.568,
+      "finished_at": "2026-11-09T10:36:54.692+00:00"
+    },
+    {
+      "stage": "validate",
+      "attempt": 1,
+      "started_at": "2026-11-09T10:36:54.786+00:00",
+      "status": "completed",
+      "duration_seconds": 0.001,
+      "finished_at": "2026-11-09T10:36:54.810+00:00"
+    },
+    {
+      "stage": "save_draft",
+      "attempt": 1,
+      "started_at": "2026-11-09T10:36:54.911+00:00",
+      "status": "completed",
+      "duration_seconds": 0.15,
+      "finished_at": "2026-11-09T10:36:55.089+00:00"
+    },
+    {
+      "stage": "judge",
+      "attempt": 1,
+      "started_at": "2026-11-09T10:36:55.191+00:00",
+      "status": "completed",
+      "duration_seconds": 9.645,
+      "finished_at": "2026-11-09T10:37:04.871+00:00"
+    },
+    {
+      "stage": "export",
+      "attempt": 1,
+      "started_at": "2026-11-09T10:37:04.990+00:00",
+      "status": "completed",
+      "duration_seconds": 0.432,
+      "finished_at": "2026-11-09T10:37:05.511+00:00"
+    },
+    {
+      "stage": "save_report",
+      "attempt": 1,
+      "started_at": "2026-11-09T10:37:05.080+00:00",
+      "status": "completed",
+      "duration_seconds": 0.257,
+      "finished_at": "2026-11-09T10:37:05.373+00:00"
+    }
+  ],
+  "llm_calls": [
+    {
+      "stage": "report_selection",
+      "attempt": "initial",
+      "started_at": "2026-11-09T10:26:51.865+00:00",
+      "status": "validated",
+      "input_chars": 31805,
+      "output_chars": 1431,
+      "duration_seconds": 85.104
+    },
+    {
+      "stage": "literature_claims",
+      "attempt": "initial",
+      "started_at": "2026-11-09T10:28:18.192+00:00",
+      "status": "validated",
+      "input_chars": 200481,
+      "output_chars": 1541,
+      "duration_seconds": 12.419
+    },
+    {
+      "stage": "literature_verify",
+      "attempt": "initial",
+      "started_at": "2026-11-09T10:28:38.696+00:00",
+      "status": "validated",
+      "input_chars": 12469,
+      "output_chars": 1737,
+      "duration_seconds": 8.963
+    },
+    {
+      "stage": "report_writer",
+      "attempt": "initial",
+      "started_at": "2026-11-09T10:28:48.134+00:00",
+      "status": "invalid",
+      "input_chars": 307330,
+      "output_chars": 20921,
+      "parse_error": "report.sections[3].blocks[0].blocks[0].type must be paragraph or callout",
+      "duration_seconds": 307.09
+    },
+    {
+      "stage": "report_writer",
+      "attempt": "json_repair",
+      "started_at": "2026-11-09T10:33:55.391+00:00",
+      "status": "validated",
+      "input_chars": 329373,
+      "output_chars": 20316,
+      "duration_seconds": 179.282
+    },
+    {
+      "stage": "report_judge",
+      "attempt": "initial",
+      "started_at": "2026-11-09T10:36:55.239+00:00",
+      "status": "validated",
+      "input_chars": 282160,
+      "output_chars": 42,
+      "duration_seconds": 9.583
+    }
+  ],
+  "json_repair_count": 1,
+  "writer_rewrite_count": 0
+}

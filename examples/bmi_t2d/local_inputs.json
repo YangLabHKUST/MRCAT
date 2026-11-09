@@ -1,0 +1,22 @@
+[
+  {
+    "trait": "BMI",
+    "filename": "bmi_mrapss.gz",
+    "size_bytes": 498073247,
+    "sha256": "d7b9d70900c7da25594beb919cf2ee0614d529323ba11fe7b3c88e62d08ecc0a",
+    "ancestry": "European",
+    "source_table": "https://github.com/YangLabHKUST/MRAPSS_RealDataAnalysis_reproduce/blob/master/GWAS_26and5_source.csv",
+    "source": "Watanabe et al. (2019), UK Biobank",
+    "sample_size_policy": "Use the supplied per-SNP sample size; do not replace it with the study maximum."
+  },
+  {
+    "trait": "T2D",
+    "filename": "t2d_mrapss.gz",
+    "size_bytes": 134772856,
+    "sha256": "20ed7e96562e54de130ef2445d112d55a13a0b741b12b39c3733e3a158cf8163",
+    "ancestry": "European",
+    "source_table": "https://github.com/YangLabHKUST/MRAPSS_RealDataAnalysis_reproduce/blob/master/GWAS_26and5_source.csv",
+    "source": "Mahajan et al. (2018), DIAGRAM",
+    "sample_size_policy": "Use the supplied per-SNP sample size; do not replace it with the study maximum."
+  }
+]

@@ -1,0 +1,6 @@
+{
+  "mrdat_path": "/recorded-session/workspace/outputs/a78b9cb9eed8/gwas_pair_prepare_2qwobvze/intermediate/gwas_pair_mrdat_clumped.tsv.gz",
+  "input_scale": "standardize",
+  "pvalue_threshold": 5e-08,
+  "min_instruments": 4
+}

@@ -1,0 +1,2471 @@
+{
+  "target": {
+    "kind": "trait",
+    "value": "hexadecanedioate levels",
+    "resolved_query": "hexadecanedioate levels",
+    "aliases": [
+      "hexadecanedioate",
+      "hexadecanedioic acid",
+      "1,16-hexadecanedioic acid",
+      "hexadecane-1,16-dioic acid"
+    ]
+  },
+  "raw_results": [
+    {
+      "side": "target",
+      "trait": "Hexadecanedioate levels",
+      "study_id": "GCST90243839",
+      "source": "gwas_catalog",
+      "matched_query": "hexadecanedioate levels",
+      "matched_fields": [
+        "disease_trait",
+        "efo_traits"
+      ],
+      "downloadable": true,
+      "download_descriptor": {
+        "source": "gwas_catalog",
+        "study_id": "GCST90243839",
+        "status": "ready",
+        "method": "url",
+        "requires_auth": false,
+        "url": "https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90243001-GCST90244000/GCST90243839/GCST90243839_buildNCBI36.tsv.gz"
+      },
+      "downloadability_reason": "confirmed_url",
+      "download_check": {
+        "method": "HEAD",
+        "ok": true,
+        "status_code": 200,
+        "content_type": "application/x-gzip",
+        "content_length": "53375810",
+        "final_url": "https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90243001-GCST90244000/GCST90243839/GCST90243839_buildNCBI36.tsv.gz"
+      },
+      "raw_record": {
+        "accession_id": "GCST90243839",
+        "disease_trait": "Hexadecanedioate levels",
+        "efo_traits": [
+          {
+            "efo_trait": "hexadecanedioate measurement",
+            "efo_id": "EFO_0021055"
+          }
+        ],
+        "initial_sample_size": "6,887 European ancestry individuals",
+        "replication_sample_size": "NA",
+        "discovery_ancestry": "6887 European",
+        "full_summary_stats_available": true,
+        "pubmed_id": "24816252",
+        "publication": {
+          "title": "An atlas of genetic influences on human blood metabolites.",
+          "publication_date": "2014-05-11",
+          "author": "Shin SY",
+          "journal": "Nat Genet"
+        },
+        "website_record": {
+          "accessionId": "GCST90243839",
+          "pubmedId": "24816252",
+          "reportedTrait": "Hexadecanedioate levels",
+          "efoTraits": [
+            {
+              "key": "EFO_0021055",
+              "label": "hexadecanedioate measurement"
+            }
+          ],
+          "publicationDate": "2014-05-11",
+          "journal": "Nat Genet",
+          "title": "An atlas of genetic influences on human blood metabolites.",
+          "firstAuthor": "Shin SY",
+          "genotypingTechnologies": [
+            "Genome-wide genotyping array"
+          ],
+          "initialSampleDescription": [
+            "6,887 European ancestry individuals"
+          ],
+          "replicateSampleDescription": [
+            "NA"
+          ],
+          "discoverySampleAncestry": [
+            "6887 European"
+          ],
+          "replicationSampleAncestry": [],
+          "associationCount": 2,
+          "summaryStatistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90243001-GCST90244000/GCST90243839",
+          "agreedToCc0": false,
+          "_links": {
+            "self": {
+              "href": "https://www.ebi.ac.uk/gwas/api/v2/variants"
+            }
+          }
+        }
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Hexadecanedioate",
+      "study_id": "met-a-711",
+      "source": "opengwas",
+      "matched_query": "hexadecanedioate",
+      "matched_fields": [
+        "trait"
+      ],
+      "downloadable": true,
+      "download_descriptor": {
+        "source": "opengwas",
+        "study_id": "met-a-711",
+        "status": "ready",
+        "method": "url",
+        "requires_auth": false,
+        "url": "[REDACTED_DOWNLOAD_URL]"
+      },
+      "downloadability_reason": "confirmed_url",
+      "download_check": {
+        "method": "HEAD",
+        "ok": true,
+        "status_code": 200,
+        "content_type": "application/octet-stream",
+        "content_length": "66914039",
+        "final_url": "[REDACTED_DOWNLOAD_URL]"
+      },
+      "raw_record": {
+        "group_name": "public",
+        "year": 2014,
+        "mr": 1,
+        "author": "Shin",
+        "consortium": "NA",
+        "sex": "Males and Females",
+        "priority": 1,
+        "pmid": 24816252,
+        "population": "European",
+        "sd": 0.2384652252,
+        "unit": "log10 units",
+        "nsnp": 2545172,
+        "sample_size": 6887,
+        "build": "HG19/GRCh37",
+        "trait": "Hexadecanedioate",
+        "id": "met-a-711",
+        "subcategory": "Lipid",
+        "category": "Metabolites",
+        "ontology": "NA"
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Hexadecanedioate (C16-DC) levels",
+      "study_id": "GCST90199807",
+      "source": "gwas_catalog",
+      "matched_query": "hexadecanedioate",
+      "matched_fields": [
+        "disease_trait",
+        "efo_traits"
+      ],
+      "downloadable": true,
+      "download_descriptor": {
+        "source": "gwas_catalog",
+        "study_id": "GCST90199807",
+        "status": "ready",
+        "method": "url",
+        "requires_auth": false,
+        "url": "https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90199001-GCST90200000/GCST90199807/GCST90199807_buildGRCh38.tsv.gz"
+      },
+      "downloadability_reason": "confirmed_url",
+      "download_check": {
+        "method": "HEAD",
+        "ok": true,
+        "status_code": 200,
+        "content_type": "application/x-gzip",
+        "content_length": "361597419",
+        "final_url": "https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90199001-GCST90200000/GCST90199807/GCST90199807_buildGRCh38.tsv.gz"
+      },
+      "raw_record": {
+        "accession_id": "GCST90199807",
+        "disease_trait": "Hexadecanedioate (C16-DC) levels",
+        "efo_traits": [
+          {
+            "efo_trait": "hexadecanedioate measurement",
+            "efo_id": "EFO_0021055"
+          }
+        ],
+        "initial_sample_size": "8,260 European ancestry individuals",
+        "replication_sample_size": "NA",
+        "discovery_ancestry": "8260 European",
+        "full_summary_stats_available": true,
+        "pubmed_id": "36635386",
+        "publication": {
+          "title": "Genomic atlas of the plasma metabolome prioritizes metabolites implicated in human diseases.",
+          "publication_date": "2023-01-12",
+          "author": "Chen Y",
+          "journal": "Nat Genet"
+        },
+        "website_record": {
+          "accessionId": "GCST90199807",
+          "pubmedId": "36635386",
+          "reportedTrait": "Hexadecanedioate (C16-DC) levels",
+          "efoTraits": [
+            {
+              "key": "EFO_0021055",
+              "label": "hexadecanedioate measurement"
+            }
+          ],
+          "publicationDate": "2023-01-12",
+          "journal": "Nat Genet",
+          "title": "Genomic atlas of the plasma metabolome prioritizes metabolites implicated in human diseases.",
+          "firstAuthor": "Chen Y",
+          "genotypingTechnologies": [
+            "Genome-wide genotyping array"
+          ],
+          "initialSampleDescription": [
+            "8,260 European ancestry individuals"
+          ],
+          "replicateSampleDescription": [
+            "NA"
+          ],
+          "discoverySampleAncestry": [
+            "8260 European"
+          ],
+          "replicationSampleAncestry": [],
+          "associationCount": 2,
+          "summaryStatistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90199001-GCST90200000/GCST90199807",
+          "agreedToCc0": false,
+          "gxe": false,
+          "_links": {
+            "self": {
+              "href": "https://www.ebi.ac.uk/gwas/api/v2/variants"
+            }
+          }
+        }
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Hexadecanedioate (C16-DC) levels",
+      "study_id": "GCST90201211",
+      "source": "gwas_catalog",
+      "matched_query": "hexadecanedioate",
+      "matched_fields": [
+        "disease_trait",
+        "efo_traits"
+      ],
+      "downloadable": true,
+      "download_descriptor": {
+        "source": "gwas_catalog",
+        "study_id": "GCST90201211",
+        "status": "ready",
+        "method": "url",
+        "requires_auth": false,
+        "url": "https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90201001-GCST90202000/GCST90201211/GCST90201211_buildGRCh38.tsv.gz"
+      },
+      "downloadability_reason": "confirmed_url",
+      "download_check": {
+        "method": "HEAD",
+        "ok": true,
+        "status_code": 200,
+        "content_type": "application/x-gzip",
+        "content_length": "132532703",
+        "final_url": "https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90201001-GCST90202000/GCST90201211/GCST90201211_buildGRCh38.tsv.gz"
+      },
+      "raw_record": {
+        "accession_id": "GCST90201211",
+        "disease_trait": "Hexadecanedioate (C16-DC) levels",
+        "efo_traits": [
+          {
+            "efo_trait": "hexadecanedioate measurement",
+            "efo_id": "EFO_0021055"
+          }
+        ],
+        "initial_sample_size": "",
+        "replication_sample_size": "NA",
+        "discovery_ancestry": "59 African unspecified",
+        "full_summary_stats_available": true,
+        "pubmed_id": "36635386",
+        "publication": {
+          "title": "Genomic atlas of the plasma metabolome prioritizes metabolites implicated in human diseases.",
+          "publication_date": "2023-01-12",
+          "author": "Chen Y",
+          "journal": "Nat Genet"
+        },
+        "website_record": {
+          "accessionId": "GCST90201211",
+          "pubmedId": "36635386",
+          "reportedTrait": "Hexadecanedioate (C16-DC) levels",
+          "efoTraits": [
+            {
+              "key": "EFO_0021055",
+              "label": "hexadecanedioate measurement"
+            }
+          ],
+          "publicationDate": "2023-01-12",
+          "journal": "Nat Genet",
+          "title": "Genomic atlas of the plasma metabolome prioritizes metabolites implicated in human diseases.",
+          "firstAuthor": "Chen Y",
+          "genotypingTechnologies": [
+            "Genome-wide genotyping array"
+          ],
+          "initialSampleDescription": [],
+          "replicateSampleDescription": [
+            "NA"
+          ],
+          "discoverySampleAncestry": [
+            "59 African unspecified"
+          ],
+          "replicationSampleAncestry": [],
+          "associationCount": 0,
+          "summaryStatistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90201001-GCST90202000/GCST90201211",
+          "agreedToCc0": false,
+          "gxe": false,
+          "_links": {
+            "self": {
+              "href": "https://www.ebi.ac.uk/gwas/api/v2/variants"
+            }
+          }
+        }
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Hexadecanedioate (C16-DC) levels",
+      "study_id": "GCST90202246",
+      "source": "gwas_catalog",
+      "matched_query": "hexadecanedioate",
+      "matched_fields": [
+        "disease_trait",
+        "efo_traits"
+      ],
+      "downloadable": true,
+      "download_descriptor": {
+        "source": "gwas_catalog",
+        "study_id": "GCST90202246",
+        "status": "ready",
+        "method": "url",
+        "requires_auth": false,
+        "url": "https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90202001-GCST90203000/GCST90202246/GCST90202246_buildGRCh38.tsv.gz"
+      },
+      "downloadability_reason": "confirmed_url",
+      "download_check": {
+        "method": "HEAD",
+        "ok": true,
+        "status_code": 200,
+        "content_type": "application/x-gzip",
+        "content_length": "73502899",
+        "final_url": "https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90202001-GCST90203000/GCST90202246/GCST90202246_buildGRCh38.tsv.gz"
+      },
+      "raw_record": {
+        "accession_id": "GCST90202246",
+        "disease_trait": "Hexadecanedioate (C16-DC) levels",
+        "efo_traits": [
+          {
+            "efo_trait": "hexadecanedioate measurement",
+            "efo_id": "EFO_0021055"
+          }
+        ],
+        "initial_sample_size": "",
+        "replication_sample_size": "NA",
+        "discovery_ancestry": "103 East Asian",
+        "full_summary_stats_available": true,
+        "pubmed_id": "36635386",
+        "publication": {
+          "title": "Genomic atlas of the plasma metabolome prioritizes metabolites implicated in human diseases.",
+          "publication_date": "2023-01-12",
+          "author": "Chen Y",
+          "journal": "Nat Genet"
+        },
+        "website_record": {
+          "accessionId": "GCST90202246",
+          "pubmedId": "36635386",
+          "reportedTrait": "Hexadecanedioate (C16-DC) levels",
+          "efoTraits": [
+            {
+              "key": "EFO_0021055",
+              "label": "hexadecanedioate measurement"
+            }
+          ],
+          "publicationDate": "2023-01-12",
+          "journal": "Nat Genet",
+          "title": "Genomic atlas of the plasma metabolome prioritizes metabolites implicated in human diseases.",
+          "firstAuthor": "Chen Y",
+          "genotypingTechnologies": [
+            "Genome-wide genotyping array"
+          ],
+          "initialSampleDescription": [],
+          "replicateSampleDescription": [
+            "NA"
+          ],
+          "discoverySampleAncestry": [
+            "103 East Asian"
+          ],
+          "replicationSampleAncestry": [],
+          "associationCount": 0,
+          "summaryStatistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90202001-GCST90203000/GCST90202246",
+          "agreedToCc0": false,
+          "gxe": false,
+          "_links": {
+            "self": {
+              "href": "https://www.ebi.ac.uk/gwas/api/v2/variants"
+            }
+          }
+        }
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Hexadecanedioate (C16-DC) levels",
+      "study_id": "GCST90203258",
+      "source": "gwas_catalog",
+      "matched_query": "hexadecanedioate",
+      "matched_fields": [
+        "disease_trait",
+        "efo_traits"
+      ],
+      "downloadable": true,
+      "download_descriptor": {
+        "source": "gwas_catalog",
+        "study_id": "GCST90203258",
+        "status": "ready",
+        "method": "url",
+        "requires_auth": false,
+        "url": "https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90203001-GCST90204000/GCST90203258/GCST90203258_buildGRCh38.tsv.gz"
+      },
+      "downloadability_reason": "confirmed_url",
+      "download_check": {
+        "method": "HEAD",
+        "ok": true,
+        "status_code": 200,
+        "content_type": "application/x-gzip",
+        "content_length": "76177045",
+        "final_url": "https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90203001-GCST90204000/GCST90203258/GCST90203258_buildGRCh38.tsv.gz"
+      },
+      "raw_record": {
+        "accession_id": "GCST90203258",
+        "disease_trait": "Hexadecanedioate (C16-DC) levels",
+        "efo_traits": [
+          {
+            "efo_trait": "hexadecanedioate measurement",
+            "efo_id": "EFO_0021055"
+          }
+        ],
+        "initial_sample_size": "",
+        "replication_sample_size": "NA",
+        "discovery_ancestry": "108 South Asian",
+        "full_summary_stats_available": true,
+        "pubmed_id": "36635386",
+        "publication": {
+          "title": "Genomic atlas of the plasma metabolome prioritizes metabolites implicated in human diseases.",
+          "publication_date": "2023-01-12",
+          "author": "Chen Y",
+          "journal": "Nat Genet"
+        },
+        "website_record": {
+          "accessionId": "GCST90203258",
+          "pubmedId": "36635386",
+          "reportedTrait": "Hexadecanedioate (C16-DC) levels",
+          "efoTraits": [
+            {
+              "key": "EFO_0021055",
+              "label": "hexadecanedioate measurement"
+            }
+          ],
+          "publicationDate": "2023-01-12",
+          "journal": "Nat Genet",
+          "title": "Genomic atlas of the plasma metabolome prioritizes metabolites implicated in human diseases.",
+          "firstAuthor": "Chen Y",
+          "genotypingTechnologies": [
+            "Genome-wide genotyping array"
+          ],
+          "initialSampleDescription": [],
+          "replicateSampleDescription": [
+            "NA"
+          ],
+          "discoverySampleAncestry": [
+            "108 South Asian"
+          ],
+          "replicationSampleAncestry": [],
+          "associationCount": 0,
+          "summaryStatistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90203001-GCST90204000/GCST90203258",
+          "agreedToCc0": false,
+          "gxe": false,
+          "_links": {
+            "self": {
+              "href": "https://www.ebi.ac.uk/gwas/api/v2/variants"
+            }
+          }
+        }
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Plasma hexadecanedioate (C16-DC) levels in chronic kidney disease",
+      "study_id": "GCST90265329",
+      "source": "gwas_catalog",
+      "matched_query": "hexadecanedioate",
+      "matched_fields": [
+        "disease_trait"
+      ],
+      "downloadable": true,
+      "download_descriptor": {
+        "source": "gwas_catalog",
+        "study_id": "GCST90265329",
+        "status": "ready",
+        "method": "url",
+        "requires_auth": false,
+        "url": "https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90265001-GCST90266000/GCST90265329/GCST90265329_buildGRCh37.tsv.gz"
+      },
+      "downloadability_reason": "confirmed_url",
+      "download_check": {
+        "method": "HEAD",
+        "ok": true,
+        "status_code": 200,
+        "content_type": "application/x-gzip",
+        "content_length": "157515491",
+        "final_url": "https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90265001-GCST90266000/GCST90265329/GCST90265329_buildGRCh37.tsv.gz"
+      },
+      "raw_record": {
+        "accession_id": "GCST90265329",
+        "disease_trait": "Plasma hexadecanedioate (C16-DC) levels in chronic kidney disease",
+        "efo_traits": [
+          {
+            "efo_trait": "hexadecenedioate (C16:1-DC) measurement",
+            "efo_id": "EFO_0800562"
+          }
+        ],
+        "initial_sample_size": "4,959 European ancestry individuals",
+        "replication_sample_size": "NA",
+        "discovery_ancestry": "4959 European",
+        "full_summary_stats_available": true,
+        "pubmed_id": "37277652",
+        "publication": {
+          "title": "Genetic studies of paired metabolomes reveal enzymatic and transport processes at the interface of plasma and urine.",
+          "publication_date": "2023-06-05",
+          "author": "Schlosser P",
+          "journal": "Nat Genet"
+        },
+        "website_record": {
+          "accessionId": "GCST90265329",
+          "pubmedId": "37277652",
+          "reportedTrait": "Plasma hexadecanedioate (C16-DC) levels in chronic kidney disease",
+          "efoTraits": [
+            {
+              "key": "EFO_0800562",
+              "label": "hexadecenedioate (C16:1-DC) measurement"
+            }
+          ],
+          "bgTraits": [
+            {
+              "key": "MONDO_0005300",
+              "label": "chronic kidney disease"
+            }
+          ],
+          "publicationDate": "2023-06-05",
+          "journal": "Nat Genet",
+          "title": "Genetic studies of paired metabolomes reveal enzymatic and transport processes at the interface of plasma and urine.",
+          "firstAuthor": "Schlosser P",
+          "genotypingTechnologies": [
+            "Genome-wide genotyping array"
+          ],
+          "initialSampleDescription": [
+            "4,959 European ancestry individuals"
+          ],
+          "replicateSampleDescription": [
+            "NA"
+          ],
+          "discoverySampleAncestry": [
+            "4959 European"
+          ],
+          "replicationSampleAncestry": [],
+          "associationCount": 2,
+          "summaryStatistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90265001-GCST90266000/GCST90265329",
+          "agreedToCc0": true,
+          "gxe": false,
+          "_links": {
+            "self": {
+              "href": "https://www.ebi.ac.uk/gwas/api/v2/variants"
+            }
+          }
+        }
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Hexadecanedioate (C16-DC) metabolite level",
+      "study_id": "GCST90615624",
+      "source": "gwas_catalog",
+      "matched_query": "hexadecanedioate",
+      "matched_fields": [
+        "disease_trait"
+      ],
+      "downloadable": true,
+      "download_descriptor": {
+        "source": "gwas_catalog",
+        "study_id": "GCST90615624",
+        "status": "ready",
+        "method": "url",
+        "requires_auth": false,
+        "url": "https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90615001-GCST90616000/GCST90615624/GCST90615624.tsv.gz"
+      },
+      "downloadability_reason": "confirmed_url",
+      "download_check": {
+        "method": "HEAD",
+        "ok": true,
+        "status_code": 200,
+        "content_type": "application/x-gzip",
+        "content_length": "177632026",
+        "final_url": "https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90615001-GCST90616000/GCST90615624/GCST90615624.tsv.gz"
+      },
+      "raw_record": {
+        "accession_id": "GCST90615624",
+        "disease_trait": "Hexadecanedioate (C16-DC) metabolite level",
+        "efo_traits": [
+          {
+            "efo_trait": "hexadecenedioate (C16:1-DC) measurement",
+            "efo_id": "EFO_0800562"
+          }
+        ],
+        "initial_sample_size": "2,392 European ancestry individuals",
+        "replication_sample_size": "NA",
+        "discovery_ancestry": "2392 European",
+        "full_summary_stats_available": true,
+        "pubmed_id": "40789849",
+        "publication": {
+          "title": "European and African ancestry-specific plasma protein-QTL and metabolite-QTL analyses identify ancestry-specific T2D effector proteins and metabolites.",
+          "publication_date": "2025-08-11",
+          "author": "Yang C",
+          "journal": "Nat Commun"
+        },
+        "website_record": {
+          "accessionId": "GCST90615624",
+          "pubmedId": "40789849",
+          "reportedTrait": "Hexadecanedioate (C16-DC) metabolite level",
+          "efoTraits": [
+            {
+              "key": "EFO_0800562",
+              "label": "hexadecenedioate (C16:1-DC) measurement"
+            }
+          ],
+          "publicationDate": "2025-08-11",
+          "journal": "Nat Commun",
+          "title": "European and African ancestry-specific plasma protein-QTL and metabolite-QTL analyses identify ancestry-specific T2D effector proteins and metabolites.",
+          "firstAuthor": "Yang C",
+          "genotypingTechnologies": [
+            "Genome-wide genotyping array"
+          ],
+          "initialSampleDescription": [
+            "2,392 European ancestry individuals"
+          ],
+          "replicateSampleDescription": [
+            "NA"
+          ],
+          "discoverySampleAncestry": [
+            "2392 European"
+          ],
+          "replicationSampleAncestry": [],
+          "associationCount": 2,
+          "summaryStatistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90615001-GCST90616000/GCST90615624",
+          "agreedToCc0": true,
+          "gxe": false,
+          "_links": {
+            "self": {
+              "href": "https://www.ebi.ac.uk/gwas/api/v2/variants"
+            }
+          }
+        }
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Hexadecanedioate (C16-DC) metabolite level",
+      "study_id": "GCST90607301",
+      "source": "gwas_catalog",
+      "matched_query": "hexadecanedioate",
+      "matched_fields": [
+        "disease_trait"
+      ],
+      "downloadable": true,
+      "download_descriptor": {
+        "source": "gwas_catalog",
+        "study_id": "GCST90607301",
+        "status": "ready",
+        "method": "url",
+        "requires_auth": false,
+        "url": "https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90607001-GCST90608000/GCST90607301/GCST90607301.tsv.gz"
+      },
+      "downloadability_reason": "confirmed_url",
+      "download_check": {
+        "method": "HEAD",
+        "ok": true,
+        "status_code": 200,
+        "content_type": "application/x-gzip",
+        "content_length": "133073663",
+        "final_url": "https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90607001-GCST90608000/GCST90607301/GCST90607301.tsv.gz"
+      },
+      "raw_record": {
+        "accession_id": "GCST90607301",
+        "disease_trait": "Hexadecanedioate (C16-DC) metabolite level",
+        "efo_traits": [
+          {
+            "efo_trait": "hexadecenedioate (C16:1-DC) measurement",
+            "efo_id": "EFO_0800562"
+          }
+        ],
+        "initial_sample_size": "",
+        "replication_sample_size": "NA",
+        "discovery_ancestry": "417 African American or Afro-Caribbean",
+        "full_summary_stats_available": true,
+        "pubmed_id": "40789849",
+        "publication": {
+          "title": "European and African ancestry-specific plasma protein-QTL and metabolite-QTL analyses identify ancestry-specific T2D effector proteins and metabolites.",
+          "publication_date": "2025-08-11",
+          "author": "Yang C",
+          "journal": "Nat Commun"
+        },
+        "website_record": {
+          "accessionId": "GCST90607301",
+          "pubmedId": "40789849",
+          "reportedTrait": "Hexadecanedioate (C16-DC) metabolite level",
+          "efoTraits": [
+            {
+              "key": "EFO_0800562",
+              "label": "hexadecenedioate (C16:1-DC) measurement"
+            }
+          ],
+          "publicationDate": "2025-08-11",
+          "journal": "Nat Commun",
+          "title": "European and African ancestry-specific plasma protein-QTL and metabolite-QTL analyses identify ancestry-specific T2D effector proteins and metabolites.",
+          "firstAuthor": "Yang C",
+          "genotypingTechnologies": [
+            "Genome-wide genotyping array"
+          ],
+          "initialSampleDescription": [],
+          "replicateSampleDescription": [
+            "NA"
+          ],
+          "discoverySampleAncestry": [
+            "417 African American or Afro-Caribbean"
+          ],
+          "replicationSampleAncestry": [],
+          "associationCount": 0,
+          "summaryStatistics": "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90607001-GCST90608000/GCST90607301",
+          "agreedToCc0": true,
+          "gxe": false,
+          "_links": {
+            "self": {
+              "href": "https://www.ebi.ac.uk/gwas/api/v2/variants"
+            }
+          }
+        }
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Fatty acid(12:1)_[M-H]1- levels",
+      "study_id": "ebi-a-GCST90060092",
+      "source": "opengwas",
+      "matched_query": "1,16-hexadecanedioic acid",
+      "matched_fields": [
+        "trait"
+      ],
+      "downloadable": true,
+      "download_descriptor": {
+        "source": "opengwas",
+        "study_id": "ebi-a-GCST90060092",
+        "status": "ready",
+        "method": "url",
+        "requires_auth": false,
+        "url": "[REDACTED_DOWNLOAD_URL]"
+      },
+      "downloadability_reason": "confirmed_url",
+      "download_check": {
+        "method": "HEAD",
+        "ok": true,
+        "status_code": 200,
+        "content_type": "application/octet-stream",
+        "content_length": "19787704",
+        "final_url": "[REDACTED_DOWNLOAD_URL]"
+      },
+      "raw_record": {
+        "note": "",
+        "year": 2021,
+        "group_name": "public",
+        "mr": 1,
+        "author": "Harshfield EL",
+        "consortium": "NA",
+        "sex": "NA",
+        "pmid": 34503513,
+        "population": "European",
+        "nsnp": 614265,
+        "sample_size": 13814,
+        "build": "HG19/GRCh37",
+        "trait": "Fatty acid(12:1)_[M-H]1- levels",
+        "id": "ebi-a-GCST90060092",
+        "category": "NA",
+        "subcategory": "NA"
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Octadecanoid(C12H18O3)_jasmonic acid_[M-H]1- levels",
+      "study_id": "ebi-a-GCST90060093",
+      "source": "opengwas",
+      "matched_query": "1,16-hexadecanedioic acid",
+      "matched_fields": [
+        "trait"
+      ],
+      "downloadable": true,
+      "download_descriptor": {
+        "source": "opengwas",
+        "study_id": "ebi-a-GCST90060093",
+        "status": "ready",
+        "method": "url",
+        "requires_auth": false,
+        "url": "[REDACTED_DOWNLOAD_URL]"
+      },
+      "downloadability_reason": "confirmed_url",
+      "download_check": {
+        "method": "HEAD",
+        "ok": true,
+        "status_code": 200,
+        "content_type": "application/octet-stream",
+        "content_length": "19819538",
+        "final_url": "[REDACTED_DOWNLOAD_URL]"
+      },
+      "raw_record": {
+        "note": "",
+        "year": 2021,
+        "group_name": "public",
+        "mr": 1,
+        "author": "Harshfield EL",
+        "consortium": "NA",
+        "sex": "NA",
+        "pmid": 34503513,
+        "population": "European",
+        "nsnp": 614265,
+        "sample_size": 13814,
+        "build": "HG19/GRCh37",
+        "trait": "Octadecanoid(C12H18O3)_jasmonic acid_[M-H]1- levels",
+        "id": "ebi-a-GCST90060093",
+        "category": "NA",
+        "subcategory": "NA"
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Octadecanoid(C12H20O3)_dihydrojasmonic_acid_[M-H]1- levels",
+      "study_id": "ebi-a-GCST90060094",
+      "source": "opengwas",
+      "matched_query": "1,16-hexadecanedioic acid",
+      "matched_fields": [
+        "trait"
+      ],
+      "downloadable": true,
+      "download_descriptor": {
+        "source": "opengwas",
+        "study_id": "ebi-a-GCST90060094",
+        "status": "ready",
+        "method": "url",
+        "requires_auth": false,
+        "url": "[REDACTED_DOWNLOAD_URL]"
+      },
+      "downloadability_reason": "confirmed_url",
+      "download_check": {
+        "method": "HEAD",
+        "ok": true,
+        "status_code": 200,
+        "content_type": "application/octet-stream",
+        "content_length": "19825523",
+        "final_url": "[REDACTED_DOWNLOAD_URL]"
+      },
+      "raw_record": {
+        "note": "",
+        "year": 2021,
+        "group_name": "public",
+        "mr": 1,
+        "author": "Harshfield EL",
+        "consortium": "NA",
+        "sex": "NA",
+        "pmid": 34503513,
+        "population": "European",
+        "nsnp": 614265,
+        "sample_size": 13814,
+        "build": "HG19/GRCh37",
+        "trait": "Octadecanoid(C12H20O3)_dihydrojasmonic_acid_[M-H]1- levels",
+        "id": "ebi-a-GCST90060094",
+        "category": "NA",
+        "subcategory": "NA"
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Fatty acid(14:1)_[M-H]1- levels",
+      "study_id": "ebi-a-GCST90060097",
+      "source": "opengwas",
+      "matched_query": "1,16-hexadecanedioic acid",
+      "matched_fields": [
+        "trait"
+      ],
+      "downloadable": true,
+      "download_descriptor": {
+        "source": "opengwas",
+        "study_id": "ebi-a-GCST90060097",
+        "status": "ready",
+        "method": "url",
+        "requires_auth": false,
+        "url": "[REDACTED_DOWNLOAD_URL]"
+      },
+      "downloadability_reason": "confirmed_url",
+      "download_check": {
+        "method": "HEAD",
+        "ok": true,
+        "status_code": 200,
+        "content_type": "application/octet-stream",
+        "content_length": "19780292",
+        "final_url": "[REDACTED_DOWNLOAD_URL]"
+      },
+      "raw_record": {
+        "note": "",
+        "year": 2021,
+        "group_name": "public",
+        "mr": 1,
+        "author": "Harshfield EL",
+        "consortium": "NA",
+        "sex": "NA",
+        "pmid": 34503513,
+        "population": "European",
+        "nsnp": 614265,
+        "sample_size": 13814,
+        "build": "HG19/GRCh37",
+        "trait": "Fatty acid(14:1)_[M-H]1- levels",
+        "id": "ebi-a-GCST90060097",
+        "category": "NA",
+        "subcategory": "NA"
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Fatty acid(14:0)_[M-H]1- levels",
+      "study_id": "ebi-a-GCST90060098",
+      "source": "opengwas",
+      "matched_query": "1,16-hexadecanedioic acid",
+      "matched_fields": [
+        "trait"
+      ],
+      "downloadable": true,
+      "download_descriptor": {
+        "source": "opengwas",
+        "study_id": "ebi-a-GCST90060098",
+        "status": "ready",
+        "method": "url",
+        "requires_auth": false,
+        "url": "[REDACTED_DOWNLOAD_URL]"
+      },
+      "downloadability_reason": "confirmed_url",
+      "download_check": {
+        "method": "HEAD",
+        "ok": true,
+        "status_code": 200,
+        "content_type": "application/octet-stream",
+        "content_length": "19852162",
+        "final_url": "[REDACTED_DOWNLOAD_URL]"
+      },
+      "raw_record": {
+        "note": "",
+        "year": 2021,
+        "group_name": "public",
+        "mr": 1,
+        "author": "Harshfield EL",
+        "consortium": "NA",
+        "sex": "NA",
+        "pmid": 34503513,
+        "population": "European",
+        "nsnp": 614265,
+        "sample_size": 13814,
+        "build": "HG19/GRCh37",
+        "trait": "Fatty acid(14:0)_[M-H]1- levels",
+        "id": "ebi-a-GCST90060098",
+        "category": "NA",
+        "subcategory": "NA"
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Fatty acid(15:0)_[M-H]1- levels",
+      "study_id": "ebi-a-GCST90060099",
+      "source": "opengwas",
+      "matched_query": "1,16-hexadecanedioic acid",
+      "matched_fields": [
+        "trait"
+      ],
+      "downloadable": true,
+      "download_descriptor": {
+        "source": "opengwas",
+        "study_id": "ebi-a-GCST90060099",
+        "status": "ready",
+        "method": "url",
+        "requires_auth": false,
+        "url": "[REDACTED_DOWNLOAD_URL]"
+      },
+      "downloadability_reason": "confirmed_url",
+      "download_check": {
+        "method": "HEAD",
+        "ok": true,
+        "status_code": 200,
+        "content_type": "application/octet-stream",
+        "content_length": "19853133",
+        "final_url": "[REDACTED_DOWNLOAD_URL]"
+      },
+      "raw_record": {
+        "note": "",
+        "year": 2021,
+        "group_name": "public",
+        "mr": 1,
+        "author": "Harshfield EL",
+        "consortium": "NA",
+        "sex": "NA",
+        "pmid": 34503513,
+        "population": "European",
+        "nsnp": 614265,
+        "sample_size": 13814,
+        "build": "HG19/GRCh37",
+        "trait": "Fatty acid(15:0)_[M-H]1- levels",
+        "id": "ebi-a-GCST90060099",
+        "category": "NA",
+        "subcategory": "NA"
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Fatty acid(16:3)_[M-H]1- levels",
+      "study_id": "ebi-a-GCST90060100",
+      "source": "opengwas",
+      "matched_query": "1,16-hexadecanedioic acid",
+      "matched_fields": [
+        "trait"
+      ],
+      "downloadable": true,
+      "download_descriptor": {
+        "source": "opengwas",
+        "study_id": "ebi-a-GCST90060100",
+        "status": "ready",
+        "method": "url",
+        "requires_auth": false,
+        "url": "[REDACTED_DOWNLOAD_URL]"
+      },
+      "downloadability_reason": "confirmed_url",
+      "download_check": {
+        "method": "HEAD",
+        "ok": true,
+        "status_code": 200,
+        "content_type": "application/octet-stream",
+        "content_length": "19820388",
+        "final_url": "[REDACTED_DOWNLOAD_URL]"
+      },
+      "raw_record": {
+        "note": "",
+        "year": 2021,
+        "group_name": "public",
+        "mr": 1,
+        "author": "Harshfield EL",
+        "consortium": "NA",
+        "sex": "NA",
+        "pmid": 34503513,
+        "population": "European",
+        "nsnp": 614265,
+        "sample_size": 13814,
+        "build": "HG19/GRCh37",
+        "trait": "Fatty acid(16:3)_[M-H]1- levels",
+        "id": "ebi-a-GCST90060100",
+        "category": "NA",
+        "subcategory": "NA"
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Fatty acid(16:2)_[M-H]1- levels",
+      "study_id": "ebi-a-GCST90060101",
+      "source": "opengwas",
+      "matched_query": "1,16-hexadecanedioic acid",
+      "matched_fields": [
+        "trait"
+      ],
+      "downloadable": true,
+      "download_descriptor": {
+        "source": "opengwas",
+        "study_id": "ebi-a-GCST90060101",
+        "status": "ready",
+        "method": "url",
+        "requires_auth": false,
+        "url": "[REDACTED_DOWNLOAD_URL]"
+      },
+      "downloadability_reason": "confirmed_url",
+      "download_check": {
+        "method": "HEAD",
+        "ok": true,
+        "status_code": 200,
+        "content_type": "application/octet-stream",
+        "content_length": "19821347",
+        "final_url": "[REDACTED_DOWNLOAD_URL]"
+      },
+      "raw_record": {
+        "note": "",
+        "year": 2021,
+        "group_name": "public",
+        "mr": 1,
+        "author": "Harshfield EL",
+        "consortium": "NA",
+        "sex": "NA",
+        "pmid": 34503513,
+        "population": "European",
+        "nsnp": 614265,
+        "sample_size": 13814,
+        "build": "HG19/GRCh37",
+        "trait": "Fatty acid(16:2)_[M-H]1- levels",
+        "id": "ebi-a-GCST90060101",
+        "category": "NA",
+        "subcategory": "NA"
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Fatty acid(16:1)_[M-H]1- levels",
+      "study_id": "ebi-a-GCST90060102",
+      "source": "opengwas",
+      "matched_query": "1,16-hexadecanedioic acid",
+      "matched_fields": [
+        "trait"
+      ],
+      "downloadable": true,
+      "download_descriptor": {
+        "source": "opengwas",
+        "study_id": "ebi-a-GCST90060102",
+        "status": "ready",
+        "method": "url",
+        "requires_auth": false,
+        "url": "[REDACTED_DOWNLOAD_URL]"
+      },
+      "downloadability_reason": "confirmed_url",
+      "download_check": {
+        "method": "HEAD",
+        "ok": true,
+        "status_code": 200,
+        "content_type": "application/octet-stream",
+        "content_length": "19756106",
+        "final_url": "[REDACTED_DOWNLOAD_URL]"
+      },
+      "raw_record": {
+        "note": "",
+        "year": 2021,
+        "group_name": "public",
+        "mr": 1,
+        "author": "Harshfield EL",
+        "consortium": "NA",
+        "sex": "NA",
+        "pmid": 34503513,
+        "population": "European",
+        "nsnp": 614265,
+        "sample_size": 13814,
+        "build": "HG19/GRCh37",
+        "trait": "Fatty acid(16:1)_[M-H]1- levels",
+        "id": "ebi-a-GCST90060102",
+        "category": "NA",
+        "subcategory": "NA"
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Hexadecanedioate levels",
+      "study_id": "GCST90245242",
+      "source": "gwas_catalog",
+      "matched_query": "hexadecanedioate levels",
+      "matched_fields": [
+        "disease_trait",
+        "efo_traits"
+      ],
+      "downloadable": false,
+      "download_descriptor": {
+        "source": "gwas_catalog",
+        "study_id": "GCST90245242",
+        "status": "unavailable",
+        "method": "none",
+        "requires_auth": false
+      },
+      "downloadability_reason": "no_summary_stats",
+      "download_check": null,
+      "raw_record": {
+        "accession_id": "GCST90245242",
+        "disease_trait": "Hexadecanedioate levels",
+        "efo_traits": [
+          {
+            "efo_trait": "hexadecanedioate measurement",
+            "efo_id": "EFO_0021055"
+          }
+        ],
+        "initial_sample_size": "14,296 European ancestry individuals",
+        "replication_sample_size": "5,698 European ancestry individuals",
+        "discovery_ancestry": "14296 European",
+        "full_summary_stats_available": false,
+        "pubmed_id": "36357675",
+        "publication": {
+          "title": "Rare and common genetic determinants of metabolic individuality and their effects on human health.",
+          "publication_date": "2022-11-10",
+          "author": "Surendran P",
+          "journal": "Nat Med"
+        },
+        "website_record": {
+          "accessionId": "GCST90245242",
+          "pubmedId": "36357675",
+          "reportedTrait": "Hexadecanedioate levels",
+          "efoTraits": [
+            {
+              "key": "EFO_0021055",
+              "label": "hexadecanedioate measurement"
+            }
+          ],
+          "publicationDate": "2022-11-10",
+          "journal": "Nat Med",
+          "title": "Rare and common genetic determinants of metabolic individuality and their effects on human health.",
+          "firstAuthor": "Surendran P",
+          "genotypingTechnologies": [
+            "Genome-wide genotyping array"
+          ],
+          "initialSampleDescription": [
+            "14,296 European ancestry individuals"
+          ],
+          "replicateSampleDescription": [
+            "5,698 European ancestry individuals"
+          ],
+          "discoverySampleAncestry": [
+            "14296 European"
+          ],
+          "replicationSampleAncestry": [
+            "5698 European"
+          ],
+          "associationCount": 6,
+          "summaryStatistics": "NA",
+          "agreedToCc0": true,
+          "_links": {
+            "self": {
+              "href": "https://www.ebi.ac.uk/gwas/api/v2/variants"
+            }
+          }
+        }
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Hexadecanedioate levels",
+      "study_id": "GCST90103006",
+      "source": "gwas_catalog",
+      "matched_query": "hexadecanedioate levels",
+      "matched_fields": [
+        "disease_trait",
+        "efo_traits"
+      ],
+      "downloadable": false,
+      "download_descriptor": {
+        "source": "gwas_catalog",
+        "study_id": "GCST90103006",
+        "status": "unavailable",
+        "method": "none",
+        "requires_auth": false
+      },
+      "downloadability_reason": "no_summary_stats",
+      "download_check": null,
+      "raw_record": {
+        "accession_id": "GCST90103006",
+        "disease_trait": "Hexadecanedioate levels",
+        "efo_traits": [
+          {
+            "efo_trait": "hexadecanedioate measurement",
+            "efo_id": "EFO_0021055"
+          }
+        ],
+        "initial_sample_size": "8,809 European ancestry individuals",
+        "replication_sample_size": "NA",
+        "discovery_ancestry": "8809 European",
+        "full_summary_stats_available": false,
+        "pubmed_id": "35050183",
+        "publication": {
+          "title": "Metabolome Genome-Wide Association Study Identifies 74 Novel Genomic Regions Influencing Plasma Metabolites Levels.",
+          "publication_date": "2022-01-11",
+          "author": "Hysi PG",
+          "journal": "Metabolites"
+        },
+        "website_record": {
+          "accessionId": "GCST90103006",
+          "pubmedId": "35050183",
+          "reportedTrait": "Hexadecanedioate levels",
+          "efoTraits": [
+            {
+              "key": "EFO_0021055",
+              "label": "hexadecanedioate measurement"
+            }
+          ],
+          "publicationDate": "2022-01-11",
+          "journal": "Metabolites",
+          "title": "Metabolome Genome-Wide Association Study Identifies 74 Novel Genomic Regions Influencing Plasma Metabolites Levels.",
+          "firstAuthor": "Hysi PG",
+          "genotypingTechnologies": [
+            "Genome-wide genotyping array"
+          ],
+          "initialSampleDescription": [
+            "8,809 European ancestry individuals"
+          ],
+          "replicateSampleDescription": [
+            "NA"
+          ],
+          "discoverySampleAncestry": [
+            "8809 European"
+          ],
+          "replicationSampleAncestry": [],
+          "associationCount": 2,
+          "summaryStatistics": "NA",
+          "agreedToCc0": true,
+          "_links": {
+            "self": {
+              "href": "https://www.ebi.ac.uk/gwas/api/v2/variants"
+            }
+          }
+        }
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Hexadecanedioate levels",
+      "study_id": "GCST90104998",
+      "source": "gwas_catalog",
+      "matched_query": "hexadecanedioate levels",
+      "matched_fields": [
+        "disease_trait"
+      ],
+      "downloadable": false,
+      "download_descriptor": {
+        "source": "gwas_catalog",
+        "study_id": "GCST90104998",
+        "status": "unavailable",
+        "method": "none",
+        "requires_auth": false
+      },
+      "downloadability_reason": "no_summary_stats",
+      "download_check": null,
+      "raw_record": {
+        "accession_id": "GCST90104998",
+        "disease_trait": "Hexadecanedioate levels",
+        "efo_traits": [
+          {
+            "efo_trait": "amount of metabolite in blood serum",
+            "efo_id": "OBA_2050092"
+          }
+        ],
+        "initial_sample_size": "1,170 Israeli ancestry individuals",
+        "replication_sample_size": "NA",
+        "discovery_ancestry": "1170 Other",
+        "full_summary_stats_available": false,
+        "pubmed_id": "33177712",
+        "publication": {
+          "title": "A reference map of potential determinants for the human serum metabolome.",
+          "publication_date": "2020-11-11",
+          "author": "Bar N",
+          "journal": "Nature"
+        },
+        "website_record": {
+          "accessionId": "GCST90104998",
+          "pubmedId": "33177712",
+          "reportedTrait": "Hexadecanedioate levels",
+          "efoTraits": [
+            {
+              "key": "OBA_2050092",
+              "label": "amount of metabolite in blood serum"
+            }
+          ],
+          "publicationDate": "2020-11-11",
+          "journal": "Nature",
+          "title": "A reference map of potential determinants for the human serum metabolome.",
+          "firstAuthor": "Bar N",
+          "genotypingTechnologies": [
+            "Genome-wide genotyping array"
+          ],
+          "initialSampleDescription": [
+            "1,170 Israeli ancestry individuals"
+          ],
+          "replicateSampleDescription": [
+            "NA"
+          ],
+          "discoverySampleAncestry": [
+            "1170 Other"
+          ],
+          "replicationSampleAncestry": [],
+          "associationCount": 1,
+          "summaryStatistics": "NA",
+          "agreedToCc0": false,
+          "gxe": false,
+          "_links": {
+            "self": {
+              "href": "https://www.ebi.ac.uk/gwas/api/v2/variants"
+            }
+          }
+        }
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Hexadecanedioate levels in elite athletes",
+      "study_id": "GCST90133936",
+      "source": "gwas_catalog",
+      "matched_query": "hexadecanedioate levels",
+      "matched_fields": [
+        "disease_trait",
+        "efo_traits"
+      ],
+      "downloadable": false,
+      "download_descriptor": {
+        "source": "gwas_catalog",
+        "study_id": "GCST90133936",
+        "status": "unavailable",
+        "method": "none",
+        "requires_auth": false
+      },
+      "downloadability_reason": "no_summary_stats",
+      "download_check": null,
+      "raw_record": {
+        "accession_id": "GCST90133936",
+        "disease_trait": "Hexadecanedioate levels in elite athletes",
+        "efo_traits": [
+          {
+            "efo_trait": "hexadecanedioate measurement",
+            "efo_id": "EFO_0021055"
+          }
+        ],
+        "initial_sample_size": "",
+        "replication_sample_size": "NA",
+        "discovery_ancestry": "490 NR",
+        "full_summary_stats_available": false,
+        "pubmed_id": "31882771",
+        "publication": {
+          "title": "Metabolic GWAS of elite athletes reveals novel genetically-influenced metabolites associated with athletic performance.",
+          "publication_date": "2019-12-27",
+          "author": "Al-Khelaifi F",
+          "journal": "Sci Rep"
+        },
+        "website_record": {
+          "accessionId": "GCST90133936",
+          "pubmedId": "31882771",
+          "reportedTrait": "Hexadecanedioate levels in elite athletes",
+          "efoTraits": [
+            {
+              "key": "EFO_0021055",
+              "label": "hexadecanedioate measurement"
+            }
+          ],
+          "bgTraits": [
+            {
+              "key": "EFO_0007818",
+              "label": "athletic endurance measurement"
+            }
+          ],
+          "publicationDate": "2019-12-27",
+          "journal": "Sci Rep",
+          "title": "Metabolic GWAS of elite athletes reveals novel genetically-influenced metabolites associated with athletic performance.",
+          "firstAuthor": "Al-Khelaifi F",
+          "genotypingTechnologies": [
+            "Genome-wide genotyping array"
+          ],
+          "initialSampleDescription": [],
+          "replicateSampleDescription": [
+            "NA"
+          ],
+          "discoverySampleAncestry": [
+            "490 NR"
+          ],
+          "replicationSampleAncestry": [],
+          "associationCount": 1,
+          "summaryStatistics": "NA",
+          "_links": {
+            "self": {
+              "href": "https://www.ebi.ac.uk/gwas/api/v2/variants"
+            }
+          }
+        }
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Metabolite levels (hexadecanedioate; hexadecanedioate (C16-DC))",
+      "study_id": "GCST90299640",
+      "source": "gwas_catalog",
+      "matched_query": "hexadecanedioate",
+      "matched_fields": [
+        "disease_trait",
+        "efo_traits"
+      ],
+      "downloadable": false,
+      "download_descriptor": {
+        "source": "gwas_catalog",
+        "study_id": "GCST90299640",
+        "status": "unavailable",
+        "method": "none",
+        "requires_auth": false
+      },
+      "downloadability_reason": "no_summary_stats",
+      "download_check": null,
+      "raw_record": {
+        "accession_id": "GCST90299640",
+        "disease_trait": "Metabolite levels (hexadecanedioate; hexadecanedioate (C16-DC))",
+        "efo_traits": [
+          {
+            "efo_trait": "hexadecanedioate measurement",
+            "efo_id": "EFO_0021055"
+          }
+        ],
+        "initial_sample_size": "9,331 European, Hispanic or African American individuals",
+        "replication_sample_size": "up to 2,466 African American individuals; up to 15,619 European ancestry individuals; 1,734 Hispanic ancestry children",
+        "discovery_ancestry": "9331 European, Hispanic or Latin American, African American or Afro-Caribbean",
+        "full_summary_stats_available": false,
+        "pubmed_id": "37253714",
+        "publication": {
+          "title": "Whole-Genome Sequencing Analysis of Human Metabolome in Multi-Ethnic Populations.",
+          "publication_date": "2023-05-30",
+          "author": "Feofanova EV",
+          "journal": "Nat Commun"
+        },
+        "website_record": {
+          "accessionId": "GCST90299640",
+          "pubmedId": "37253714",
+          "reportedTrait": "Metabolite levels (hexadecanedioate; hexadecanedioate (C16-DC))",
+          "efoTraits": [
+            {
+              "key": "EFO_0021055",
+              "label": "hexadecanedioate measurement"
+            }
+          ],
+          "publicationDate": "2023-05-30",
+          "journal": "Nat Commun",
+          "title": "Whole-Genome Sequencing Analysis of Human Metabolome in Multi-Ethnic Populations.",
+          "firstAuthor": "Feofanova EV",
+          "genotypingTechnologies": [
+            "Genome-wide sequencing"
+          ],
+          "initialSampleDescription": [
+            "9,331 European, Hispanic or African American individuals"
+          ],
+          "replicateSampleDescription": [
+            "up to 2,466 African American individuals",
+            "up to 15,619 European ancestry individuals",
+            "1,734 Hispanic ancestry children"
+          ],
+          "discoverySampleAncestry": [
+            "9331 European, Hispanic or Latin American, African American or Afro-Caribbean"
+          ],
+          "replicationSampleAncestry": [
+            "2466 African American or Afro-Caribbean",
+            "15619 European",
+            "1734 Hispanic or Latin American"
+          ],
+          "associationCount": 6,
+          "summaryStatistics": "NA",
+          "agreedToCc0": false,
+          "gxe": false,
+          "_links": {
+            "self": {
+              "href": "https://www.ebi.ac.uk/gwas/api/v2/variants"
+            }
+          }
+        }
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Hexadecanedioate (C16-DC) levels",
+      "study_id": "GCST90139787",
+      "source": "gwas_catalog",
+      "matched_query": "hexadecanedioate",
+      "matched_fields": [
+        "disease_trait",
+        "efo_traits"
+      ],
+      "downloadable": false,
+      "download_descriptor": {
+        "source": "gwas_catalog",
+        "study_id": "GCST90139787",
+        "status": "unavailable",
+        "method": "none",
+        "requires_auth": false
+      },
+      "downloadability_reason": "no_summary_stats",
+      "download_check": null,
+      "raw_record": {
+        "accession_id": "GCST90139787",
+        "disease_trait": "Hexadecanedioate (C16-DC) levels",
+        "efo_traits": [
+          {
+            "efo_trait": "hexadecanedioate measurement",
+            "efo_id": "EFO_0021055"
+          }
+        ],
+        "initial_sample_size": "6,136 Finnish ancestry individuals",
+        "replication_sample_size": "NA",
+        "discovery_ancestry": "6136 European",
+        "full_summary_stats_available": false,
+        "pubmed_id": "35347128",
+        "publication": {
+          "title": "Genome-wide association studies of metabolites in Finnish men identify disease-relevant loci.",
+          "publication_date": "2022-03-28",
+          "author": "Yin X",
+          "journal": "Nat Commun"
+        },
+        "website_record": {
+          "accessionId": "GCST90139787",
+          "pubmedId": "35347128",
+          "reportedTrait": "Hexadecanedioate (C16-DC) levels",
+          "efoTraits": [
+            {
+              "key": "EFO_0021055",
+              "label": "hexadecanedioate measurement"
+            }
+          ],
+          "publicationDate": "2022-03-28",
+          "journal": "Nat Commun",
+          "title": "Genome-wide association studies of metabolites in Finnish men identify disease-relevant loci.",
+          "firstAuthor": "Yin X",
+          "genotypingTechnologies": [
+            "Genome-wide genotyping array",
+            "Genome-wide sequencing",
+            "Exome-wide sequencing"
+          ],
+          "initialSampleDescription": [
+            "6,136 Finnish ancestry individuals"
+          ],
+          "replicateSampleDescription": [
+            "NA"
+          ],
+          "discoverySampleAncestry": [
+            "6136 European"
+          ],
+          "replicationSampleAncestry": [],
+          "associationCount": 1,
+          "summaryStatistics": "NA",
+          "agreedToCc0": true,
+          "_links": {
+            "self": {
+              "href": "https://www.ebi.ac.uk/gwas/api/v2/variants"
+            }
+          }
+        }
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Hexadecanedioate (C16) levels",
+      "study_id": "GCST90128892",
+      "source": "gwas_catalog",
+      "matched_query": "hexadecanedioate",
+      "matched_fields": [
+        "disease_trait",
+        "efo_traits"
+      ],
+      "downloadable": false,
+      "download_descriptor": {
+        "source": "gwas_catalog",
+        "study_id": "GCST90128892",
+        "status": "unavailable",
+        "method": "none",
+        "requires_auth": false
+      },
+      "downloadability_reason": "no_summary_stats",
+      "download_check": null,
+      "raw_record": {
+        "accession_id": "GCST90128892",
+        "disease_trait": "Hexadecanedioate (C16) levels",
+        "efo_traits": [
+          {
+            "efo_trait": "hexadecanedioate measurement",
+            "efo_id": "EFO_0021055"
+          }
+        ],
+        "initial_sample_size": "",
+        "replication_sample_size": "NA",
+        "discovery_ancestry": "1001 NR",
+        "full_summary_stats_available": false,
+        "pubmed_id": "27073872",
+        "publication": {
+          "title": "Genetic Influences on Metabolite Levels: A Comparison across Metabolomic Platforms.",
+          "publication_date": "2016-04-13",
+          "author": "Yet I",
+          "journal": "PLoS One"
+        },
+        "website_record": {
+          "accessionId": "GCST90128892",
+          "pubmedId": "27073872",
+          "reportedTrait": "Hexadecanedioate (C16) levels",
+          "efoTraits": [
+            {
+              "key": "EFO_0021055",
+              "label": "hexadecanedioate measurement"
+            }
+          ],
+          "publicationDate": "2016-04-13",
+          "journal": "PLoS One",
+          "title": "Genetic Influences on Metabolite Levels: A Comparison across Metabolomic Platforms.",
+          "firstAuthor": "Yet I",
+          "genotypingTechnologies": [
+            "Genome-wide genotyping array"
+          ],
+          "initialSampleDescription": [],
+          "replicateSampleDescription": [
+            "NA"
+          ],
+          "discoverySampleAncestry": [
+            "1001 NR"
+          ],
+          "replicationSampleAncestry": [],
+          "associationCount": 1,
+          "summaryStatistics": "NA",
+          "agreedToCc0": false,
+          "_links": {
+            "self": {
+              "href": "https://www.ebi.ac.uk/gwas/api/v2/variants"
+            }
+          }
+        }
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Hexadecanedioate (C16) levels",
+      "study_id": "GCST90095606",
+      "source": "gwas_catalog",
+      "matched_query": "hexadecanedioate",
+      "matched_fields": [
+        "disease_trait"
+      ],
+      "downloadable": false,
+      "download_descriptor": {
+        "source": "gwas_catalog",
+        "study_id": "GCST90095606",
+        "status": "unavailable",
+        "method": "none",
+        "requires_auth": false
+      },
+      "downloadability_reason": "no_summary_stats",
+      "download_check": null,
+      "raw_record": {
+        "accession_id": "GCST90095606",
+        "disease_trait": "Hexadecanedioate (C16) levels",
+        "efo_traits": [
+          {
+            "efo_trait": "amount of metabolite in blood serum",
+            "efo_id": "OBA_2050092"
+          }
+        ],
+        "initial_sample_size": "",
+        "replication_sample_size": "NA",
+        "discovery_ancestry": "712 European",
+        "full_summary_stats_available": false,
+        "pubmed_id": "34780722",
+        "publication": {
+          "title": "Integrative analysis of the Inflammatory Bowel Disease serum metabolome improves our understanding of genetic etiology and points to novel putative therapeutic targets. ",
+          "publication_date": "2021-11-12",
+          "author": "Di Narzo AF",
+          "journal": "Gastroenterology"
+        },
+        "website_record": {
+          "accessionId": "GCST90095606",
+          "pubmedId": "34780722",
+          "reportedTrait": "Hexadecanedioate (C16) levels",
+          "efoTraits": [
+            {
+              "key": "OBA_2050092",
+              "label": "amount of metabolite in blood serum"
+            }
+          ],
+          "publicationDate": "2021-11-12",
+          "journal": "Gastroenterology",
+          "title": "Integrative analysis of the Inflammatory Bowel Disease serum metabolome improves our understanding of genetic etiology and points to novel putative therapeutic targets. ",
+          "firstAuthor": "Di Narzo AF",
+          "genotypingTechnologies": [
+            "Genome-wide genotyping array"
+          ],
+          "initialSampleDescription": [],
+          "replicateSampleDescription": [
+            "NA"
+          ],
+          "discoverySampleAncestry": [
+            "712 European"
+          ],
+          "replicationSampleAncestry": [],
+          "associationCount": 1,
+          "summaryStatistics": "NA",
+          "agreedToCc0": false,
+          "gxe": false,
+          "_links": {
+            "self": {
+              "href": "https://www.ebi.ac.uk/gwas/api/v2/variants"
+            }
+          }
+        }
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Fatty acid(17:1)_[M-H]1- levels",
+      "study_id": "ebi-a-GCST90060103",
+      "source": "opengwas",
+      "matched_query": "1,16-hexadecanedioic acid",
+      "matched_fields": [
+        "trait"
+      ],
+      "downloadable": false,
+      "download_descriptor": {
+        "source": "opengwas",
+        "study_id": "ebi-a-GCST90060103",
+        "status": "unavailable",
+        "method": "none",
+        "requires_auth": false
+      },
+      "downloadability_reason": "unresolved",
+      "download_check": null,
+      "raw_record": {
+        "note": "",
+        "year": 2021,
+        "group_name": "public",
+        "mr": 1,
+        "author": "Harshfield EL",
+        "consortium": "NA",
+        "sex": "NA",
+        "pmid": 34503513,
+        "population": "European",
+        "nsnp": 614265,
+        "sample_size": 13814,
+        "build": "HG19/GRCh37",
+        "trait": "Fatty acid(17:1)_[M-H]1- levels",
+        "id": "ebi-a-GCST90060103",
+        "category": "NA",
+        "subcategory": "NA"
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Fatty acid(16:1)-OH_[M-H]1- levels",
+      "study_id": "ebi-a-GCST90060104",
+      "source": "opengwas",
+      "matched_query": "1,16-hexadecanedioic acid",
+      "matched_fields": [
+        "trait"
+      ],
+      "downloadable": false,
+      "download_descriptor": {
+        "source": "opengwas",
+        "study_id": "ebi-a-GCST90060104",
+        "status": "unavailable",
+        "method": "none",
+        "requires_auth": false
+      },
+      "downloadability_reason": "unresolved",
+      "download_check": null,
+      "raw_record": {
+        "note": "",
+        "year": 2021,
+        "group_name": "public",
+        "mr": 1,
+        "author": "Harshfield EL",
+        "consortium": "NA",
+        "sex": "NA",
+        "pmid": 34503513,
+        "population": "European",
+        "nsnp": 614265,
+        "sample_size": 13814,
+        "build": "HG19/GRCh37",
+        "trait": "Fatty acid(16:1)-OH_[M-H]1- levels",
+        "id": "ebi-a-GCST90060104",
+        "category": "NA",
+        "subcategory": "NA"
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Fatty acid(17:0)_[M-H]1- levels",
+      "study_id": "ebi-a-GCST90060105",
+      "source": "opengwas",
+      "matched_query": "1,16-hexadecanedioic acid",
+      "matched_fields": [
+        "trait"
+      ],
+      "downloadable": false,
+      "download_descriptor": {
+        "source": "opengwas",
+        "study_id": "ebi-a-GCST90060105",
+        "status": "unavailable",
+        "method": "none",
+        "requires_auth": false
+      },
+      "downloadability_reason": "unresolved",
+      "download_check": null,
+      "raw_record": {
+        "note": "",
+        "year": 2021,
+        "group_name": "public",
+        "mr": 1,
+        "author": "Harshfield EL",
+        "consortium": "NA",
+        "sex": "NA",
+        "pmid": 34503513,
+        "population": "European",
+        "nsnp": 614265,
+        "sample_size": 13814,
+        "build": "HG19/GRCh37",
+        "trait": "Fatty acid(17:0)_[M-H]1- levels",
+        "id": "ebi-a-GCST90060105",
+        "category": "NA",
+        "subcategory": "NA"
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Fatty acid(16:0)-OH_[M-H]1- levels",
+      "study_id": "ebi-a-GCST90060106",
+      "source": "opengwas",
+      "matched_query": "1,16-hexadecanedioic acid",
+      "matched_fields": [
+        "trait"
+      ],
+      "downloadable": false,
+      "download_descriptor": {
+        "source": "opengwas",
+        "study_id": "ebi-a-GCST90060106",
+        "status": "unavailable",
+        "method": "none",
+        "requires_auth": false
+      },
+      "downloadability_reason": "unresolved",
+      "download_check": null,
+      "raw_record": {
+        "note": "",
+        "year": 2021,
+        "group_name": "public",
+        "mr": 1,
+        "author": "Harshfield EL",
+        "consortium": "NA",
+        "sex": "NA",
+        "pmid": 34503513,
+        "population": "European",
+        "nsnp": 614265,
+        "sample_size": 13814,
+        "build": "HG19/GRCh37",
+        "trait": "Fatty acid(16:0)-OH_[M-H]1- levels",
+        "id": "ebi-a-GCST90060106",
+        "category": "NA",
+        "subcategory": "NA"
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Fatty acid(18:4)_[M-H]1- levels",
+      "study_id": "ebi-a-GCST90060107",
+      "source": "opengwas",
+      "matched_query": "1,16-hexadecanedioic acid",
+      "matched_fields": [
+        "trait"
+      ],
+      "downloadable": false,
+      "download_descriptor": {
+        "source": "opengwas",
+        "study_id": "ebi-a-GCST90060107",
+        "status": "unavailable",
+        "method": "none",
+        "requires_auth": false
+      },
+      "downloadability_reason": "unresolved",
+      "download_check": null,
+      "raw_record": {
+        "note": "",
+        "year": 2021,
+        "group_name": "public",
+        "mr": 1,
+        "author": "Harshfield EL",
+        "consortium": "NA",
+        "sex": "NA",
+        "pmid": 34503513,
+        "population": "European",
+        "nsnp": 614265,
+        "sample_size": 13814,
+        "build": "HG19/GRCh37",
+        "trait": "Fatty acid(18:4)_[M-H]1- levels",
+        "id": "ebi-a-GCST90060107",
+        "category": "NA",
+        "subcategory": "NA"
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Fatty acid(18:1)_[M-H]1- levels",
+      "study_id": "ebi-a-GCST90060108",
+      "source": "opengwas",
+      "matched_query": "1,16-hexadecanedioic acid",
+      "matched_fields": [
+        "trait"
+      ],
+      "downloadable": false,
+      "download_descriptor": {
+        "source": "opengwas",
+        "study_id": "ebi-a-GCST90060108",
+        "status": "unavailable",
+        "method": "none",
+        "requires_auth": false
+      },
+      "downloadability_reason": "unresolved",
+      "download_check": null,
+      "raw_record": {
+        "note": "",
+        "year": 2021,
+        "group_name": "public",
+        "mr": 1,
+        "author": "Harshfield EL",
+        "consortium": "NA",
+        "sex": "NA",
+        "pmid": 34503513,
+        "population": "European",
+        "nsnp": 614265,
+        "sample_size": 13814,
+        "build": "HG19/GRCh37",
+        "trait": "Fatty acid(18:1)_[M-H]1- levels",
+        "id": "ebi-a-GCST90060108",
+        "category": "NA",
+        "subcategory": "NA"
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Fatty acid(18:2)-OH_[M-H]1- levels",
+      "study_id": "ebi-a-GCST90060111",
+      "source": "opengwas",
+      "matched_query": "1,16-hexadecanedioic acid",
+      "matched_fields": [
+        "trait"
+      ],
+      "downloadable": false,
+      "download_descriptor": {
+        "source": "opengwas",
+        "study_id": "ebi-a-GCST90060111",
+        "status": "unavailable",
+        "method": "none",
+        "requires_auth": false
+      },
+      "downloadability_reason": "unresolved",
+      "download_check": null,
+      "raw_record": {
+        "note": "",
+        "year": 2021,
+        "group_name": "public",
+        "mr": 1,
+        "author": "Harshfield EL",
+        "consortium": "NA",
+        "sex": "NA",
+        "pmid": 34503513,
+        "population": "European",
+        "nsnp": 614265,
+        "sample_size": 13814,
+        "build": "HG19/GRCh37",
+        "trait": "Fatty acid(18:2)-OH_[M-H]1- levels",
+        "id": "ebi-a-GCST90060111",
+        "category": "NA",
+        "subcategory": "NA"
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Fatty acid(19:1)_[M-H]1- levels",
+      "study_id": "ebi-a-GCST90060112",
+      "source": "opengwas",
+      "matched_query": "1,16-hexadecanedioic acid",
+      "matched_fields": [
+        "trait"
+      ],
+      "downloadable": false,
+      "download_descriptor": {
+        "source": "opengwas",
+        "study_id": "ebi-a-GCST90060112",
+        "status": "unavailable",
+        "method": "none",
+        "requires_auth": false
+      },
+      "downloadability_reason": "unresolved",
+      "download_check": null,
+      "raw_record": {
+        "note": "",
+        "year": 2021,
+        "group_name": "public",
+        "mr": 1,
+        "author": "Harshfield EL",
+        "consortium": "NA",
+        "sex": "NA",
+        "pmid": 34503513,
+        "population": "European",
+        "nsnp": 614265,
+        "sample_size": 13814,
+        "build": "HG19/GRCh37",
+        "trait": "Fatty acid(19:1)_[M-H]1- levels",
+        "id": "ebi-a-GCST90060112",
+        "category": "NA",
+        "subcategory": "NA"
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Fatty acid(18:1)-OH_[M-H]1- levels",
+      "study_id": "ebi-a-GCST90060113",
+      "source": "opengwas",
+      "matched_query": "1,16-hexadecanedioic acid",
+      "matched_fields": [
+        "trait"
+      ],
+      "downloadable": false,
+      "download_descriptor": {
+        "source": "opengwas",
+        "study_id": "ebi-a-GCST90060113",
+        "status": "unavailable",
+        "method": "none",
+        "requires_auth": false
+      },
+      "downloadability_reason": "unresolved",
+      "download_check": null,
+      "raw_record": {
+        "note": "",
+        "year": 2021,
+        "group_name": "public",
+        "mr": 1,
+        "author": "Harshfield EL",
+        "consortium": "NA",
+        "sex": "NA",
+        "pmid": 34503513,
+        "population": "European",
+        "nsnp": 614265,
+        "sample_size": 13814,
+        "build": "HG19/GRCh37",
+        "trait": "Fatty acid(18:1)-OH_[M-H]1- levels",
+        "id": "ebi-a-GCST90060113",
+        "category": "NA",
+        "subcategory": "NA"
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Fatty acid(19:0)_[M-H]1- levels",
+      "study_id": "ebi-a-GCST90060114",
+      "source": "opengwas",
+      "matched_query": "1,16-hexadecanedioic acid",
+      "matched_fields": [
+        "trait"
+      ],
+      "downloadable": false,
+      "download_descriptor": {
+        "source": "opengwas",
+        "study_id": "ebi-a-GCST90060114",
+        "status": "unavailable",
+        "method": "none",
+        "requires_auth": false
+      },
+      "downloadability_reason": "unresolved",
+      "download_check": null,
+      "raw_record": {
+        "note": "",
+        "year": 2021,
+        "group_name": "public",
+        "mr": 1,
+        "author": "Harshfield EL",
+        "consortium": "NA",
+        "sex": "NA",
+        "pmid": 34503513,
+        "population": "European",
+        "nsnp": 614265,
+        "sample_size": 13814,
+        "build": "HG19/GRCh37",
+        "trait": "Fatty acid(19:0)_[M-H]1- levels",
+        "id": "ebi-a-GCST90060114",
+        "category": "NA",
+        "subcategory": "NA"
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Fatty acid(18:0)-OH_[M-H]1- levels",
+      "study_id": "ebi-a-GCST90060115",
+      "source": "opengwas",
+      "matched_query": "1,16-hexadecanedioic acid",
+      "matched_fields": [
+        "trait"
+      ],
+      "downloadable": false,
+      "download_descriptor": {
+        "source": "opengwas",
+        "study_id": "ebi-a-GCST90060115",
+        "status": "unavailable",
+        "method": "none",
+        "requires_auth": false
+      },
+      "downloadability_reason": "unresolved",
+      "download_check": null,
+      "raw_record": {
+        "note": "",
+        "year": 2021,
+        "group_name": "public",
+        "mr": 1,
+        "author": "Harshfield EL",
+        "consortium": "NA",
+        "sex": "NA",
+        "pmid": 34503513,
+        "population": "European",
+        "nsnp": 614265,
+        "sample_size": 13814,
+        "build": "HG19/GRCh37",
+        "trait": "Fatty acid(18:0)-OH_[M-H]1- levels",
+        "id": "ebi-a-GCST90060115",
+        "category": "NA",
+        "subcategory": "NA"
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Fatty acid(16:1)_[M-H]1- levels",
+      "study_id": "ebi-a-GCST90060571",
+      "source": "opengwas",
+      "matched_query": "hexadecane-1,16-dioic acid",
+      "matched_fields": [
+        "trait"
+      ],
+      "downloadable": false,
+      "download_descriptor": {
+        "source": "opengwas",
+        "study_id": "ebi-a-GCST90060571",
+        "status": "unavailable",
+        "method": "none",
+        "requires_auth": false
+      },
+      "downloadability_reason": "unresolved",
+      "download_check": null,
+      "raw_record": {
+        "note": "",
+        "year": 2021,
+        "group_name": "public",
+        "mr": 1,
+        "author": "Harshfield EL",
+        "consortium": "NA",
+        "sex": "NA",
+        "pmid": 34503513,
+        "population": "South Asian",
+        "nsnp": 6870709,
+        "sample_size": 5662,
+        "build": "HG19/GRCh37",
+        "trait": "Fatty acid(16:1)_[M-H]1- levels",
+        "id": "ebi-a-GCST90060571",
+        "category": "NA",
+        "subcategory": "NA"
+      }
+    },
+    {
+      "side": "target",
+      "trait": "Fatty acid(16:0)_[M-H]1- levels",
+      "study_id": "ebi-a-GCST90060572",
+      "source": "opengwas",
+      "matched_query": "hexadecane-1,16-dioic acid",
+      "matched_fields": [
+        "trait"
+      ],
+      "downloadable": false,
+      "download_descriptor": {
+        "source": "opengwas",
+        "study_id": "ebi-a-GCST90060572",
+        "status": "unavailable",
+        "method": "none",
+        "requires_auth": false
+      },
+      "downloadability_reason": "unresolved",
+      "download_check": null,
+      "raw_record": {
+        "note": "",
+        "year": 2021,
+        "group_name": "public",
+        "mr": 1,
+        "author": "Harshfield EL",
+        "consortium": "NA",
+        "sex": "NA",
+        "pmid": 34503513,
+        "population": "South Asian",
+        "nsnp": 6861883,
+        "sample_size": 5662,
+        "build": "HG19/GRCh37",
+        "trait": "Fatty acid(16:0)_[M-H]1- levels",
+        "id": "ebi-a-GCST90060572",
+        "category": "NA",
+        "subcategory": "NA"
+      }
+    }
+  ],
+  "search_diagnostics": {
+    "candidate_count": 18,
+    "sources_attempted": [
+      "opengwas",
+      "gwas_catalog",
+      "pan_ukb",
+      "finngen"
+    ],
+    "search_exhausted": false,
+    "preferred_sources": [],
+    "allow_source_fallback": true,
+    "source_reports": [
+      {
+        "source": "opengwas",
+        "status": "ok",
+        "n_results": 23,
+        "message": "target: searched 5 query variant(s).",
+        "metadata_endpoint": "https://api.opengwas.io/api/gwasinfo"
+      },
+      {
+        "source": "gwas_catalog",
+        "status": "partial",
+        "n_results": 16,
+        "message": "target: retained candidates; incomplete search: [{'field': 'disease_trait', 'query': 'hexadecanedioate levels', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}, {'field': 'efo_trait', 'query': 'hexadecanedioate levels', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}, {'field': 'disease_trait', 'query': 'hexadecanedioate', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}, {'field': 'efo_trait', 'query': 'hexadecanedioate', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}, {'field': 'disease_trait', 'query': 'hexadecanedioic acid', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}, {'field': 'efo_trait', 'query': 'hexadecanedioic acid', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}, {'query': 'hexadecanedioic acid', 'error': \"HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)\"}]",
+        "metadata_endpoint": "https://www.ebi.ac.uk/gwas/rest/api/v2/studies"
+      },
+      {
+        "source": "pan_ukb",
+        "status": "empty",
+        "n_results": 0,
+        "message": "target: no matches across 5 query variant(s).",
+        "metadata_endpoint": "https://pan-ukb-us-east-1.s3.amazonaws.com/sumstats_release/phenotype_manifest.tsv.bgz"
+      },
+      {
+        "source": "finngen",
+        "status": "empty",
+        "n_results": 0,
+        "message": "target: no matches across 5 query variant(s).",
+        "metadata_endpoint": "https://storage.googleapis.com/finngen-public-data-r12/summary_stats/finngen_R12_manifest.tsv"
+      }
+    ],
+    "source_timings": {
+      "opengwas": {
+        "status": "ok",
+        "n_results": 23,
+        "elapsed_ms": 33593,
+        "probe_total": 10,
+        "probe_success_count": 10,
+        "probe_failure_count": 0,
+        "cache_scope": "process_only",
+        "session_cache_hits": 0,
+        "session_cache_misses": 0,
+        "matched_candidate_count": 7,
+        "pre_filter_candidate_count": 329,
+        "relevance_rejected_count": 322,
+        "probe_budget_initial": 10,
+        "probe_budget_final": 10,
+        "probe_budget": 10,
+        "probe_count": 10,
+        "raw_candidate_count": 28,
+        "ancestry_filter_drop_count": 0,
+        "unique_candidate_count": 23,
+        "executable_candidate_count": 10,
+        "dedup_drop_count": 5
+      },
+      "gwas_catalog": {
+        "status": "partial",
+        "n_results": 16,
+        "elapsed_ms": 206939,
+        "probe_total": 8,
+        "probe_success_count": 8,
+        "probe_failure_count": 0,
+        "cache_scope": "process_only",
+        "session_cache_hits": 0,
+        "session_cache_misses": 0,
+        "search_complete": false,
+        "endpoint_failures": [
+          {
+            "field": "disease_trait",
+            "query": "hexadecanedioate levels",
+            "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+          },
+          {
+            "field": "efo_trait",
+            "query": "hexadecanedioate levels",
+            "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+          },
+          {
+            "field": "disease_trait",
+            "query": "hexadecanedioate",
+            "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+          },
+          {
+            "field": "efo_trait",
+            "query": "hexadecanedioate",
+            "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+          },
+          {
+            "field": "disease_trait",
+            "query": "hexadecanedioic acid",
+            "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+          },
+          {
+            "field": "efo_trait",
+            "query": "hexadecanedioic acid",
+            "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+          },
+          {
+            "query": "hexadecanedioic acid",
+            "error": "HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=30)"
+          }
+        ],
+        "fallback_transport": "catalog_website",
+        "website_candidate_count": 0,
+        "matched_candidate_count": 16,
+        "matched_row_count": 16,
+        "unique_candidate_count": 16,
+        "probe_budget": 12,
+        "probe_count": 8,
+        "raw_candidate_count": 21,
+        "ancestry_filter_drop_count": 0,
+        "executable_candidate_count": 8,
+        "dedup_drop_count": 5
+      },
+      "pan_ukb": {
+        "status": "empty",
+        "n_results": 0,
+        "elapsed_ms": 958,
+        "probe_total": 0,
+        "probe_success_count": 0,
+        "probe_failure_count": 0,
+        "cache_scope": "process_only",
+        "session_cache_hits": 0,
+        "session_cache_misses": 0,
+        "manifest_path": "/recorded-session/workspace/outputs/35e7b060eec7/gwas_search_j5v9g102/pan_ukb_manifest.tsv.bgz",
+        "manifest_url": "https://pan-ukb-us-east-1.s3.amazonaws.com/sumstats_release/phenotype_manifest.tsv.bgz",
+        "downloaded_bytes": 1420758,
+        "decompressed_bytes": 7813557,
+        "rows_scanned": 7223,
+        "matched_row_count": 0,
+        "matches_found": 0,
+        "unique_candidate_count": 0,
+        "family_capped_count": 0,
+        "probe_budget": 12,
+        "probe_count": 0,
+        "raw_candidate_count": 0,
+        "ancestry_filter_drop_count": 0,
+        "executable_candidate_count": 0,
+        "dedup_drop_count": 0
+      },
+      "finngen": {
+        "status": "empty",
+        "n_results": 0,
+        "elapsed_ms": 2436,
+        "probe_total": 0,
+        "probe_success_count": 0,
+        "probe_failure_count": 0,
+        "cache_scope": "process_only",
+        "session_cache_hits": 0,
+        "session_cache_misses": 0,
+        "release": "R12",
+        "manifest_url": "https://storage.googleapis.com/finngen-public-data-r12/summary_stats/finngen_R12_manifest.tsv",
+        "rows_scanned": 2469,
+        "matched_candidate_count": 0,
+        "probe_budget": 20,
+        "probe_count": 0,
+        "search_mode": "manifest",
+        "raw_candidate_count": 0,
+        "ancestry_filter_drop_count": 0,
+        "unique_candidate_count": 0,
+        "executable_candidate_count": 0,
+        "dedup_drop_count": 0
+      }
+    }
+  }
+}

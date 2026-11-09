@@ -1,0 +1,10 @@
+{
+  "reference": {
+    "mode": "api",
+    "population": "EUR",
+    "bfile": null,
+    "plink_bin": null,
+    "fallback_reason": null
+  },
+  "summary": "LD reference used: mode=api; population=EUR."
+}

@@ -372,8 +372,6 @@ def _configure_plot_style(plt: Any) -> None:
             "font.family": "sans-serif",
             "font.sans-serif": ["Arial", "Helvetica", "DejaVu Sans", "Liberation Sans", "sans-serif"],
             "font.weight": "bold",
-            "svg.fonttype": "none",
-            "pdf.fonttype": 42,
             "font.size": 12,
             "axes.titlesize": 14,
             "axes.labelsize": 12,
@@ -393,16 +391,7 @@ def _configure_plot_style(plt: Any) -> None:
 
 
 def _save_publication_figure(figure: Any, plt: Any, path: Path) -> None:
-    figure.savefig(path.with_suffix(".svg"), bbox_inches="tight", facecolor="white")
-    figure.savefig(path.with_suffix(".pdf"), bbox_inches="tight", facecolor="white")
     figure.savefig(path, dpi=600, bbox_inches="tight", facecolor="white")
-    figure.savefig(
-        path.with_suffix(".tiff"),
-        dpi=600,
-        bbox_inches="tight",
-        facecolor="white",
-        pil_kwargs={"compression": "tiff_lzw"},
-    )
     plt.close(figure)
 
 
@@ -606,7 +595,7 @@ def _generate_forest_plot(
         axis.set_ylim(y_min, y_max)
 
     x_to_m_text_axis.set_title(
-        f"Exposure →\n{mediator}\nβ (reported CI)",
+        f"Exposure →\n{mediator}\n$\\hat{{\\beta}}$ (reported CI)",
         loc="left",
         fontsize=13,
         fontweight="bold",
@@ -619,7 +608,7 @@ def _generate_forest_plot(
         pad=27,
     )
     m_to_y_text_axis.set_title(
-        f"{mediator}\n→ outcome\nβ (reported CI)",
+        f"{mediator}\n→ outcome\n$\\hat{{\\beta}}$ (reported CI)",
         loc="left",
         fontsize=13,
         fontweight="bold",

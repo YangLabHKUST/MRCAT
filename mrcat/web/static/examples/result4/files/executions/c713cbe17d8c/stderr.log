@@ -1,0 +1,6 @@
+[gwas-select] Starting GWAS selection.
+[gwas-select] Loading outcome shortlist artifact: /recorded-session/workspace/outputs/41dfedfba76e/gwas_search_1azkfd0w/gwas_search_shortlists.json.
+[gwas-select] Loaded outcome shortlist: raw=2; downloadable=2.
+[gwas-select] Selecting one reusable GWAS study per target with the LLM: outcome.
+[gwas-select] Selected outcome: source=finngen; study_id=finngen_R12_I9_CHD; trait=Major coronary heart disease event.
+[gwas-select] Selection reason: The requested outcome is coronary artery disease (CAD). The closest eligible candidate is finngen_R12_I9_CHD, whose endpoint is I9_CHD (Major coronary heart disease event). Coronary heart disease is a supported equivalent synonym for coronary artery disease, and the endpoint definition is a major CHD event, which is within the requested CAD scope. The alternative finngen_R12_I9_HEARTFAIL_AND_CHD combines heart failure with CHD, broadening the endpoint beyond CAD and therefore is less faithful to the requested trait. Both candidates are Finnish, downloadable, and executable. The CHD-only candidate is selected because it preserves the requested CAD definition without adding heart failure, despite its reported trait label not literally matching the full requested phrase.

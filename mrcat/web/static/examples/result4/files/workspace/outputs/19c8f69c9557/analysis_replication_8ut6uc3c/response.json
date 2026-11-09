@@ -1,0 +1,974 @@
+{
+  "summary": "Replication analysis summarized 2 selected study combination(s), 12 method estimate(s), and 6 method(s) for Hexadecanedioate levels to Coronary artery disease; 6 method(s) covered every analysis.",
+  "outputs": {
+    "status": "ok",
+    "mr_replication_result": {
+      "input_scale": "standardize",
+      "method": "mr_replication",
+      "exposure": "Hexadecanedioate levels",
+      "outcome": "Coronary artery disease",
+      "analyses": [
+        {
+          "analysis_index": 1,
+          "name": "Original GWAS Catalog outcome",
+          "exposure_study": {
+            "source": "gwas_catalog",
+            "study_id": "GCST90243839",
+            "trait": "Hexadecanedioate levels",
+            "sample_size": 6887,
+            "ncase": null,
+            "ncontrol": null,
+            "ancestry": "european",
+            "study_metadata": {
+              "initial_sample_size": "6,887 European ancestry individuals",
+              "population": "6887 European",
+              "sample_size": 6887,
+              "initialSampleSize": "6,887 European ancestry individuals",
+              "replicationSampleSize": "NA",
+              "pmid": "24816252",
+              "publication_title": "An atlas of genetic influences on human blood metabolites.",
+              "publication_date": "2014-05-11",
+              "publication_year": 2014
+            }
+          },
+          "outcome_study": {
+            "source": "gwas_catalog",
+            "study_id": "GCST90132314",
+            "trait": "Coronary artery disease",
+            "sample_size": 1165690,
+            "ncase": null,
+            "ncontrol": null,
+            "ancestry": "european",
+            "study_metadata": {
+              "initial_sample_size": "181,522 European ancestry, unknown cases; 984,168 European ancestry, unknown controls",
+              "population": "1165690 European, NR",
+              "sample_size": 1165690,
+              "initialSampleSize": "181,522 European ancestry, unknown cases; 984,168 European ancestry, unknown controls",
+              "replicationSampleSize": "NA",
+              "pmid": "36474045",
+              "publication_title": "Discovery and systematic characterization of risk variants and genes for coronary artery disease in over a million participants.",
+              "publication_date": "2022-12-06",
+              "publication_year": 2022
+            }
+          },
+          "result_paths": [
+            "/recorded-session/workspace/outputs/cc5ac7326e22/mr_primary_tizeuu7q/reports/mr_primary_result_record.json",
+            "/recorded-session/workspace/outputs/f2ed685faa65/mr_apss_sqnnzrer/reports/mrapss_result_record.json",
+            "/recorded-session/workspace/outputs/a4b4ddfdf6f8/mr_bwmr_82v_7hvf/reports/mr_bwmr_result_record.json"
+          ]
+        },
+        {
+          "analysis_index": 2,
+          "name": "FinnGen outcome",
+          "exposure_study": {
+            "source": "gwas_catalog",
+            "study_id": "GCST90243839",
+            "trait": "Hexadecanedioate levels",
+            "sample_size": 6887,
+            "ncase": null,
+            "ncontrol": null,
+            "ancestry": "european",
+            "study_metadata": {
+              "initial_sample_size": "6,887 European ancestry individuals",
+              "population": "6887 European",
+              "sample_size": 6887,
+              "initialSampleSize": "6,887 European ancestry individuals",
+              "replicationSampleSize": "NA",
+              "pmid": "24816252",
+              "publication_title": "An atlas of genetic influences on human blood metabolites.",
+              "publication_date": "2014-05-11",
+              "publication_year": 2014
+            }
+          },
+          "outcome_study": {
+            "source": "finngen",
+            "study_id": "finngen_R12_I9_CHD",
+            "trait": "Major coronary heart disease event",
+            "sample_size": 500348,
+            "ncase": null,
+            "ncontrol": null,
+            "ancestry": "finnish",
+            "study_metadata": {
+              "num_cases": "56650",
+              "num_controls": "443698",
+              "phenocode": "I9_CHD",
+              "release": "R12",
+              "endpoint": "I9_CHD",
+              "endpoint_code": "I9_CHD",
+              "population": "Finnish"
+            }
+          },
+          "result_paths": [
+            "/recorded-session/workspace/outputs/32e9f140fc83/mr_primary_m8lrhgrn/reports/mr_primary_result_record.json",
+            "/recorded-session/workspace/outputs/f557bbed1fec/mr_apss_x2od2x4m/reports/mrapss_result_record.json",
+            "/recorded-session/workspace/outputs/09f910c44d94/mr_bwmr_q1dkdu92/reports/mr_bwmr_result_record.json"
+          ]
+        }
+      ],
+      "estimates": [
+        {
+          "analysis_index": 1,
+          "analysis_name": "Original GWAS Catalog outcome",
+          "exposure": "Hexadecanedioate levels",
+          "outcome": "Coronary artery disease",
+          "exposure_study": {
+            "source": "gwas_catalog",
+            "study_id": "GCST90243839",
+            "trait": "Hexadecanedioate levels",
+            "sample_size": 6887,
+            "ncase": null,
+            "ncontrol": null,
+            "ancestry": "european",
+            "study_metadata": {
+              "initial_sample_size": "6,887 European ancestry individuals",
+              "population": "6887 European",
+              "sample_size": 6887,
+              "initialSampleSize": "6,887 European ancestry individuals",
+              "replicationSampleSize": "NA",
+              "pmid": "24816252",
+              "publication_title": "An atlas of genetic influences on human blood metabolites.",
+              "publication_date": "2014-05-11",
+              "publication_year": 2014
+            }
+          },
+          "outcome_study": {
+            "source": "gwas_catalog",
+            "study_id": "GCST90132314",
+            "trait": "Coronary artery disease",
+            "sample_size": 1165690,
+            "ncase": null,
+            "ncontrol": null,
+            "ancestry": "european",
+            "study_metadata": {
+              "initial_sample_size": "181,522 European ancestry, unknown cases; 984,168 European ancestry, unknown controls",
+              "population": "1165690 European, NR",
+              "sample_size": 1165690,
+              "initialSampleSize": "181,522 European ancestry, unknown cases; 984,168 European ancestry, unknown controls",
+              "replicationSampleSize": "NA",
+              "pmid": "36474045",
+              "publication_title": "Discovery and systematic characterization of risk variants and genes for coronary artery disease in over a million participants.",
+              "publication_date": "2022-12-06",
+              "publication_year": 2022
+            }
+          },
+          "method": "IVW",
+          "method_key": "ivw",
+          "source_method": "mr_primary",
+          "source_result_path": "/recorded-session/workspace/outputs/cc5ac7326e22/mr_primary_tizeuu7q/reports/mr_primary_result_record.json",
+          "input_scale": "standardize",
+          "beta.hat": -0.00877503934156128,
+          "se": 0.0059768865785,
+          "pval": 0.142060151406819,
+          "nsnp": 10,
+          "ci": {
+            "level": 0.95,
+            "ranges": [
+              {
+                "lower": -0.0204895217751021,
+                "upper": 0.00293944309197954
+              }
+            ]
+          },
+          "qval": 0.284120302813638
+        },
+        {
+          "analysis_index": 1,
+          "analysis_name": "Original GWAS Catalog outcome",
+          "exposure": "Hexadecanedioate levels",
+          "outcome": "Coronary artery disease",
+          "exposure_study": {
+            "source": "gwas_catalog",
+            "study_id": "GCST90243839",
+            "trait": "Hexadecanedioate levels",
+            "sample_size": 6887,
+            "ncase": null,
+            "ncontrol": null,
+            "ancestry": "european",
+            "study_metadata": {
+              "initial_sample_size": "6,887 European ancestry individuals",
+              "population": "6887 European",
+              "sample_size": 6887,
+              "initialSampleSize": "6,887 European ancestry individuals",
+              "replicationSampleSize": "NA",
+              "pmid": "24816252",
+              "publication_title": "An atlas of genetic influences on human blood metabolites.",
+              "publication_date": "2014-05-11",
+              "publication_year": 2014
+            }
+          },
+          "outcome_study": {
+            "source": "gwas_catalog",
+            "study_id": "GCST90132314",
+            "trait": "Coronary artery disease",
+            "sample_size": 1165690,
+            "ncase": null,
+            "ncontrol": null,
+            "ancestry": "european",
+            "study_metadata": {
+              "initial_sample_size": "181,522 European ancestry, unknown cases; 984,168 European ancestry, unknown controls",
+              "population": "1165690 European, NR",
+              "sample_size": 1165690,
+              "initialSampleSize": "181,522 European ancestry, unknown cases; 984,168 European ancestry, unknown controls",
+              "replicationSampleSize": "NA",
+              "pmid": "36474045",
+              "publication_title": "Discovery and systematic characterization of risk variants and genes for coronary artery disease in over a million participants.",
+              "publication_date": "2022-12-06",
+              "publication_year": 2022
+            }
+          },
+          "method": "MR-Egger",
+          "method_key": "mr-egger",
+          "source_method": "mr_primary",
+          "source_result_path": "/recorded-session/workspace/outputs/cc5ac7326e22/mr_primary_tizeuu7q/reports/mr_primary_result_record.json",
+          "input_scale": "standardize",
+          "beta.hat": -0.0393964274516033,
+          "se": 0.0253493444212965,
+          "pval": 0.158757590345491,
+          "nsnp": 10,
+          "ci": {
+            "level": 0.95,
+            "ranges": [
+              {
+                "lower": -0.0978521205118276,
+                "upper": 0.019059265608621
+              }
+            ]
+          },
+          "qval": 0.317515180690982
+        },
+        {
+          "analysis_index": 1,
+          "analysis_name": "Original GWAS Catalog outcome",
+          "exposure": "Hexadecanedioate levels",
+          "outcome": "Coronary artery disease",
+          "exposure_study": {
+            "source": "gwas_catalog",
+            "study_id": "GCST90243839",
+            "trait": "Hexadecanedioate levels",
+            "sample_size": 6887,
+            "ncase": null,
+            "ncontrol": null,
+            "ancestry": "european",
+            "study_metadata": {
+              "initial_sample_size": "6,887 European ancestry individuals",
+              "population": "6887 European",
+              "sample_size": 6887,
+              "initialSampleSize": "6,887 European ancestry individuals",
+              "replicationSampleSize": "NA",
+              "pmid": "24816252",
+              "publication_title": "An atlas of genetic influences on human blood metabolites.",
+              "publication_date": "2014-05-11",
+              "publication_year": 2014
+            }
+          },
+          "outcome_study": {
+            "source": "gwas_catalog",
+            "study_id": "GCST90132314",
+            "trait": "Coronary artery disease",
+            "sample_size": 1165690,
+            "ncase": null,
+            "ncontrol": null,
+            "ancestry": "european",
+            "study_metadata": {
+              "initial_sample_size": "181,522 European ancestry, unknown cases; 984,168 European ancestry, unknown controls",
+              "population": "1165690 European, NR",
+              "sample_size": 1165690,
+              "initialSampleSize": "181,522 European ancestry, unknown cases; 984,168 European ancestry, unknown controls",
+              "replicationSampleSize": "NA",
+              "pmid": "36474045",
+              "publication_title": "Discovery and systematic characterization of risk variants and genes for coronary artery disease in over a million participants.",
+              "publication_date": "2022-12-06",
+              "publication_year": 2022
+            }
+          },
+          "method": "Weighted median",
+          "method_key": "weighted median",
+          "source_method": "mr_primary",
+          "source_result_path": "/recorded-session/workspace/outputs/cc5ac7326e22/mr_primary_tizeuu7q/reports/mr_primary_result_record.json",
+          "input_scale": "standardize",
+          "beta.hat": -0.0131300643345956,
+          "se": 0.00620854820629253,
+          "pval": 0.0344438851315121,
+          "nsnp": 10,
+          "ci": {
+            "level": 0.95,
+            "ranges": [
+              {
+                "lower": -0.0252985952152097,
+                "upper": -0.000961533453981518
+              }
+            ]
+          },
+          "qval": 0.0688877702630242
+        },
+        {
+          "analysis_index": 1,
+          "analysis_name": "Original GWAS Catalog outcome",
+          "exposure": "Hexadecanedioate levels",
+          "outcome": "Coronary artery disease",
+          "exposure_study": {
+            "source": "gwas_catalog",
+            "study_id": "GCST90243839",
+            "trait": "Hexadecanedioate levels",
+            "sample_size": 6887,
+            "ncase": null,
+            "ncontrol": null,
+            "ancestry": "european",
+            "study_metadata": {
+              "initial_sample_size": "6,887 European ancestry individuals",
+              "population": "6887 European",
+              "sample_size": 6887,
+              "initialSampleSize": "6,887 European ancestry individuals",
+              "replicationSampleSize": "NA",
+              "pmid": "24816252",
+              "publication_title": "An atlas of genetic influences on human blood metabolites.",
+              "publication_date": "2014-05-11",
+              "publication_year": 2014
+            }
+          },
+          "outcome_study": {
+            "source": "gwas_catalog",
+            "study_id": "GCST90132314",
+            "trait": "Coronary artery disease",
+            "sample_size": 1165690,
+            "ncase": null,
+            "ncontrol": null,
+            "ancestry": "european",
+            "study_metadata": {
+              "initial_sample_size": "181,522 European ancestry, unknown cases; 984,168 European ancestry, unknown controls",
+              "population": "1165690 European, NR",
+              "sample_size": 1165690,
+              "initialSampleSize": "181,522 European ancestry, unknown cases; 984,168 European ancestry, unknown controls",
+              "replicationSampleSize": "NA",
+              "pmid": "36474045",
+              "publication_title": "Discovery and systematic characterization of risk variants and genes for coronary artery disease in over a million participants.",
+              "publication_date": "2022-12-06",
+              "publication_year": 2022
+            }
+          },
+          "method": "Weighted mode",
+          "method_key": "weighted mode",
+          "source_method": "mr_primary",
+          "source_result_path": "/recorded-session/workspace/outputs/cc5ac7326e22/mr_primary_tizeuu7q/reports/mr_primary_result_record.json",
+          "input_scale": "standardize",
+          "beta.hat": -0.0175270809988976,
+          "se": 0.0189442944019554,
+          "pval": 0.379006247645994,
+          "nsnp": 10,
+          "ci": {
+            "level": 0.95,
+            "ranges": [
+              {
+                "lower": -0.0603820522744389,
+                "upper": 0.0253278902766438
+              }
+            ]
+          },
+          "qval": 0.758012495291988
+        },
+        {
+          "analysis_index": 1,
+          "analysis_name": "Original GWAS Catalog outcome",
+          "exposure": "Hexadecanedioate levels",
+          "outcome": "Coronary artery disease",
+          "exposure_study": {
+            "source": "gwas_catalog",
+            "study_id": "GCST90243839",
+            "trait": "Hexadecanedioate levels",
+            "sample_size": 6887,
+            "ncase": null,
+            "ncontrol": null,
+            "ancestry": "european",
+            "study_metadata": {
+              "initial_sample_size": "6,887 European ancestry individuals",
+              "population": "6887 European",
+              "sample_size": 6887,
+              "initialSampleSize": "6,887 European ancestry individuals",
+              "replicationSampleSize": "NA",
+              "pmid": "24816252",
+              "publication_title": "An atlas of genetic influences on human blood metabolites.",
+              "publication_date": "2014-05-11",
+              "publication_year": 2014
+            }
+          },
+          "outcome_study": {
+            "source": "gwas_catalog",
+            "study_id": "GCST90132314",
+            "trait": "Coronary artery disease",
+            "sample_size": 1165690,
+            "ncase": null,
+            "ncontrol": null,
+            "ancestry": "european",
+            "study_metadata": {
+              "initial_sample_size": "181,522 European ancestry, unknown cases; 984,168 European ancestry, unknown controls",
+              "population": "1165690 European, NR",
+              "sample_size": 1165690,
+              "initialSampleSize": "181,522 European ancestry, unknown cases; 984,168 European ancestry, unknown controls",
+              "replicationSampleSize": "NA",
+              "pmid": "36474045",
+              "publication_title": "Discovery and systematic characterization of risk variants and genes for coronary artery disease in over a million participants.",
+              "publication_date": "2022-12-06",
+              "publication_year": 2022
+            }
+          },
+          "method": "MR-APSS",
+          "method_key": "mr-apss",
+          "source_method": "mrapss",
+          "source_result_path": "/recorded-session/workspace/outputs/f2ed685faa65/mr_apss_sqnnzrer/reports/mrapss_result_record.json",
+          "input_scale": "standardize",
+          "beta.hat": -0.0148554543367293,
+          "se": 0.00997435147238598,
+          "pval": 0.13639,
+          "nsnp": 31,
+          "ci": {
+            "level": 0.95,
+            "ranges": [
+              {
+                "lower": -0.0344051832226058,
+                "upper": 0.00469427454914721
+              }
+            ]
+          },
+          "qval": 0.14405
+        },
+        {
+          "analysis_index": 1,
+          "analysis_name": "Original GWAS Catalog outcome",
+          "exposure": "Hexadecanedioate levels",
+          "outcome": "Coronary artery disease",
+          "exposure_study": {
+            "source": "gwas_catalog",
+            "study_id": "GCST90243839",
+            "trait": "Hexadecanedioate levels",
+            "sample_size": 6887,
+            "ncase": null,
+            "ncontrol": null,
+            "ancestry": "european",
+            "study_metadata": {
+              "initial_sample_size": "6,887 European ancestry individuals",
+              "population": "6887 European",
+              "sample_size": 6887,
+              "initialSampleSize": "6,887 European ancestry individuals",
+              "replicationSampleSize": "NA",
+              "pmid": "24816252",
+              "publication_title": "An atlas of genetic influences on human blood metabolites.",
+              "publication_date": "2014-05-11",
+              "publication_year": 2014
+            }
+          },
+          "outcome_study": {
+            "source": "gwas_catalog",
+            "study_id": "GCST90132314",
+            "trait": "Coronary artery disease",
+            "sample_size": 1165690,
+            "ncase": null,
+            "ncontrol": null,
+            "ancestry": "european",
+            "study_metadata": {
+              "initial_sample_size": "181,522 European ancestry, unknown cases; 984,168 European ancestry, unknown controls",
+              "population": "1165690 European, NR",
+              "sample_size": 1165690,
+              "initialSampleSize": "181,522 European ancestry, unknown cases; 984,168 European ancestry, unknown controls",
+              "replicationSampleSize": "NA",
+              "pmid": "36474045",
+              "publication_title": "Discovery and systematic characterization of risk variants and genes for coronary artery disease in over a million participants.",
+              "publication_date": "2022-12-06",
+              "publication_year": 2022
+            }
+          },
+          "method": "BWMR",
+          "method_key": "bwmr",
+          "source_method": "mr_bwmr",
+          "source_result_path": "/recorded-session/workspace/outputs/a4b4ddfdf6f8/mr_bwmr_82v_7hvf/reports/mr_bwmr_result_record.json",
+          "input_scale": "standardize",
+          "beta.hat": -0.00901668509042803,
+          "se": 0.00621574651963823,
+          "pval": 0.146885753486633,
+          "nsnp": 10,
+          "ci": {
+            "level": 0.95,
+            "ranges": [
+              {
+                "lower": -0.0211995482689189,
+                "upper": 0.00316617808806289
+              }
+            ]
+          },
+          "qval": 0.293771506973266
+        },
+        {
+          "analysis_index": 2,
+          "analysis_name": "FinnGen outcome",
+          "exposure": "Hexadecanedioate levels",
+          "outcome": "Coronary artery disease",
+          "exposure_study": {
+            "source": "gwas_catalog",
+            "study_id": "GCST90243839",
+            "trait": "Hexadecanedioate levels",
+            "sample_size": 6887,
+            "ncase": null,
+            "ncontrol": null,
+            "ancestry": "european",
+            "study_metadata": {
+              "initial_sample_size": "6,887 European ancestry individuals",
+              "population": "6887 European",
+              "sample_size": 6887,
+              "initialSampleSize": "6,887 European ancestry individuals",
+              "replicationSampleSize": "NA",
+              "pmid": "24816252",
+              "publication_title": "An atlas of genetic influences on human blood metabolites.",
+              "publication_date": "2014-05-11",
+              "publication_year": 2014
+            }
+          },
+          "outcome_study": {
+            "source": "finngen",
+            "study_id": "finngen_R12_I9_CHD",
+            "trait": "Major coronary heart disease event",
+            "sample_size": 500348,
+            "ncase": null,
+            "ncontrol": null,
+            "ancestry": "finnish",
+            "study_metadata": {
+              "num_cases": "56650",
+              "num_controls": "443698",
+              "phenocode": "I9_CHD",
+              "release": "R12",
+              "endpoint": "I9_CHD",
+              "endpoint_code": "I9_CHD",
+              "population": "Finnish"
+            }
+          },
+          "method": "IVW",
+          "method_key": "ivw",
+          "source_method": "mr_primary",
+          "source_result_path": "/recorded-session/workspace/outputs/32e9f140fc83/mr_primary_m8lrhgrn/reports/mr_primary_result_record.json",
+          "input_scale": "standardize",
+          "beta.hat": -0.00856171529298656,
+          "se": 0.00985029811830026,
+          "pval": 0.384746843092962,
+          "nsnp": 10,
+          "ci": {
+            "level": 0.95,
+            "ranges": [
+              {
+                "lower": -0.0278679448418377,
+                "upper": 0.0107445142558646
+              }
+            ]
+          },
+          "qval": 0.384746843092962
+        },
+        {
+          "analysis_index": 2,
+          "analysis_name": "FinnGen outcome",
+          "exposure": "Hexadecanedioate levels",
+          "outcome": "Coronary artery disease",
+          "exposure_study": {
+            "source": "gwas_catalog",
+            "study_id": "GCST90243839",
+            "trait": "Hexadecanedioate levels",
+            "sample_size": 6887,
+            "ncase": null,
+            "ncontrol": null,
+            "ancestry": "european",
+            "study_metadata": {
+              "initial_sample_size": "6,887 European ancestry individuals",
+              "population": "6887 European",
+              "sample_size": 6887,
+              "initialSampleSize": "6,887 European ancestry individuals",
+              "replicationSampleSize": "NA",
+              "pmid": "24816252",
+              "publication_title": "An atlas of genetic influences on human blood metabolites.",
+              "publication_date": "2014-05-11",
+              "publication_year": 2014
+            }
+          },
+          "outcome_study": {
+            "source": "finngen",
+            "study_id": "finngen_R12_I9_CHD",
+            "trait": "Major coronary heart disease event",
+            "sample_size": 500348,
+            "ncase": null,
+            "ncontrol": null,
+            "ancestry": "finnish",
+            "study_metadata": {
+              "num_cases": "56650",
+              "num_controls": "443698",
+              "phenocode": "I9_CHD",
+              "release": "R12",
+              "endpoint": "I9_CHD",
+              "endpoint_code": "I9_CHD",
+              "population": "Finnish"
+            }
+          },
+          "method": "MR-Egger",
+          "method_key": "mr-egger",
+          "source_method": "mr_primary",
+          "source_result_path": "/recorded-session/workspace/outputs/32e9f140fc83/mr_primary_m8lrhgrn/reports/mr_primary_result_record.json",
+          "input_scale": "standardize",
+          "beta.hat": -0.041662752525425,
+          "se": 0.0440835944135678,
+          "pval": 0.372280395894546,
+          "nsnp": 10,
+          "ci": {
+            "level": 0.95,
+            "ranges": [
+              {
+                "lower": -0.143319703537776,
+                "upper": 0.0599941984869257
+              }
+            ]
+          },
+          "qval": 0.372280395894546
+        },
+        {
+          "analysis_index": 2,
+          "analysis_name": "FinnGen outcome",
+          "exposure": "Hexadecanedioate levels",
+          "outcome": "Coronary artery disease",
+          "exposure_study": {
+            "source": "gwas_catalog",
+            "study_id": "GCST90243839",
+            "trait": "Hexadecanedioate levels",
+            "sample_size": 6887,
+            "ncase": null,
+            "ncontrol": null,
+            "ancestry": "european",
+            "study_metadata": {
+              "initial_sample_size": "6,887 European ancestry individuals",
+              "population": "6887 European",
+              "sample_size": 6887,
+              "initialSampleSize": "6,887 European ancestry individuals",
+              "replicationSampleSize": "NA",
+              "pmid": "24816252",
+              "publication_title": "An atlas of genetic influences on human blood metabolites.",
+              "publication_date": "2014-05-11",
+              "publication_year": 2014
+            }
+          },
+          "outcome_study": {
+            "source": "finngen",
+            "study_id": "finngen_R12_I9_CHD",
+            "trait": "Major coronary heart disease event",
+            "sample_size": 500348,
+            "ncase": null,
+            "ncontrol": null,
+            "ancestry": "finnish",
+            "study_metadata": {
+              "num_cases": "56650",
+              "num_controls": "443698",
+              "phenocode": "I9_CHD",
+              "release": "R12",
+              "endpoint": "I9_CHD",
+              "endpoint_code": "I9_CHD",
+              "population": "Finnish"
+            }
+          },
+          "method": "Weighted median",
+          "method_key": "weighted median",
+          "source_method": "mr_primary",
+          "source_result_path": "/recorded-session/workspace/outputs/32e9f140fc83/mr_primary_m8lrhgrn/reports/mr_primary_result_record.json",
+          "input_scale": "standardize",
+          "beta.hat": -0.00374490901250325,
+          "se": 0.00917817857360043,
+          "pval": 0.683256704719799,
+          "nsnp": 10,
+          "ci": {
+            "level": 0.95,
+            "ranges": [
+              {
+                "lower": -0.0217338084604373,
+                "upper": 0.0142439904354308
+              }
+            ]
+          },
+          "qval": 0.683256704719799
+        },
+        {
+          "analysis_index": 2,
+          "analysis_name": "FinnGen outcome",
+          "exposure": "Hexadecanedioate levels",
+          "outcome": "Coronary artery disease",
+          "exposure_study": {
+            "source": "gwas_catalog",
+            "study_id": "GCST90243839",
+            "trait": "Hexadecanedioate levels",
+            "sample_size": 6887,
+            "ncase": null,
+            "ncontrol": null,
+            "ancestry": "european",
+            "study_metadata": {
+              "initial_sample_size": "6,887 European ancestry individuals",
+              "population": "6887 European",
+              "sample_size": 6887,
+              "initialSampleSize": "6,887 European ancestry individuals",
+              "replicationSampleSize": "NA",
+              "pmid": "24816252",
+              "publication_title": "An atlas of genetic influences on human blood metabolites.",
+              "publication_date": "2014-05-11",
+              "publication_year": 2014
+            }
+          },
+          "outcome_study": {
+            "source": "finngen",
+            "study_id": "finngen_R12_I9_CHD",
+            "trait": "Major coronary heart disease event",
+            "sample_size": 500348,
+            "ncase": null,
+            "ncontrol": null,
+            "ancestry": "finnish",
+            "study_metadata": {
+              "num_cases": "56650",
+              "num_controls": "443698",
+              "phenocode": "I9_CHD",
+              "release": "R12",
+              "endpoint": "I9_CHD",
+              "endpoint_code": "I9_CHD",
+              "population": "Finnish"
+            }
+          },
+          "method": "Weighted mode",
+          "method_key": "weighted mode",
+          "source_method": "mr_primary",
+          "source_result_path": "/recorded-session/workspace/outputs/32e9f140fc83/mr_primary_m8lrhgrn/reports/mr_primary_result_record.json",
+          "input_scale": "standardize",
+          "beta.hat": -0.0048612235424192,
+          "se": 0.0275668078930241,
+          "pval": 0.863928472407596,
+          "nsnp": 10,
+          "ci": {
+            "level": 0.95,
+            "ranges": [
+              {
+                "lower": -0.0672216754731057,
+                "upper": 0.0574992283882673
+              }
+            ]
+          },
+          "qval": 0.863928472407596
+        },
+        {
+          "analysis_index": 2,
+          "analysis_name": "FinnGen outcome",
+          "exposure": "Hexadecanedioate levels",
+          "outcome": "Coronary artery disease",
+          "exposure_study": {
+            "source": "gwas_catalog",
+            "study_id": "GCST90243839",
+            "trait": "Hexadecanedioate levels",
+            "sample_size": 6887,
+            "ncase": null,
+            "ncontrol": null,
+            "ancestry": "european",
+            "study_metadata": {
+              "initial_sample_size": "6,887 European ancestry individuals",
+              "population": "6887 European",
+              "sample_size": 6887,
+              "initialSampleSize": "6,887 European ancestry individuals",
+              "replicationSampleSize": "NA",
+              "pmid": "24816252",
+              "publication_title": "An atlas of genetic influences on human blood metabolites.",
+              "publication_date": "2014-05-11",
+              "publication_year": 2014
+            }
+          },
+          "outcome_study": {
+            "source": "finngen",
+            "study_id": "finngen_R12_I9_CHD",
+            "trait": "Major coronary heart disease event",
+            "sample_size": 500348,
+            "ncase": null,
+            "ncontrol": null,
+            "ancestry": "finnish",
+            "study_metadata": {
+              "num_cases": "56650",
+              "num_controls": "443698",
+              "phenocode": "I9_CHD",
+              "release": "R12",
+              "endpoint": "I9_CHD",
+              "endpoint_code": "I9_CHD",
+              "population": "Finnish"
+            }
+          },
+          "method": "MR-APSS",
+          "method_key": "mr-apss",
+          "source_method": "mrapss",
+          "source_result_path": "/recorded-session/workspace/outputs/f557bbed1fec/mr_apss_x2od2x4m/reports/mrapss_result_record.json",
+          "input_scale": "standardize",
+          "beta.hat": -0.0215882291121731,
+          "se": 0.0147776264268582,
+          "pval": 0.14405,
+          "nsnp": 31,
+          "ci": {
+            "level": 0.95,
+            "ranges": [
+              {
+                "lower": -0.0505523769088152,
+                "upper": 0.00737591868446897
+              }
+            ]
+          },
+          "qval": 0.14405
+        },
+        {
+          "analysis_index": 2,
+          "analysis_name": "FinnGen outcome",
+          "exposure": "Hexadecanedioate levels",
+          "outcome": "Coronary artery disease",
+          "exposure_study": {
+            "source": "gwas_catalog",
+            "study_id": "GCST90243839",
+            "trait": "Hexadecanedioate levels",
+            "sample_size": 6887,
+            "ncase": null,
+            "ncontrol": null,
+            "ancestry": "european",
+            "study_metadata": {
+              "initial_sample_size": "6,887 European ancestry individuals",
+              "population": "6887 European",
+              "sample_size": 6887,
+              "initialSampleSize": "6,887 European ancestry individuals",
+              "replicationSampleSize": "NA",
+              "pmid": "24816252",
+              "publication_title": "An atlas of genetic influences on human blood metabolites.",
+              "publication_date": "2014-05-11",
+              "publication_year": 2014
+            }
+          },
+          "outcome_study": {
+            "source": "finngen",
+            "study_id": "finngen_R12_I9_CHD",
+            "trait": "Major coronary heart disease event",
+            "sample_size": 500348,
+            "ncase": null,
+            "ncontrol": null,
+            "ancestry": "finnish",
+            "study_metadata": {
+              "num_cases": "56650",
+              "num_controls": "443698",
+              "phenocode": "I9_CHD",
+              "release": "R12",
+              "endpoint": "I9_CHD",
+              "endpoint_code": "I9_CHD",
+              "population": "Finnish"
+            }
+          },
+          "method": "BWMR",
+          "method_key": "bwmr",
+          "source_method": "mr_bwmr",
+          "source_result_path": "/recorded-session/workspace/outputs/09f910c44d94/mr_bwmr_q1dkdu92/reports/mr_bwmr_result_record.json",
+          "input_scale": "standardize",
+          "beta.hat": -0.00884466048690903,
+          "se": 0.0102344576501453,
+          "pval": 0.387475768286607,
+          "nsnp": 10,
+          "ci": {
+            "level": 0.95,
+            "ranges": [
+              {
+                "lower": -0.0289041974811938,
+                "upper": 0.0112148765073758
+              }
+            ]
+          },
+          "qval": 0.387475768286607
+        }
+      ],
+      "summary_table_path": "/recorded-session/workspace/outputs/19c8f69c9557/analysis_replication_8ut6uc3c/reports/replication_estimates.tsv",
+      "forest_matrix_path": "/recorded-session/workspace/outputs/19c8f69c9557/analysis_replication_8ut6uc3c/plots/replication_forest_matrix.png",
+      "diagnostics": {
+        "analysis_count": 2,
+        "estimate_count": 12,
+        "method_count": 6,
+        "alpha": 0.05,
+        "p_adjust_method": "bh",
+        "method_coverage": {
+          "BWMR": {
+            "coverage": 2,
+            "analysis_count": 2,
+            "directional_concordance": 1.0,
+            "positive_count": 0,
+            "negative_count": 2
+          },
+          "IVW": {
+            "coverage": 2,
+            "analysis_count": 2,
+            "directional_concordance": 1.0,
+            "positive_count": 0,
+            "negative_count": 2
+          },
+          "MR-APSS": {
+            "coverage": 2,
+            "analysis_count": 2,
+            "directional_concordance": 1.0,
+            "positive_count": 0,
+            "negative_count": 2
+          },
+          "MR-Egger": {
+            "coverage": 2,
+            "analysis_count": 2,
+            "directional_concordance": 1.0,
+            "positive_count": 0,
+            "negative_count": 2
+          },
+          "Weighted median": {
+            "coverage": 2,
+            "analysis_count": 2,
+            "directional_concordance": 1.0,
+            "positive_count": 0,
+            "negative_count": 2
+          },
+          "Weighted mode": {
+            "coverage": 2,
+            "analysis_count": 2,
+            "directional_concordance": 1.0,
+            "positive_count": 0,
+            "negative_count": 2
+          }
+        },
+        "warnings": []
+      },
+      "interpretation": {
+        "summary": "Replication analysis summarized 2 selected study combination(s), 12 method estimate(s), and 6 method(s) for Hexadecanedioate levels to Coronary artery disease; 6 method(s) covered every analysis.",
+        "recommendations": [
+          "Interpret agreement across selected study combinations using direction, uncertainty, effect-scale compatibility, and method coverage together.",
+          "Different study IDs do not by themselves establish non-overlapping samples or independent replication."
+        ]
+      },
+      "plot_manifest": {
+        "plots": [
+          {
+            "plot_id": "replication_forest_matrix",
+            "path": "/recorded-session/workspace/outputs/19c8f69c9557/analysis_replication_8ut6uc3c/plots/replication_forest_matrix.png",
+            "title": "Replication of hexadecanedioate-to-CAD estimates: original GWAS Catalog vs FinnGen outcome",
+            "source": "mr_replication_result",
+            "explanation_path": "/local/jyxProject/MRCAT-langgraph/skills/analysis-replication/plot_explanations/replication_forest_matrix.md"
+          }
+        ]
+      },
+      "result_record_path": "/recorded-session/workspace/outputs/19c8f69c9557/analysis_replication_8ut6uc3c/reports/replication_result_record.json"
+    }
+  },
+  "details": {
+    "result_status": "ok",
+    "failure_class": null
+  },
+  "artifacts": [
+    {
+      "path": "/recorded-session/workspace/outputs/19c8f69c9557/analysis_replication_8ut6uc3c/reports/replication_estimates.tsv",
+      "kind": "tsv",
+      "summary": "Replication MR estimates and study provenance"
+    },
+    {
+      "path": "/recorded-session/workspace/outputs/19c8f69c9557/analysis_replication_8ut6uc3c/plots/replication_forest_matrix.png",
+      "kind": "png",
+      "summary": "Replication of hexadecanedioate-to-CAD estimates: original GWAS Catalog vs FinnGen outcome"
+    },
+    {
+      "path": "/recorded-session/workspace/outputs/19c8f69c9557/analysis_replication_8ut6uc3c/reports/replication_result_record.json",
+      "kind": "json",
+      "summary": "Replication MR result record"
+    }
+  ]
+}

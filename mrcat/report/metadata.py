@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from functools import lru_cache
 import os
 import platform
 import shutil
@@ -122,7 +121,6 @@ def _env(name: str, default: str) -> str:
     return str(os.getenv(name) or default).strip()
 
 
-@lru_cache(maxsize=1)
 def _software_environment() -> dict[str, Any]:
     result: dict[str, Any] = {
         "mrcat_version": mrcat_version,
@@ -143,9 +141,10 @@ def _software_environment() -> dict[str, Any]:
     quoted = ",".join(f'"{name}"' for name in _R_PACKAGES)
     expression = (
         f"pkgs <- c({quoted}); "
-        "cat(paste(R.version$major, R.version$minor, sep='.'), '\\n', sep=''); "
-        "for (p in pkgs) if (requireNamespace(p, quietly=TRUE)) "
-        "cat(p, as.character(packageVersion(p)), sep='\\t', fill=TRUE)"
+        "writeLines(paste(R.version$major, R.version$minor, sep='.')); flush(stdout()); "
+        "for (p in pkgs) if (length(find.package(p, quiet=TRUE))) { "
+        "writeLines(paste(p, as.character(packageVersion(p)), sep='\\t')); "
+        "flush(stdout()) }"
     )
     try:
         completed = subprocess.run(
@@ -155,11 +154,17 @@ def _software_environment() -> dict[str, Any]:
             text=True,
             timeout=10,
         )
+        stdout = completed.stdout
+    except subprocess.TimeoutExpired as exc:
+        # TimeoutExpired can contain bytes even with text=True. Keep completed
+        # records, but never report a version whose line was interrupted.
+        stdout = exc.stdout or ""
     except (OSError, subprocess.SubprocessError):
         return result
-    if completed.returncode != 0:
-        return result
-    lines = [line.strip() for line in completed.stdout.splitlines() if line.strip()]
+    if isinstance(stdout, bytes):
+        stdout = stdout.decode("utf-8", errors="replace")
+    lines = [line.strip() for line in stdout.splitlines(keepends=True)
+             if line.endswith("\n") and line.strip()]
     if not lines:
         return result
     result["r_version"] = lines[0]
@@ -168,5 +173,6 @@ def _software_environment() -> dict[str, Any]:
         for line in lines[1:]
         if "\t" in line
         for name, version in [line.split("\t", 1)]
+        if name in _R_PACKAGES and version
     }
     return result

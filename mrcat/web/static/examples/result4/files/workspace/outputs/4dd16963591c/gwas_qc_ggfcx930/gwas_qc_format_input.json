@@ -1,0 +1,9 @@
+{
+  "canonical_path": "/recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/canonical/study.canonical.tsv.gz",
+  "label": "Coronary artery disease",
+  "sample_size": 1165690,
+  "ancestry": "european",
+  "min_freq": 0.05,
+  "hm3_path": "/local/jyxProject/MRCAT/database/hapmap3/w_hm3.snplist.rda",
+  "mhc_path": "/local/jyxProject/MRCAT/database/hapmap3/MHC.SNPs.rda"
+}

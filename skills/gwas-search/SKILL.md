@@ -143,7 +143,15 @@ The Catalog adapter uses REST API v2 and combines reported-trait and EFO-trait
 searches before deduplicating accessions. Ontology matches are candidates, not
 authorization to substitute a phenotype, subtype or variant-analysis type.
 If one endpoint fails, usable candidates from the other are retained with
-partial source diagnostics. These candidates still require semantic selection;
+partial source diagnostics. The adapter also retries the unchanged query through
+the Catalog website study-table JSON interface (`/gwas/api/v2/studies`), using
+reported-trait and ontology filters. It preserves the REST failures in diagnostics,
+maps website metadata into the existing candidates, and verifies download files
+using the same FTP discovery logic. It does not change the requested phenotype.
+Transient website request failures are retried once. Successful pages and earlier
+query candidates are retained if a later request fails. Source diagnostics retain
+the individual endpoint failures even when the source returns no candidates.
+These candidates still require semantic selection;
 partial or failed searches cannot establish absence of the requested phenotype.
 For a verified accession, reuse gwas_search(study_id=..., source="gwas_catalog")
 in exact-ID mode. Custom metadata inspection must use

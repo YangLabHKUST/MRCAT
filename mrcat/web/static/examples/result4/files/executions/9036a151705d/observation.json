@@ -1,0 +1,43 @@
+{
+  "execution_id": "9036a151705d",
+  "language": "python",
+  "status": "exited",
+  "returncode": 0,
+  "stdout": "[gwas-search] Starting trait target search: trait=coronary artery disease; query=coronary artery disease; sources=finngen.\n[gwas-search] Searching target.\n[gwas-search] Searching target in finngen: query variants=2.\n[gwas-search] Downloading FinnGen R12 manifest.\n[gwas-search] Downloading FinnGen R12 manifest: 0.7 MiB / 0.7 MiB (100.0%).\n[gwas-search] Completed download FinnGen R12 manifest: 0.7 MiB.\n[gwas-search] Decompressing FinnGen R12 manifest.\n[gwas-search] Decompressed FinnGen R12 manifest: 0.7 MiB in 2 ms.\n[gwas-search] Scanning FinnGen R12 manifest.\n[gwas-search] Scanned FinnGen R12 manifest: rows=2469 in 15 ms.\n[gwas-search] Finished target in finngen: candidates=0; probes=0; downloadable=0; elapsed_ms=2080.\n[gwas-search] Finished target: downloadable_candidates=0.\n[gwas-search] Writing shortlist artifact: /recorded-session/workspace/outputs/9036a151705d/gwas_search_db7acslb/gwas_search_shortlists.json.\n[gwas-search] Writing human-readable shortlist workbook: /recorded-session/workspace/outputs/9036a151705d/gwas_search_db7acslb/gwas_search_shortlists.xlsx.\n[gwas-search] Writing raw search artifact: /recorded-session/workspace/outputs/9036a151705d/gwas_search_db7acslb/gwas_search_raw.json.\nGWAS search blocked: No executable downloadable candidate was found for trait=coronary artery disease.\nSearch failed or returned no usable outputs.\nDetails: {'result_status': 'blocked', 'failure_class': 'no_downloadable_candidates', 'message': 'No executable downloadable candidate was found for trait=coronary artery disease.', 'diagnostics': {'candidate_count': 0, 'sources_attempted': ['finngen'], 'search_exhausted': True, 'preferred_sources': ['finngen'], 'allow_source_fallback': False, 'source_reports': [{'source': 'finngen', 'status': 'empty', 'n_results': 0, 'message': 'target: no matches across 2 query variant(s).', 'metadata_endpoint': 'https://storage.googleapis.com/finngen-public-data-r12/summary_stats/finngen_R12_manifest.tsv'}], 'source_timings': {'finngen': {'status': 'empty', 'n_results': 0, 'elapsed_ms': 2080, 'probe_total': 0, 'probe_success_count': 0, 'probe_failure_count': 0, 'cache_scope': 'process_only', 'session_cache_hits': 0, 'session_cache_misses': 0, 'release': 'R12', 'manifest_url': 'https://storage.googleapis.com/finngen-public-data-r12/summary_stats/finngen_R12_manifest.tsv', 'rows_scanned': 2469, 'matched_candidate_count': 0, 'probe_budget': 20, 'probe_count': 0, 'search_mode': 'manifest', 'raw_candidate_count': 0, 'ancestry_filter_drop_count': 0, 'unique_candidate_count': 0, 'executable_candidate_count': 0, 'dedup_drop_count': 0}}}}\n",
+  "stderr": "[gwas-search] Blocked: No executable downloadable candidate was found for trait=coronary artery disease.\n",
+  "source_path": "executions/9036a151705d/code.py",
+  "stdout_path": "executions/9036a151705d/stdout.log",
+  "stderr_path": "executions/9036a151705d/stderr.log",
+  "duration_seconds": 3.233,
+  "working_directory": "/recorded-session/workspace",
+  "generated_files": [
+    "workspace/outputs/9036a151705d/gwas_search_db7acslb/gwas_search_shortlists.xlsx",
+    "workspace/outputs/9036a151705d/gwas_search_db7acslb/gwas_search_raw.json",
+    "workspace/outputs/9036a151705d/gwas_search_db7acslb/gwas_search_shortlists.json",
+    "workspace/outputs/9036a151705d/gwas_search_db7acslb/response.json"
+  ],
+  "tool_results": [
+    {
+      "path": "workspace/outputs/9036a151705d/gwas_search_db7acslb/response.json",
+      "status": "blocked",
+      "failure_class": "no_downloadable_candidates",
+      "summary": "GWAS search blocked: No executable downloadable candidate was found for trait=coronary artery disease.",
+      "message": "No executable downloadable candidate was found for trait=coronary artery disease."
+    }
+  ],
+  "result_refs": [
+    {
+      "ref": "$ref:gwas_search_43537b59e8a0",
+      "fields": [
+        "status"
+      ],
+      "status": "blocked",
+      "tool": "gwas_search",
+      "input_identity": {
+        "trait": "coronary artery disease",
+        "source": "finngen"
+      },
+      "response_path": "/recorded-session/workspace/outputs/9036a151705d/gwas_search_db7acslb/response.json"
+    }
+  ]
+}

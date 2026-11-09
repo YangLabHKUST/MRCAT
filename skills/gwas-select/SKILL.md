@@ -54,7 +54,14 @@ with an inferred scope or a claimed user authorization.
 
 The internal selector preserves fixed IDs, requested endpoint, source and
 population. Related, broader, laterality or treatment phenotypes are not an
-authorized replacement. Independent replication requires cohort evidence when
+authorized replacement. Rank trait and measurement-definition fidelity before
+sample size, metadata completeness or source consistency. Among scientifically
+suitable candidates satisfying hard constraints, prefer the reported trait
+matching the user's full trait over a shortened or synonymous label. Format is
+an eligibility check, not a ranking preference;
+do not prefer a convenient VCF or API over a closer eligible trait match.
+The selection reason must compare the closest alternative using actual metadata.
+Independent replication requires cohort evidence when
 requested. Unknown evidence remains unknown. The full internal rules are in
 `mrcat/prompts/gwas_select.selector.system.md`.
 

@@ -234,7 +234,7 @@ function renderPrimaryScatter(host, { points, omitted }, payload) {
         caption.textContent = "Harmonized analysis associations";
         table.appendChild(caption);
         const head = notebookElement("tr");
-        ["Trait", "Beta", "SE", "95% CI"].forEach((label) => head.appendChild(notebookElement("th", "", label)));
+        ["Trait", "β̂", "SE", "95% CI"].forEach((label) => head.appendChild(notebookElement("th", "", label)));
         table.appendChild(head);
         for (const [trait, beta, se] of [["Exposure", point.betaExposure, point.seExposure], ["Outcome", point.betaOutcome, point.seOutcome]]) {
           const row = notebookElement("tr");

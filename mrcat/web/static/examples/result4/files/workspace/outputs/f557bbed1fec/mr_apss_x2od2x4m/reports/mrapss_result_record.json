@@ -1,0 +1,68 @@
+{
+  "input_scale": "standardize",
+  "scale_excluded_rows": 0,
+  "selected_mrdat_path": "/recorded-session/workspace/outputs/f557bbed1fec/mr_apss_x2od2x4m/reports/selected_mrdat.tsv",
+  "method": "mrapss",
+  "methods": [
+    {
+      "method": "MR-APSS",
+      "Threshold": 5e-05,
+      "nsnp": 31,
+      "beta.hat": -0.0215882291121731,
+      "se": 0.0147776264268582,
+      "pval": 0.14405,
+      "ci": {
+        "level": 0.95,
+        "ranges": [
+          {
+            "lower": -0.0505523769088152,
+            "upper": 0.00737591868446897
+          }
+        ]
+      },
+      "pi0": 0.30966588623984,
+      "nvalid": 9.59964247343505,
+      "sigma.sq": 2.75270476116329e-05,
+      "tau.sq": 1.8978092384463e-08,
+      "IVstrength": 0.0287134411221913,
+      "threshold_source": "upstream MRdat$Threshold from gwas-pair-prepare"
+    }
+  ],
+  "diagnostics": {
+    "mrdat_rows": 31,
+    "fit_input_rows": 31,
+    "selection_bias_threshold": 5e-05,
+    "threshold_source": "upstream MRdat$Threshold from gwas-pair-prepare",
+    "exposure_label": "Hexadecanedioate levels",
+    "outcome_label": "Major coronary heart disease event",
+    "c_path": "/recorded-session/workspace/outputs/a78b9cb9eed8/gwas_pair_prepare_2qwobvze/intermediate/gwas_pair_C.tsv",
+    "omega_path": "/recorded-session/workspace/outputs/a78b9cb9eed8/gwas_pair_prepare_2qwobvze/intermediate/gwas_pair_Omega.tsv",
+    "result_plot_path": "/recorded-session/workspace/outputs/f557bbed1fec/mr_apss_x2od2x4m/plots/mrapss_mrplot.png"
+  },
+  "interpretation": {
+    "summary": "Parameters used: MRdat_selection_bias_threshold=5e-05, Cor.SelectionBias=TRUE, min_instruments=4. canonicalized/formatted counts: completed upstream and reused; estimated MR-APSS parameters: reused C/Omega from gwas-pair-prepare; input MRdat: already constructed and LD-clumped upstream, rows=31; fit input instruments=31; MR-APSS selection-bias correction threshold=5e-05; fitted method: MR-APSS beta=-2.15882e-02, se=1.47776e-02, pval=1.4405e-01, nsnp=31, nvalid=9.59964e+00, pi0=3.09666e-01, sigma.sq=2.7527e-05, tau.sq=1.89781e-08, IVstrength=2.87134e-02; artifacts/plots: result_record=1, mrapss_mrplot=1.",
+    "recommendations": []
+  },
+  "plot_manifest": {
+    "plots": [
+      {
+        "plot_id": "mrapss_mrplot",
+        "path": "/recorded-session/workspace/outputs/f557bbed1fec/mr_apss_x2od2x4m/plots/mrapss_mrplot.png",
+        "title": "MR-APSS Result Plot",
+        "source": "mrapss_result",
+        "explanation_path": "/local/jyxProject/MRCAT-langgraph/skills/mr-apss/plot_explanations/mrapss_mrplot.md"
+      }
+    ],
+    "standard_bundle": {
+      "expected_plot_ids": [
+        "mrapss_mrplot"
+      ],
+      "generated_plot_ids": [
+        "mrapss_mrplot"
+      ],
+      "missing_plot_ids": [],
+      "degraded": false
+    }
+  },
+  "result_record_path": "/recorded-session/workspace/outputs/f557bbed1fec/mr_apss_x2od2x4m/reports/mrapss_result_record.json"
+}

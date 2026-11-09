@@ -1,0 +1,14 @@
+{
+  "formatted_exposure_path": "/recorded-session/workspace/outputs/687e78e832b7/gwas_qc_pzivenh9/formatted/study.mrapss.tsv.gz",
+  "formatted_outcome_path": "/recorded-session/workspace/outputs/4dd16963591c/gwas_qc_ggfcx930/formatted/study.mrapss.tsv.gz",
+  "exposure_label": "Hexadecanedioate levels",
+  "outcome_label": "Coronary artery disease",
+  "ancestry": "european",
+  "h2_fix_intercept": false,
+  "iv_threshold": 5e-05,
+  "clump_r2": 0.001,
+  "clump_kb": 10000,
+  "clump_p": 0.999,
+  "pop": "EUR",
+  "ldscore_dir": "/local/jyxProject/MRCAT/database/ldsc/eur_w_ld_chr"
+}

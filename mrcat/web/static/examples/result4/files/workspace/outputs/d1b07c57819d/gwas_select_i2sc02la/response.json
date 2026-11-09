@@ -1,0 +1,158 @@
+{
+  "summary": "GWAS select completed: selected 2 reusable study/studies: exposure Hexadecanedioate levels (GWAS Catalog study_id=GCST90243839, ancestry=european, n=6,887); outcome Coronary artery disease (GWAS Catalog study_id=GCST90132314, ancestry=european, n=1,165,690). Selection reason: Exposure: the requested trait is 'hexadecanedioate levels'. The closest eligible candidates are GCST90243839 ('Hexadecanedioate levels', reported_trait_matches_request true, 6887 European, executable) and met-a-711 ('Hexadecanedioate', reported_trait_matches_request false, 6887 European, executable). GCST90243839 preserves the full requested wording and endpoint definition, so it is preferred over the shortened met-a-711 label despite met-a-711 having extra unit metadata. GCST90199807 ('Hexadecanedioate (C16-DC) levels') is also a direct metabolite-level endpoint but its label is a parenthetical variant rather than the exact full requested trait, so GCST90243839 remains the closest full-label match. Other candidates are unrelated fatty acids or disease-restricted metabolite levels and are excluded. Outcome: the requested trait is 'coronary artery disease'. Eligible candidates with reported_trait_matches_request true include GCST90132314 (European, 1165690), GCST90132315 (multi_ancestry, 1378170), GCST90837195 (European, 457512), GCST90081466 (European, 283203), and others. No explicit ancestry constraint was imposed. GCST90132314 is a direct 'Coronary artery disease' endpoint with documented European ancestry and a large sample, and is preferred over the multi_ancestry GCST90132315 because the exposure is European and GCST90132314 avoids mixed-ancestry comparability concerns while retaining the exact requested label. GCST005195 and GCST005194 have unknown ancestry and are excluded under the ancestry-resolution rule. FinnGen and UKB 'Major coronary heart disease event' candidates are related but not the exact requested CAD endpoint and are not preferred over direct CAD labels.",
+  "outputs": {
+    "status": "ok",
+    "gwas_selection_result": {
+      "selected_studies": {
+        "exposure": {
+          "trait": "Hexadecanedioate levels",
+          "study_id": "GCST90243839",
+          "source": "gwas_catalog",
+          "ancestry": "european",
+          "ancestry_raw": "6887 European",
+          "sample_size": 6887,
+          "n_cases": null,
+          "n_controls": null,
+          "downloadable": true,
+          "auth_required": false,
+          "requires_user_confirmation": false,
+          "study_metadata": {
+            "initial_sample_size": "6,887 European ancestry individuals",
+            "population": "6887 European",
+            "sample_size": 6887,
+            "initialSampleSize": "6,887 European ancestry individuals",
+            "replicationSampleSize": "NA",
+            "pmid": "24816252",
+            "publication_title": "An atlas of genetic influences on human blood metabolites.",
+            "publication_date": "2014-05-11",
+            "publication_year": 2014
+          },
+          "downloadability_reason": "confirmed_url",
+          "side": "target",
+          "download_descriptor": {
+            "source": "gwas_catalog",
+            "study_id": "GCST90243839",
+            "status": "ready",
+            "method": "url",
+            "requires_auth": false,
+            "url": "https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90243001-GCST90244000/GCST90243839/GCST90243839_buildNCBI36.tsv.gz"
+          },
+          "status": "selected"
+        },
+        "outcome": {
+          "trait": "Coronary artery disease",
+          "study_id": "GCST90132314",
+          "source": "gwas_catalog",
+          "ancestry": "european",
+          "ancestry_raw": "1165690 European, NR",
+          "sample_size": 1165690,
+          "n_cases": null,
+          "n_controls": null,
+          "downloadable": true,
+          "auth_required": false,
+          "requires_user_confirmation": false,
+          "study_metadata": {
+            "initial_sample_size": "181,522 European ancestry, unknown cases; 984,168 European ancestry, unknown controls",
+            "population": "1165690 European, NR",
+            "sample_size": 1165690,
+            "initialSampleSize": "181,522 European ancestry, unknown cases; 984,168 European ancestry, unknown controls",
+            "replicationSampleSize": "NA",
+            "pmid": "36474045",
+            "publication_title": "Discovery and systematic characterization of risk variants and genes for coronary artery disease in over a million participants. ",
+            "publication_date": "2022-12-06",
+            "publication_year": 2022
+          },
+          "downloadability_reason": "confirmed_url",
+          "side": "target",
+          "download_descriptor": {
+            "source": "gwas_catalog",
+            "study_id": "GCST90132314",
+            "status": "ready",
+            "method": "url",
+            "requires_auth": false,
+            "url": "https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90132001-GCST90133000/GCST90132314/GCST90132314_buildGRCh37.tsv"
+          },
+          "status": "selected"
+        }
+      },
+      "selection_reason": "Exposure: the requested trait is 'hexadecanedioate levels'. The closest eligible candidates are GCST90243839 ('Hexadecanedioate levels', reported_trait_matches_request true, 6887 European, executable) and met-a-711 ('Hexadecanedioate', reported_trait_matches_request false, 6887 European, executable). GCST90243839 preserves the full requested wording and endpoint definition, so it is preferred over the shortened met-a-711 label despite met-a-711 having extra unit metadata. GCST90199807 ('Hexadecanedioate (C16-DC) levels') is also a direct metabolite-level endpoint but its label is a parenthetical variant rather than the exact full requested trait, so GCST90243839 remains the closest full-label match. Other candidates are unrelated fatty acids or disease-restricted metabolite levels and are excluded. Outcome: the requested trait is 'coronary artery disease'. Eligible candidates with reported_trait_matches_request true include GCST90132314 (European, 1165690), GCST90132315 (multi_ancestry, 1378170), GCST90837195 (European, 457512), GCST90081466 (European, 283203), and others. No explicit ancestry constraint was imposed. GCST90132314 is a direct 'Coronary artery disease' endpoint with documented European ancestry and a large sample, and is preferred over the multi_ancestry GCST90132315 because the exposure is European and GCST90132314 avoids mixed-ancestry comparability concerns while retaining the exact requested label. GCST005195 and GCST005194 have unknown ancestry and are excluded under the ancestry-resolution rule. FinnGen and UKB 'Major coronary heart disease event' candidates are related but not the exact requested CAD endpoint and are not preferred over direct CAD labels."
+    }
+  },
+  "details": {
+    "result_status": "ok",
+    "failure_class": null,
+    "selected_studies": {
+      "exposure": {
+        "trait": "Hexadecanedioate levels",
+        "study_id": "GCST90243839",
+        "source": "gwas_catalog",
+        "ancestry": "european",
+        "ancestry_raw": "6887 European",
+        "sample_size": 6887,
+        "n_cases": null,
+        "n_controls": null,
+        "downloadable": true,
+        "auth_required": false,
+        "requires_user_confirmation": false,
+        "study_metadata": {
+          "initial_sample_size": "6,887 European ancestry individuals",
+          "population": "6887 European",
+          "sample_size": 6887,
+          "initialSampleSize": "6,887 European ancestry individuals",
+          "replicationSampleSize": "NA",
+          "pmid": "24816252",
+          "publication_title": "An atlas of genetic influences on human blood metabolites.",
+          "publication_date": "2014-05-11",
+          "publication_year": 2014
+        },
+        "downloadability_reason": "confirmed_url",
+        "side": "target",
+        "download_descriptor": {
+          "source": "gwas_catalog",
+          "study_id": "GCST90243839",
+          "status": "ready",
+          "method": "url",
+          "requires_auth": false,
+          "url": "https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90243001-GCST90244000/GCST90243839/GCST90243839_buildNCBI36.tsv.gz"
+        },
+        "status": "selected"
+      },
+      "outcome": {
+        "trait": "Coronary artery disease",
+        "study_id": "GCST90132314",
+        "source": "gwas_catalog",
+        "ancestry": "european",
+        "ancestry_raw": "1165690 European, NR",
+        "sample_size": 1165690,
+        "n_cases": null,
+        "n_controls": null,
+        "downloadable": true,
+        "auth_required": false,
+        "requires_user_confirmation": false,
+        "study_metadata": {
+          "initial_sample_size": "181,522 European ancestry, unknown cases; 984,168 European ancestry, unknown controls",
+          "population": "1165690 European, NR",
+          "sample_size": 1165690,
+          "initialSampleSize": "181,522 European ancestry, unknown cases; 984,168 European ancestry, unknown controls",
+          "replicationSampleSize": "NA",
+          "pmid": "36474045",
+          "publication_title": "Discovery and systematic characterization of risk variants and genes for coronary artery disease in over a million participants. ",
+          "publication_date": "2022-12-06",
+          "publication_year": 2022
+        },
+        "downloadability_reason": "confirmed_url",
+        "side": "target",
+        "download_descriptor": {
+          "source": "gwas_catalog",
+          "study_id": "GCST90132314",
+          "status": "ready",
+          "method": "url",
+          "requires_auth": false,
+          "url": "https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90132001-GCST90133000/GCST90132314/GCST90132314_buildGRCh37.tsv"
+        },
+        "status": "selected"
+      }
+    },
+    "selection_reason": "Exposure: the requested trait is 'hexadecanedioate levels'. The closest eligible candidates are GCST90243839 ('Hexadecanedioate levels', reported_trait_matches_request true, 6887 European, executable) and met-a-711 ('Hexadecanedioate', reported_trait_matches_request false, 6887 European, executable). GCST90243839 preserves the full requested wording and endpoint definition, so it is preferred over the shortened met-a-711 label despite met-a-711 having extra unit metadata. GCST90199807 ('Hexadecanedioate (C16-DC) levels') is also a direct metabolite-level endpoint but its label is a parenthetical variant rather than the exact full requested trait, so GCST90243839 remains the closest full-label match. Other candidates are unrelated fatty acids or disease-restricted metabolite levels and are excluded. Outcome: the requested trait is 'coronary artery disease'. Eligible candidates with reported_trait_matches_request true include GCST90132314 (European, 1165690), GCST90132315 (multi_ancestry, 1378170), GCST90837195 (European, 457512), GCST90081466 (European, 283203), and others. No explicit ancestry constraint was imposed. GCST90132314 is a direct 'Coronary artery disease' endpoint with documented European ancestry and a large sample, and is preferred over the multi_ancestry GCST90132315 because the exposure is European and GCST90132314 avoids mixed-ancestry comparability concerns while retaining the exact requested label. GCST005195 and GCST005194 have unknown ancestry and are excluded under the ancestry-resolution rule. FinnGen and UKB 'Major coronary heart disease event' candidates are related but not the exact requested CAD endpoint and are not preferred over direct CAD labels."
+  }
+}

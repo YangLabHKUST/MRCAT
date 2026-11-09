@@ -1,0 +1,1109 @@
+=== SYSTEM PROMPT ===
+You are a strict GWAS canonicalization code generator.
+
+You generate Python code that converts one raw GWAS file into a fixed canonical tab-separated table.
+Use only the provided file preview, metadata, study metadata, and previous error feedback.
+Do not invent source fields, allele direction, sample sizes, or statistics.
+
+Return only JSON. Choose exactly one status:
+- `ok`: include a complete Python source string in `code`.
+- `blocked`: include `failure_class`, `missing_requirements`, and `reason`.
+
+The generated Python code must define:
+
+```python
+def transform(input_path, output_path, context):
+    ...
+```
+
+The function must stream or chunk raw input when possible, write `output_path`, and return a small JSON-serializable summary.
+The function may print a preview of the canonical output to stdout.
+
+=== USER PROMPT ===
+Build Python code to canonicalize one GWAS summary-statistics side.
+
+## Required Output
+
+The generated `transform(input_path, output_path, context)` function must write a tab-separated file with these columns in this exact order:
+
+`SNP, CHR, BP, effect_allele, other_allele, beta, or, se, z, pval, neglog10_pval, freq_qc, info, n, n_cases, n_controls`
+
+Always write this header as the first output line. Fill unavailable optional fields with empty strings.
+
+## Mapping Decision Process
+
+Reason about the file as a coherent format. Do not map each column independently from aliases alone.
+
+1. Inspect `source`, `mapping_notes`, `study_metadata`, `physical_format`,
+   `header_fields`, `sample_rows`, `vcf_metadata`, and `vcf_format_fields`
+   together.
+2. Identify a documented format or software signature only when the source/context and the joint set of fields support it. A filename or one familiar-looking column is not enough.
+3. Select one coherent association namespace: the same trait/sample, ancestry scope, effect estimate, allele pair, frequency namespace, and quality namespace.
+4. Map fields using the evidence hierarchy below, then check sample values for compatibility with the selected meanings.
+5. If a required mapping is not fully established but one coherent executable
+   mapping remains, use the deterministic soft-assumption rules below and
+   disclose the risk. Return `status: "blocked"` only when no executable
+   mapping can satisfy the hard-block boundary below.
+
+Use mapping evidence in this order, from strongest to weakest:
+
+1. Explicit user `mapping_notes`, column descriptions, VCF header definitions,
+   source notes, or `study_metadata` for this file.
+2. A documented standard/source/software convention whose complete signature matches the context and header.
+3. Explicit header semantics such as `effect_allele`, `OR(A1)`, or `EAF_A1`.
+4. Generic aliases such as `A1`, `Allele1`, `ALT`, `A1FREQ`, or `Freq1`.
+
+Higher-priority evidence overrides lower-priority naming conventions. Sample values may confirm type/range compatibility, but values, allele frequency, or minor-allele status must never be used to infer effect direction. If equally strong evidence conflicts but a coherent allele pair and signed statistic remain available, apply the deterministic fallback below and record the conflict as a soft assumption.
+
+## Effect-Direction Decision and Soft Fallback
+
+Before generating code, determine which source allele the signed statistic
+refers to.
+
+Treat the mapping as resolved when direction is established by:
+
+1. explicit header semantics;
+2. explicit source or study metadata; or
+3. a documented format convention whose complete signature matches.
+
+When those sources do not establish direction but the file still contains one
+coherent allele pair and a signed statistic, continue with exactly one
+deterministic fallback:
+
+1. paired `A1`/`A2` or `Allele1`/`Allele2`: use the first allele as effect;
+2. paired `REF`/`ALT`: use ALT as effect;
+3. another clearly paired first/second allele namespace: use the first allele.
+
+In this fallback case, return `status: "ok"` and include an `assumptions` entry
+with `kind: "effect_allele_direction"`, the selected mapping, its limited
+basis, and the risk that the signed effect could be reversed. The generated
+code must implement the disclosed mapping consistently; it must not silently
+flip values. Generic allele labels, allele frequencies, minor-allele status,
+REF/ALT order, filenames, and sample values are fallback selectors rather than
+evidence that upgrades the direction to resolved.
+
+Block with `failure_class: "missing_required_allele_pair"` only when two
+compatible alleles cannot be formed for any association row in the study.
+Directional uncertainty alone is a recorded risk, not a hard block.
+
+## Hard-Block Boundary
+
+Return a structured blocked response only when execution cannot produce a
+valid canonical table, including:
+
+- the input is absent, unreadable, or its container cannot be handled safely;
+- variant identity cannot be represented as an rsID or coordinate plus two
+  alleles;
+- no usable compatible allele pair exists anywhere in the study;
+- no signed association statistic (`beta`, `or`, or signed `z`) exists;
+- no compatible uncertainty/significance field exists;
+- no numeric sample-size value exists in a row-level column, case/control
+  columns, or side-level context;
+- the input cannot be represented as one row-preserving canonical variant
+  table at all; or
+- equally plausible namespaces would mix traits, samples, ancestry scopes, or
+  association tests and no single coherent namespace can be selected.
+
+Every blocked response must name a specific `failure_class` and include
+`missing_requirements` describing what information or artifact is required.
+Do not use a hard block merely because ancestry provenance, effect direction,
+or sample-size semantics would benefit from further confirmation when a
+coherent executable mapping exists; record those items in `assumptions`.
+
+## Input and Output Integrity
+
+- Determine compression/container and logical format separately. Open gzip-compatible text such as `.gz`, `.bgz`, `.bgzip`, or `.vcf.gz` with `gzip.open(..., "rt", encoding="utf-8", newline="")`; open plain text with `open(..., "r", encoding="utf-8", newline="")`. If the available Python standard library cannot safely read the actual container, block.
+- Use `input_delimiter` for ordinary tables. For `whitespace`, use whitespace splitting or `pandas.read_csv(..., sep=r"\s+")`. Do not infer a delimiter from a `.tsv` suffix. Always write tab-separated output.
+- Parse line endings safely with the `csv` module or remove both CR and LF with `rstrip("\r\n")`; never leave `\r` attached to the last header or value.
+- Treat conventional missing tokens such as an empty field, `.`, `NA`, `N/A`, `NULL`, `NaN`, or `nan` as unavailable and write an empty string. Do not treat a valid numeric zero as missing.
+- Preserve one output row for every raw variant row and preserve row order. Do not filter, deduplicate, harmonize, clump, QC, or reorder rows. If the input mixes variant association rows with covariate, aggregate, or incompatible test rows and a valid row-preserving variant transform cannot be defined, block rather than silently dropping rows.
+- A row-level value may be unavailable even when the study-level mapping is
+  executable. When an individual row contains symbolic or non-nucleotide
+  allele values such as `D`, `I`, `R`, `<DEL>`, or `<INS>`, preserve that
+  output row and write empty `effect_allele` and `other_allele` fields for the
+  row. Never infer nucleotide alleles from symbolic values, and do not block
+  the whole study solely because such rows exist. The untouched raw input
+  remains the source of those original symbolic values; downstream formatting
+  determines whether the row is analysis-ready.
+- Use only values present in source fields or explicit context. Do not derive OR from beta, beta or z from p-values, p-values from log-p values, total N from case/control counts, or any other statistic.
+- Do not flip alleles, frequencies, or signed statistics. Do not liftover coordinates, change the coordinate basis, or otherwise change the source genome-build representation.
+
+## Variant Identity and Alleles
+
+- Write only rsID-like identifiers to `SNP`. If an ID field contains a delimited list, extract one valid `rs\d+` token in source order. Do not write a composite list or coordinate ID to `SNP`.
+- Parse packed coordinate identifiers such as `chr:pos`, `chr:pos:ref:alt`, or equivalent source-documented layouts into `CHR`, `BP`, and alleles when the layout is unambiguous. Otherwise use explicit chromosome and position fields.
+- If no rsID exists, write `CHR`, `BP`, and both alleles so the caller can perform deterministic local HM3 rsID mapping.
+- Each usable allele may be a single base or a non-empty nucleotide sequence composed of A/C/G/T. Accept insertion/deletion pairs such as `REF=A, ALT=AT` or `REF=CT, ALT=C`. Preserve each usable source allele string; do not trim, normalize, complement, or swap alleles. Handle symbolic non-nucleotide values with the row-level missing-value rule above.
+- `effect_allele` is the allele to which the selected signed association statistic refers. Prefer explicit semantics or a matching documented convention; otherwise apply and disclose the deterministic soft fallback above. Select `other_allele` from the same coherent allele pair.
+- `EAF_A1` or `effect_allele_frequency_A1` is valid header evidence that A1 is the effect allele when paired A1/A2 fields and a signed statistic are present and no stronger evidence contradicts it. Generic names such as `A1FREQ`, `Freq1`, or `frq_A1` identify a frequency namespace but are not sufficient by themselves to establish statistic direction.
+
+## Documented Format Conventions
+
+Apply these conventions only when the context and joint header signature identify the corresponding format. They are format evidence, not universal alias rules.
+
+### GWAS Catalog GWAS-SSF
+
+- Use explicit `effect_allele` and `other_allele` fields. Do not replace them using `ref_allele` or ALT/REF assumptions.
+- Map `beta`, `odds_ratio`, `standard_error`, `p_value`, `neg_log_10_p_value`, and `effect_allele_frequency` by their declared meanings.
+- Keep original and harmonized (`hm_*`) fields within one coherent namespace; do not combine an original effect/allele field with a harmonized counterpart.
+- The canonical schema has no hazard-ratio field. If `hazard_ratio` is the only association effect, block; do not map it to `or` or `beta`.
+- A GWAS Catalog study ID alone does not prove that an older or nonstandard downloaded file follows GWAS-SSF. Use the actual header and file notes.
+
+### OpenGWAS GWAS-VCF
+
+- For a documented OpenGWAS/GWAS-VCF association sample, the effect estimate is relative to ALT: map ALT to `effect_allele` and REF to `other_allele`.
+- Read association fields from the selected FORMAT/sample namespace: `ES` is the signed effect estimate, `SE` is its standard error, `LP` is `-log10(p)`, `AF` is ALT/effect-allele frequency, `SS` is sample size, `EZ` is signed z-score, `SI` is numeric imputation accuracy, and `NC` is case count.
+- Do not substitute a general VCF INFO annotation `AF` for the association sample's FORMAT `AF`.
+- If a VCF contains multiple trait/sample columns, select the one explicitly matching the study/trait metadata. If it cannot be selected safely, block. Generic non-GWAS VCF files do not inherit these association conventions.
+- If one VCF record contains multiple ALT alleles or multiple association values and one effect allele cannot be selected without expanding or duplicating the raw row, block rather than choosing the first ALT/value.
+
+### FinnGen
+
+- For the documented FinnGen association format, beta is relative to ALT: map `alt` to `effect_allele`, `ref` to `other_allele`, `beta`, `sebeta`, `pval`, `mlogp`, and `af_alt` by their meanings.
+- For binary traits, same-namespace `af_alt_controls` may be preferred for frequency QC when no overall `af_alt` is available. `maf`, `maf_cases`, and `maf_controls` are frequency-QC candidates only and do not determine effect direction.
+- `rsids` may contain multiple identifiers; extract one valid rsID. Leave `info` empty unless the association file actually contains a numeric imputation/variant-quality field.
+
+### Pan-UKB
+
+- ALT is the effect allele and REF is the other allele for documented Pan-UKB per-phenotype association files.
+- For Pan-UKB-style scoped columns, choose one ancestry scope and use it consistently across all scoped columns. Use `pan_ukb_scope` when provided; otherwise infer from `ancestry`. If ancestry is missing or ambiguous, default to EUR when EUR scoped columns exist. Do not mix scopes such as `beta_EUR` with `se_AFR`.
+- Keep population-specific, `meta`, and `meta_hq` fields as distinct namespaces. Select matching `beta_*`, `se_*`, `neglog10_pval_*`, frequency, and sample-size fields from one namespace.
+- For binary traits, a same-scope control allele frequency may be used for `freq_qc` when no same-scope overall frequency exists.
+- `low_confidence`, `low_confidence_*`, and scoped variants such as `low_confidence_EUR` are boolean QC flags, not numeric INFO scores, and must not be mapped to `info`.
+
+### Common Association Software
+
+- SAIGE: in a matching SAIGE single-variant result, `Allele2` is the effect allele, `Allele1` is the other allele, `BETA` and `AF_Allele2` refer to Allele2, and numeric `imputationInfo` may map to `info`.
+- REGENIE: in a matching REGENIE single-variant result, `ALLELE1` is the ALT/effect allele, `ALLELE0` is the REF/other allele, and `A1FREQ` refers to ALLELE1. Keep `BETA`, `SE`, `LOG10P`, `INFO`, and `N` in that same result namespace.
+- BOLT-LMM: in a matching BOLT-LMM result, `ALLELE1` is the effect allele, `ALLELE0` is the other allele, and `A1FREQ` and `BETA` refer to ALLELE1.
+- PLINK association output: A1 is the tested/dosage allele to which BETA or OR refers, but A1 is not universally ALT or the minor allele. Use A1/A2 only when the header and test output identify this convention. Keep the selected statistic, SE, frequency, and test in one namespace. If mixed `TEST` records cannot be represented while preserving every raw variant row, block.
+- PLINK `STAT` is test-dependent and is not universally a standard-normal
+  z-score. Do not map `STAT` to canonical `z` from its name alone. For PLINK
+  linear-regression output, where `STAT` is a t-statistic, leave canonical `z`
+  empty when `BETA`, `SE`, and `P` are available; downstream formatting may
+  compute the method-specific z representation. Map `STAT` to `z` only when
+  explicit source metadata or a complete documented signature defines it as a
+  signed standard-normal z-score.
+- Neale Lab UK Biobank v3-style output: when the complete signature includes a
+  packed `variant=CHR:BP:REF:ALT` field together with `minor_allele`,
+  `minor_AF`, `n_complete_samples`, `AC`, `ytx`, `beta`, `se`, `tstat`, and
+  `pval`, beta is ALT-oriented; map ALT to `effect_allele` and REF to
+  `other_allele`. `minor_allele` and `minor_AF` remain identity/frequency-QC
+  fields and do not independently establish direction.
+
+### Provenance-Suffixed Companion Columns
+
+- Treat a provenance suffix such as `_UKB` as a namespace label, not as a file
+  format or effect-direction rule. Interpret the semantic stem and the observed
+  values: an rsID-like `SNPID_*` field may supply `SNP`, a numeric `INFO_*`
+  field may supply `info`, and a valid `MAF_*` field may supply `freq_qc`.
+- Use the selected companion suffix consistently when mapping `freq_qc`. If a
+  provenance scope such as `_UKB` is established by selected companion fields
+  such as `SNPID_UKB` and `INFO_UKB`, and both an unsuffixed frequency field
+  such as `MAF` and a matching suffixed field such as `MAF_UKB` exist, map the
+  matching suffixed field to `freq_qc`. This matching-suffix preference is
+  mandatory unless stronger explicit metadata states that the unsuffixed
+  frequency belongs to the selected provenance scope or that the suffixed
+  frequency has incompatible semantics.
+- Suffixed identifier, quality, and frequency companions do not establish which
+  allele a signed statistic refers to. Resolve effect direction from the
+  association fields and their documented joint convention, and never replace
+  a coherent association namespace merely because a companion column carries
+  a source suffix.
+- Keep companion values from one coherent provenance scope. Do not combine
+  fields with different suffixes or scopes unless the source explicitly
+  documents them as the same association record.
+
+## User Mapping Notes
+
+`mapping_notes` is reserved for explicit user-provided explanations about this file, not an upstream agent's inferred mapping. An absent value means the user supplied no extra explanation; it does not weaken the evidence from file metadata or a complete documented format signature. Apply the evidence hierarchy above. Record your own mapping decisions and assumptions in the generated response and QC report, without attributing them to the user. If a supplied explanation conflicts with source evidence, disclose the conflict and apply the existing conflict and validation rules.
+
+## Canonical Column Semantics
+
+| Canonical field | Mapping requirement |
+| --- | --- |
+| `SNP` | One rsID-like identifier only. Identifier fields such as `SNPID` may carry a provenance suffix such as `_UKB`; use the value only when it is rsID-like. |
+| `CHR`, `BP` | Source chromosome and base-pair location, without build conversion. |
+| `effect_allele`, `other_allele` | One coherent allele pair from the selected association namespace, with resolved direction or a disclosed soft fallback. |
+| `beta` | Signed additive/log-effect estimate only; never an odds ratio or hazard ratio. |
+| `or` | Odds ratio only; do not convert it to beta. |
+| `se` | Standard error of the selected effect estimate only; never a p-value, z-score, or confidence bound. |
+| `z` | Signed z-score only; never chi-square or an unsigned statistic. |
+| `pval` | Ordinary p-values in `[0, 1]` only. Do not place `LP`, `LOGP`, `LOG10P`, or other `-log10(p)` values here. |
+| `neglog10_pval` | Non-negative `-log10(p)` values only. Do not convert ordinary p-values. |
+| `freq_qc` | A compatible allele frequency, effect-allele frequency, minor-allele frequency, or control frequency used only for frequency QC. A semantic frequency field such as `MAF` may carry a provenance suffix such as `_UKB`. Prefer the selected scope/namespace. Do not flip it or use its values to infer direction. |
+| `info` | A numeric imputation or variant-quality score where larger means higher quality and the value is directly usable as a quality threshold, such as `INFO`, a provenance-suffixed `INFO_*`, `imputation_info`, `imputation_quality`, `R2`, or `RSQ`. Boolean inclusion/exclusion flags are not INFO. |
+| `n` | Row-level total/per-variant sample size only. If N exists only as side metadata, leave row-level sample-size columns empty; downstream formatting uses the side-level value. |
+| `n_cases`, `n_controls` | Row-level case and control counts respectively; do not exchange them or derive total N. |
+
+## Consistency Checks Before Returning Code
+
+Confirm that:
+
+- the study contains usable variant identity as an rsID or an unambiguous
+  coordinate plus both alleles;
+- usable effect and other alleles belong to the selected statistic's
+  namespace; row-level symbolic allele records follow the missing-value rule
+  and do not invalidate otherwise usable study rows;
+- one signed statistic among `beta`, `or`, or `z` is available;
+- at least one compatible uncertainty/significance field among `se`, `pval`, `neglog10_pval`, or `z` is available;
+- sample size is available as row-level `n`, both row-level case/control counts, or side-level context;
+- ordinary p-values are compatible with `[0, 1]`, `-log10(p)` is non-negative, and frequency values are compatible with frequency semantics;
+- scoped or suffixed fields have not been mixed across ancestry, trait, sample, imputation panel, original/harmonized representation, or analysis test.
+- when both unsuffixed and provenance-suffixed frequency candidates exist,
+  `freq_qc` matches the selected companion suffix unless stronger explicit
+  metadata documents the exception.
+
+If a numeric column conventionally named `N`, `NMISS`, `SS`, `samplesize`, or
+equivalent is the only executable sample-size mapping but its provenance is not
+fully documented, map it and add a `sample_size_semantics` soft assumption.
+Block only when no usable sample-size value exists at all.
+
+If a required item crosses the hard-block boundary, return a structured
+blocked response. Otherwise generate one coherent transform and disclose every
+unresolved decision in `assumptions`.
+
+## JSON Response Shape
+
+For code:
+
+```json
+{
+  "status": "ok",
+  "code": "def transform(input_path, output_path, context):\n    ...",
+  "reason": "short explanation of the identified format and mapping namespace",
+  "assumptions": [
+    {
+      "kind": "effect_allele_direction or sample_size_semantics",
+      "decision": "the mapping used by the generated code",
+      "basis": "why this is the best executable mapping",
+      "risk": "what could change if the assumption is wrong"
+    }
+  ]
+}
+```
+
+For blocked:
+
+```json
+{
+  "status": "blocked",
+  "failure_class": "missing_required_...",
+  "missing_requirements": [
+    {"field": "allele_pair", "message": "why no executable allele pair can be formed"}
+  ],
+  "reason": "short explanation"
+}
+```
+
+Generate the canonicalization code for this GWAS side from this JSON context:
+{
+  "side": "study",
+  "file_name": "finngen_R12_I9_CHD.gz",
+  "physical_format": "table",
+  "study_metadata": {
+    "num_cases": "56650",
+    "num_controls": "443698",
+    "phenocode": "I9_CHD",
+    "release": "R12",
+    "endpoint": "I9_CHD",
+    "endpoint_code": "I9_CHD",
+    "population": "Finnish",
+    "filename": "finngen_R12_I9_CHD.gz"
+  },
+  "mapping_notes": null,
+  "trait_label": "Major coronary heart disease event",
+  "source": "finngen",
+  "ancestry": "finnish",
+  "pan_ukb_scope": null,
+  "sample_size": 500348,
+  "input_delimiter": "\t",
+  "header_fields": [
+    "#chrom",
+    "pos",
+    "ref",
+    "alt",
+    "rsids",
+    "nearest_genes",
+    "pval",
+    "mlogp",
+    "beta",
+    "sebeta",
+    "af_alt",
+    "af_alt_cases",
+    "af_alt_controls"
+  ],
+  "sample_rows": [
+    {
+      "#chrom": "1",
+      "pos": "13668",
+      "ref": "G",
+      "alt": "A",
+      "rsids": "rs2691328",
+      "nearest_genes": "DDX11L1",
+      "pval": "0.629603",
+      "mlogp": "0.200933",
+      "beta": "0.0408884",
+      "sebeta": "0.0847807",
+      "af_alt": "0.00598633",
+      "af_alt_cases": "0.0060685",
+      "af_alt_controls": "0.00597584"
+    },
+    {
+      "#chrom": "1",
+      "pos": "14506",
+      "ref": "G",
+      "alt": "A",
+      "rsids": "rs1240557819",
+      "nearest_genes": "WASH7P",
+      "pval": "0.478915",
+      "mlogp": "0.319742",
+      "beta": "0.0646391",
+      "sebeta": "0.0912919",
+      "af_alt": "0.00463903",
+      "af_alt_cases": "0.00474537",
+      "af_alt_controls": "0.00462545"
+    },
+    {
+      "#chrom": "1",
+      "pos": "14521",
+      "ref": "C",
+      "alt": "T",
+      "rsids": "rs1378626194",
+      "nearest_genes": "WASH7P",
+      "pval": "0.717272",
+      "mlogp": "0.144316",
+      "beta": "0.0651686",
+      "sebeta": "0.179971",
+      "af_alt": "0.00108316",
+      "af_alt_cases": "0.00104083",
+      "af_alt_controls": "0.00108857"
+    },
+    {
+      "#chrom": "1",
+      "pos": "14717",
+      "ref": "G",
+      "alt": "A",
+      "rsids": "rs377122907",
+      "nearest_genes": "WASH7P",
+      "pval": "0.696784",
+      "mlogp": "0.156902",
+      "beta": "0.145291",
+      "sebeta": "0.37286",
+      "af_alt": "0.000236682",
+      "af_alt_cases": "0.000251077",
+      "af_alt_controls": "0.000234844"
+    },
+    {
+      "#chrom": "1",
+      "pos": "14773",
+      "ref": "C",
+      "alt": "T",
+      "rsids": "rs878915777",
+      "nearest_genes": "WASH7P",
+      "pval": "0.254877",
+      "mlogp": "0.59367",
+      "beta": "0.0565271",
+      "sebeta": "0.0496468",
+      "af_alt": "0.0142081",
+      "af_alt_cases": "0.0144031",
+      "af_alt_controls": "0.0141832"
+    },
+    {
+      "#chrom": "1",
+      "pos": "14842",
+      "ref": "G",
+      "alt": "T",
+      "rsids": "rs1422503364",
+      "nearest_genes": "WASH7P",
+      "pval": "0.322063",
+      "mlogp": "0.492059",
+      "beta": "-0.58314",
+      "sebeta": "0.588895",
+      "af_alt": "0.000220674",
+      "af_alt_cases": "0.000201409",
+      "af_alt_controls": "0.000223134"
+    },
+    {
+      "#chrom": "1",
+      "pos": "14860",
+      "ref": "G",
+      "alt": "T",
+      "rsids": "rs533499096",
+      "nearest_genes": "WASH7P",
+      "pval": "0.173486",
+      "mlogp": "0.760735",
+      "beta": "-0.0657431",
+      "sebeta": "0.0483019",
+      "af_alt": "0.0143443",
+      "af_alt_cases": "0.0139771",
+      "af_alt_controls": "0.0143912"
+    },
+    {
+      "#chrom": "1",
+      "pos": "14872",
+      "ref": "T",
+      "alt": "A",
+      "rsids": "",
+      "nearest_genes": "WASH7P",
+      "pval": "0.0928432",
+      "mlogp": "1.03225",
+      "beta": "0.453819",
+      "sebeta": "0.270036",
+      "af_alt": "0.000635072",
+      "af_alt_cases": "0.000679681",
+      "af_alt_controls": "0.000629376"
+    },
+    {
+      "#chrom": "1",
+      "pos": "15585",
+      "ref": "G",
+      "alt": "A",
+      "rsids": "rs533630043",
+      "nearest_genes": "WASH7P",
+      "pval": "0.633065",
+      "mlogp": "0.198552",
+      "beta": "0.0939985",
+      "sebeta": "0.196889",
+      "af_alt": "0.000894734",
+      "af_alt_cases": "0.000894761",
+      "af_alt_controls": "0.000894731"
+    },
+    {
+      "#chrom": "1",
+      "pos": "16141",
+      "ref": "C",
+      "alt": "T",
+      "rsids": "rs529651976",
+      "nearest_genes": "WASH7P",
+      "pval": "0.0245284",
+      "mlogp": "1.61033",
+      "beta": "-0.318577",
+      "sebeta": "0.141669",
+      "af_alt": "0.00151004",
+      "af_alt_cases": "0.00131489",
+      "af_alt_controls": "0.00153496"
+    },
+    {
+      "#chrom": "1",
+      "pos": "16549",
+      "ref": "T",
+      "alt": "C",
+      "rsids": "rs1262014613",
+      "nearest_genes": "WASH7P",
+      "pval": "0.143179",
+      "mlogp": "0.84412",
+      "beta": "0.51194",
+      "sebeta": "0.349673",
+      "af_alt": "0.000328552",
+      "af_alt_cases": "0.000370836",
+      "af_alt_controls": "0.000323153"
+    },
+    {
+      "#chrom": "1",
+      "pos": "16567",
+      "ref": "G",
+      "alt": "C",
+      "rsids": "rs1194064194",
+      "nearest_genes": "WASH7P",
+      "pval": "0.0852609",
+      "mlogp": "1.06925",
+      "beta": "-0.160943",
+      "sebeta": "0.0935199",
+      "af_alt": "0.00387542",
+      "af_alt_cases": "0.00369687",
+      "af_alt_controls": "0.00389821"
+    },
+    {
+      "#chrom": "1",
+      "pos": "16792",
+      "ref": "G",
+      "alt": "A",
+      "rsids": "rs201330479",
+      "nearest_genes": "WASH7P",
+      "pval": "0.57526",
+      "mlogp": "0.240136",
+      "beta": "-0.0821075",
+      "sebeta": "0.146537",
+      "af_alt": "0.00112236",
+      "af_alt_cases": "0.00107942",
+      "af_alt_controls": "0.00112784"
+    },
+    {
+      "#chrom": "1",
+      "pos": "16850",
+      "ref": "T",
+      "alt": "C",
+      "rsids": "rs1298041101",
+      "nearest_genes": "WASH7P",
+      "pval": "0.914211",
+      "mlogp": "0.0389537",
+      "beta": "0.0307738",
+      "sebeta": "0.28566",
+      "af_alt": "0.000394745",
+      "af_alt_cases": "0.000418739",
+      "af_alt_controls": "0.000391681"
+    },
+    {
+      "#chrom": "1",
+      "pos": "16869",
+      "ref": "C",
+      "alt": "T",
+      "rsids": "rs1201088959",
+      "nearest_genes": "WASH7P",
+      "pval": "0.579326",
+      "mlogp": "0.237077",
+      "beta": "0.152805",
+      "sebeta": "0.275638",
+      "af_alt": "0.000295065",
+      "af_alt_cases": "0.000325736",
+      "af_alt_controls": "0.000291149"
+    },
+    {
+      "#chrom": "1",
+      "pos": "17017",
+      "ref": "C",
+      "alt": "G",
+      "rsids": "",
+      "nearest_genes": "WASH7P",
+      "pval": "0.0742369",
+      "mlogp": "1.12938",
+      "beta": "-1.07088",
+      "sebeta": "0.599881",
+      "af_alt": "0.000132418",
+      "af_alt_cases": "0.000109998",
+      "af_alt_controls": "0.00013528"
+    },
+    {
+      "#chrom": "1",
+      "pos": "17036",
+      "ref": "T",
+      "alt": "C",
+      "rsids": "rs1355336514",
+      "nearest_genes": "WASH7P",
+      "pval": "0.513535",
+      "mlogp": "0.28943",
+      "beta": "0.471309",
+      "sebeta": "0.721381",
+      "af_alt": "0.000173738",
+      "af_alt_cases": "0.000188152",
+      "af_alt_controls": "0.000171898"
+    },
+    {
+      "#chrom": "1",
+      "pos": "17124",
+      "ref": "T",
+      "alt": "G",
+      "rsids": "rs1308699576",
+      "nearest_genes": "WASH7P",
+      "pval": "0.427999",
+      "mlogp": "0.368557",
+      "beta": "0.246533",
+      "sebeta": "0.311036",
+      "af_alt": "0.000300411",
+      "af_alt_cases": "0.000305557",
+      "af_alt_controls": "0.000299753"
+    },
+    {
+      "#chrom": "1",
+      "pos": "17379",
+      "ref": "G",
+      "alt": "A",
+      "rsids": "rs754322362",
+      "nearest_genes": "MIR6859-1,WASH7P",
+      "pval": "0.713416",
+      "mlogp": "0.146657",
+      "beta": "-0.0297165",
+      "sebeta": "0.0809116",
+      "af_alt": "0.00426337",
+      "af_alt_cases": "0.00416244",
+      "af_alt_controls": "0.00427625"
+    },
+    {
+      "#chrom": "1",
+      "pos": "17415",
+      "ref": "G",
+      "alt": "A",
+      "rsids": "rs1348459900",
+      "nearest_genes": "MIR6859-1,WASH7P",
+      "pval": "0.834797",
+      "mlogp": "0.0784193",
+      "beta": "-0.073624",
+      "sebeta": "0.353022",
+      "af_alt": "0.000267398",
+      "af_alt_cases": "0.000249277",
+      "af_alt_controls": "0.000269712"
+    },
+    {
+      "#chrom": "1",
+      "pos": "17516",
+      "ref": "T",
+      "alt": "C",
+      "rsids": "rs1407382214",
+      "nearest_genes": "WASH7P",
+      "pval": "0.304831",
+      "mlogp": "0.515941",
+      "beta": "-0.13804",
+      "sebeta": "0.134525",
+      "af_alt": "0.002342",
+      "af_alt_cases": "0.00221155",
+      "af_alt_controls": "0.00235866"
+    },
+    {
+      "#chrom": "1",
+      "pos": "17532",
+      "ref": "C",
+      "alt": "A",
+      "rsids": "rs1413640003",
+      "nearest_genes": "WASH7P",
+      "pval": "0.897634",
+      "mlogp": "0.0469006",
+      "beta": "0.0112983",
+      "sebeta": "0.0878217",
+      "af_alt": "0.00369127",
+      "af_alt_cases": "0.0037132",
+      "af_alt_controls": "0.00368847"
+    },
+    {
+      "#chrom": "1",
+      "pos": "17626",
+      "ref": "G",
+      "alt": "A",
+      "rsids": "rs1230374648",
+      "nearest_genes": "WASH7P",
+      "pval": "0.0233271",
+      "mlogp": "1.63214",
+      "beta": "0.13158",
+      "sebeta": "0.0580152",
+      "af_alt": "0.0109612",
+      "af_alt_cases": "0.0113737",
+      "af_alt_controls": "0.0109085"
+    },
+    {
+      "#chrom": "1",
+      "pos": "17765",
+      "ref": "G",
+      "alt": "A",
+      "rsids": "rs373918278",
+      "nearest_genes": "WASH7P",
+      "pval": "0.712002",
+      "mlogp": "0.147519",
+      "beta": "-0.0265037",
+      "sebeta": "0.0717927",
+      "af_alt": "0.00721695",
+      "af_alt_cases": "0.00725386",
+      "af_alt_controls": "0.00721224"
+    },
+    {
+      "#chrom": "1",
+      "pos": "17767",
+      "ref": "G",
+      "alt": "A",
+      "rsids": "rs763779009",
+      "nearest_genes": "WASH7P",
+      "pval": "0.631719",
+      "mlogp": "0.199476",
+      "beta": "-0.0348074",
+      "sebeta": "0.0726198",
+      "af_alt": "0.00615356",
+      "af_alt_cases": "0.00598051",
+      "af_alt_controls": "0.00617566"
+    },
+    {
+      "#chrom": "1",
+      "pos": "19217",
+      "ref": "G",
+      "alt": "C",
+      "rsids": "rs879518682",
+      "nearest_genes": "WASH7P",
+      "pval": "0.801624",
+      "mlogp": "0.0960292",
+      "beta": "-0.00638006",
+      "sebeta": "0.0253937",
+      "af_alt": "0.0510219",
+      "af_alt_cases": "0.0513444",
+      "af_alt_controls": "0.0509807"
+    },
+    {
+      "#chrom": "1",
+      "pos": "19234",
+      "ref": "A",
+      "alt": "G",
+      "rsids": "rs1482748587",
+      "nearest_genes": "WASH7P",
+      "pval": "0.291596",
+      "mlogp": "0.535219",
+      "beta": "-0.797704",
+      "sebeta": "0.756384",
+      "af_alt": "6.64244e-05",
+      "af_alt_cases": "4.77995e-05",
+      "af_alt_controls": "6.88023e-05"
+    },
+    {
+      "#chrom": "1",
+      "pos": "19321",
+      "ref": "G",
+      "alt": "A",
+      "rsids": "rs1453075188",
+      "nearest_genes": "WASH7P",
+      "pval": "0.0692421",
+      "mlogp": "1.15963",
+      "beta": "0.313878",
+      "sebeta": "0.172761",
+      "af_alt": "0.000760318",
+      "af_alt_cases": "0.000813734",
+      "af_alt_controls": "0.000753498"
+    },
+    {
+      "#chrom": "1",
+      "pos": "20184",
+      "ref": "A",
+      "alt": "G",
+      "rsids": "rs796202720",
+      "nearest_genes": "WASH7P",
+      "pval": "0.794893",
+      "mlogp": "0.0996916",
+      "beta": "-0.00839874",
+      "sebeta": "0.0323075",
+      "af_alt": "0.0316704",
+      "af_alt_cases": "0.031311",
+      "af_alt_controls": "0.0317163"
+    },
+    {
+      "#chrom": "1",
+      "pos": "20240",
+      "ref": "A",
+      "alt": "T",
+      "rsids": "rs1384894602",
+      "nearest_genes": "WASH7P",
+      "pval": "0.325406",
+      "mlogp": "0.487574",
+      "beta": "-0.0684368",
+      "sebeta": "0.0695914",
+      "af_alt": "0.0052989",
+      "af_alt_cases": "0.00516411",
+      "af_alt_controls": "0.00531611"
+    },
+    {
+      "#chrom": "1",
+      "pos": "48186",
+      "ref": "T",
+      "alt": "G",
+      "rsids": "rs199900651",
+      "nearest_genes": "OR4G4P",
+      "pval": "0.623449",
+      "mlogp": "0.205199",
+      "beta": "0.0799026",
+      "sebeta": "0.162745",
+      "af_alt": "0.00157905",
+      "af_alt_cases": "0.00160057",
+      "af_alt_controls": "0.00157631"
+    },
+    {
+      "#chrom": "1",
+      "pos": "96150",
+      "ref": "G",
+      "alt": "A",
+      "rsids": "rs1337598604",
+      "nearest_genes": "RP11-34P13.7",
+      "pval": "0.813659",
+      "mlogp": "0.0895574",
+      "beta": "0.144953",
+      "sebeta": "0.614969",
+      "af_alt": "0.000120285",
+      "af_alt_cases": "0.000121939",
+      "af_alt_controls": "0.000120074"
+    },
+    {
+      "#chrom": "1",
+      "pos": "96254",
+      "ref": "G",
+      "alt": "A",
+      "rsids": "rs1477357249",
+      "nearest_genes": "RP11-34P13.7",
+      "pval": "0.147481",
+      "mlogp": "0.831263",
+      "beta": "0.104766",
+      "sebeta": "0.0723277",
+      "af_alt": "0.0070867",
+      "af_alt_cases": "0.00728183",
+      "af_alt_controls": "0.00706179"
+    },
+    {
+      "#chrom": "1",
+      "pos": "98931",
+      "ref": "A",
+      "alt": "C",
+      "rsids": "rs1389523423",
+      "nearest_genes": "RP11-34P13.7",
+      "pval": "0.75863",
+      "mlogp": "0.11997",
+      "beta": "-0.210369",
+      "sebeta": "0.684617",
+      "af_alt": "0.000173781",
+      "af_alt_cases": "0.000167627",
+      "af_alt_controls": "0.000174567"
+    },
+    {
+      "#chrom": "1",
+      "pos": "99253",
+      "ref": "G",
+      "alt": "A",
+      "rsids": "rs1179100973",
+      "nearest_genes": "RP11-34P13.7",
+      "pval": "0.445015",
+      "mlogp": "0.351625",
+      "beta": "0.144916",
+      "sebeta": "0.189743",
+      "af_alt": "0.001218",
+      "af_alt_cases": "0.00129512",
+      "af_alt_controls": "0.00120815"
+    },
+    {
+      "#chrom": "1",
+      "pos": "102988",
+      "ref": "C",
+      "alt": "T",
+      "rsids": "rs1360411048",
+      "nearest_genes": "RP11-34P13.7",
+      "pval": "0.474039",
+      "mlogp": "0.324186",
+      "beta": "0.0272597",
+      "sebeta": "0.0380763",
+      "af_alt": "0.0239524",
+      "af_alt_cases": "0.024212",
+      "af_alt_controls": "0.0239192"
+    },
+    {
+      "#chrom": "1",
+      "pos": "103147",
+      "ref": "C",
+      "alt": "T",
+      "rsids": "rs866355763",
+      "nearest_genes": "RP11-34P13.7",
+      "pval": "0.212463",
+      "mlogp": "0.672716",
+      "beta": "-0.0539838",
+      "sebeta": "0.0432972",
+      "af_alt": "0.0170802",
+      "af_alt_cases": "0.0169135",
+      "af_alt_controls": "0.0171015"
+    },
+    {
+      "#chrom": "1",
+      "pos": "104263",
+      "ref": "C",
+      "alt": "A",
+      "rsids": "rs1380205703",
+      "nearest_genes": "RP11-34P13.7",
+      "pval": "0.684022",
+      "mlogp": "0.16493",
+      "beta": "0.159311",
+      "sebeta": "0.391446",
+      "af_alt": "0.000267124",
+      "af_alt_cases": "0.00028967",
+      "af_alt_controls": "0.000264245"
+    },
+    {
+      "#chrom": "1",
+      "pos": "106834",
+      "ref": "C",
+      "alt": "G",
+      "rsids": "rs1335078986",
+      "nearest_genes": "RP11-34P13.7",
+      "pval": "0.740082",
+      "mlogp": "0.13072",
+      "beta": "0.0122778",
+      "sebeta": "0.0370098",
+      "af_alt": "0.0252195",
+      "af_alt_cases": "0.025361",
+      "af_alt_controls": "0.0252015"
+    },
+    {
+      "#chrom": "1",
+      "pos": "107682",
+      "ref": "C",
+      "alt": "G",
+      "rsids": "rs879827054",
+      "nearest_genes": "RP11-34P13.7",
+      "pval": "0.156732",
+      "mlogp": "0.804842",
+      "beta": "-0.893286",
+      "sebeta": "0.630786",
+      "af_alt": "0.000148226",
+      "af_alt_cases": "0.00013343",
+      "af_alt_controls": "0.000150115"
+    },
+    {
+      "#chrom": "1",
+      "pos": "108368",
+      "ref": "T",
+      "alt": "A",
+      "rsids": "rs1229436112",
+      "nearest_genes": "RP11-34P13.7",
+      "pval": "0.758915",
+      "mlogp": "0.119807",
+      "beta": "0.0881676",
+      "sebeta": "0.287279",
+      "af_alt": "0.000725182",
+      "af_alt_cases": "0.000777218",
+      "af_alt_controls": "0.000718538"
+    },
+    {
+      "#chrom": "1",
+      "pos": "108382",
+      "ref": "C",
+      "alt": "A",
+      "rsids": "rs539092881",
+      "nearest_genes": "RP11-34P13.7",
+      "pval": "0.500109",
+      "mlogp": "0.300935",
+      "beta": "0.132667",
+      "sebeta": "0.196742",
+      "af_alt": "0.000993301",
+      "af_alt_cases": "0.00100102",
+      "af_alt_controls": "0.000992315"
+    },
+    {
+      "#chrom": "1",
+      "pos": "108391",
+      "ref": "A",
+      "alt": "G",
+      "rsids": "rs1274919517",
+      "nearest_genes": "RP11-34P13.7",
+      "pval": "0.171428",
+      "mlogp": "0.765917",
+      "beta": "0.238166",
+      "sebeta": "0.174145",
+      "af_alt": "0.000728348",
+      "af_alt_cases": "0.000853227",
+      "af_alt_controls": "0.000712404"
+    },
+    {
+      "#chrom": "1",
+      "pos": "108395",
+      "ref": "CCTT",
+      "alt": "C",
+      "rsids": "rs1383869168",
+      "nearest_genes": "RP11-34P13.7",
+      "pval": "0.797192",
+      "mlogp": "0.0984373",
+      "beta": "0.0465153",
+      "sebeta": "0.181005",
+      "af_alt": "0.0010855",
+      "af_alt_cases": "0.00105543",
+      "af_alt_controls": "0.00108934"
+    },
+    {
+      "#chrom": "1",
+      "pos": "108436",
+      "ref": "T",
+      "alt": "C",
+      "rsids": "rs1391031796",
+      "nearest_genes": "RP11-34P13.7",
+      "pval": "0.789692",
+      "mlogp": "0.102542",
+      "beta": "0.0545192",
+      "sebeta": "0.204413",
+      "af_alt": "0.000938116",
+      "af_alt_cases": "0.0009779",
+      "af_alt_controls": "0.000933036"
+    },
+    {
+      "#chrom": "1",
+      "pos": "108506",
+      "ref": "C",
+      "alt": "T",
+      "rsids": "rs555296411",
+      "nearest_genes": "RP11-34P13.7",
+      "pval": "0.00339563",
+      "mlogp": "2.46908",
+      "beta": "0.206197",
+      "sebeta": "0.0703877",
+      "af_alt": "0.00645612",
+      "af_alt_cases": "0.00673312",
+      "af_alt_controls": "0.00642075"
+    },
+    {
+      "#chrom": "1",
+      "pos": "108591",
+      "ref": "G",
+      "alt": "C",
+      "rsids": "rs1330049217",
+      "nearest_genes": "RP11-34P13.7",
+      "pval": "0.948461",
+      "mlogp": "0.0229806",
+      "beta": "0.0258627",
+      "sebeta": "0.400105",
+      "af_alt": "0.000289924",
+      "af_alt_cases": "0.000280948",
+      "af_alt_controls": "0.00029107"
+    },
+    {
+      "#chrom": "1",
+      "pos": "108605",
+      "ref": "T",
+      "alt": "C",
+      "rsids": "rs1367784388",
+      "nearest_genes": "RP11-34P13.7",
+      "pval": "0.387975",
+      "mlogp": "0.411196",
+      "beta": "-0.322152",
+      "sebeta": "0.373166",
+      "af_alt": "0.000438393",
+      "af_alt_cases": "0.000404237",
+      "af_alt_controls": "0.000442754"
+    },
+    {
+      "#chrom": "1",
+      "pos": "108787",
+      "ref": "G",
+      "alt": "T",
+      "rsids": "rs772904727",
+      "nearest_genes": "RP11-34P13.7",
+      "pval": "0.438077",
+      "mlogp": "0.35845",
+      "beta": "-0.15516",
+      "sebeta": "0.200092",
+      "af_alt": "0.000418379",
+      "af_alt_cases": "0.000382085",
+      "af_alt_controls": "0.000423013"
+    },
+    {
+      "#chrom": "1",
+      "pos": "108826",
+      "ref": "G",
+      "alt": "C",
+      "rsids": "rs62642117",
+      "nearest_genes": "RP11-34P13.7",
+      "pval": "0.270324",
+      "mlogp": "0.568115",
+      "beta": "0.0351512",
+      "sebeta": "0.0318885",
+      "af_alt": "0.0364743",
+      "af_alt_cases": "0.0366594",
+      "af_alt_controls": "0.0364506"
+    }
+  ],
+  "vcf_metadata": [],
+  "vcf_format_fields": [],
+  "required_canonical_columns": [
+    "SNP",
+    "CHR",
+    "BP",
+    "effect_allele",
+    "other_allele",
+    "beta",
+    "or",
+    "se",
+    "z",
+    "pval",
+    "neglog10_pval",
+    "freq_qc",
+    "info",
+    "n",
+    "n_cases",
+    "n_controls"
+  ],
+  "previous_error": null
+}

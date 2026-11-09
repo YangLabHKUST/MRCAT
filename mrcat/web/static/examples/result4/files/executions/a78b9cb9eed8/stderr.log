@@ -1,0 +1,32 @@
+Warning messages:
+1: package ‘data.table’ was built under R version 4.4.3 
+2: package ‘jsonlite’ was built under R version 4.4.3 
+Merge dat1 and dat2 by SNP ...
+Harmonize the direction of SNP effects of exposure and outcome
+Read in LD scores ... 
+Add LD scores to the harmonized data set...
+The Harmonized data set will also be used for MR analysis 
+
+Begin estimation of C and Omega using LDSC ...
+Estimate heritability for trait 1 ...
+Loading required package: readr
+Using two-step estimator with cutoff at 30.
+Mean Chi2:1.0444.
+Intercept: 1.0265(0.0071).
+Total Observed scale h2:0.1257(0.0823).
+
+Estimate heritability for trait 2 ...
+Using two-step estimator with cutoff at 30.
+Mean Chi2:1.5875.
+Intercept: 1.1903 (0.0189).
+Total Observed scale h2:0.0386 (0.0027).
+
+Estimate genetic covariance ...
+Using two-step estimator with cutoff at 30.
+Intercept: -0.0124 (0.0058).
+Total Observed scale gencov: 0.0137 (0.0072).
+Warning message:
+package ‘readr’ was built under R version 4.4.3 
+Please look at vignettes for options on running this locally if you need to run many instances of this command.
+Clumping HvgdZy, 202 variants, using EUR population reference
+Removing 171 of 202 variants due to LD with other variants or absence from LD reference panel

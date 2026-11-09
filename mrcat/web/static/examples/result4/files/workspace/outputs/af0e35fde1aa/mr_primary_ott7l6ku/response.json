@@ -1,0 +1,135 @@
+{
+  "summary": "mr-primary completed: pvalue_threshold=5e-06; instruments=10; methods=IVW, MR-Egger, Weighted median, Weighted mode; plots=2.",
+  "outputs": {
+    "status": "ok",
+    "mr_primary_result": {
+      "input_scale": "standardize",
+      "scale_excluded_rows": 0,
+      "method": "mr_primary",
+      "methods": [
+        {
+          "method": "IVW",
+          "Threshold": 5e-06,
+          "nsnp": 10,
+          "beta.hat": -0.00877503934156128,
+          "se": 0.0059768865785,
+          "pval": 0.142060151406819,
+          "ci": {
+            "level": 0.95,
+            "ranges": [
+              {
+                "lower": -0.0204895217751021,
+                "upper": 0.00293944309197954
+              }
+            ]
+          }
+        },
+        {
+          "method": "MR-Egger",
+          "Threshold": 5e-06,
+          "nsnp": 10,
+          "beta.hat": -0.0393964274516033,
+          "se": 0.0253493444212965,
+          "pval": 0.158757590345491,
+          "ci": {
+            "level": 0.95,
+            "ranges": [
+              {
+                "lower": -0.0978521205118276,
+                "upper": 0.019059265608621
+              }
+            ]
+          }
+        },
+        {
+          "method": "Weighted median",
+          "Threshold": 5e-06,
+          "nsnp": 10,
+          "beta.hat": -0.0131300643345956,
+          "se": 0.00620674115273434,
+          "pval": 0.0343914233294358,
+          "ci": {
+            "level": 0.95,
+            "ranges": [
+              {
+                "lower": -0.0252950534553175,
+                "upper": -0.000965075213873692
+              }
+            ]
+          }
+        },
+        {
+          "method": "Weighted mode",
+          "Threshold": 5e-06,
+          "nsnp": 10,
+          "beta.hat": -0.0175270809988976,
+          "se": 0.0194025847916971,
+          "pval": 0.389884522780808,
+          "ci": {
+            "level": 0.95,
+            "ranges": [
+              {
+                "lower": -0.0614187771622347,
+                "upper": 0.0263646151644395
+              }
+            ]
+          }
+        }
+      ],
+      "selected_mrdat_path": "/recorded-session/workspace/outputs/af0e35fde1aa/mr_primary_ott7l6ku/reports/selected_mrdat.tsv",
+      "diagnostics": {
+        "pvalue_threshold": 5e-06,
+        "nsnp": 10
+      },
+      "interpretation": {
+        "summary": "mr-primary completed: pvalue_threshold=5e-06; instruments=10; methods=IVW, MR-Egger, Weighted median, Weighted mode; plots=2.",
+        "recommendations": []
+      },
+      "plot_manifest": {
+        "plots": [
+          {
+            "plot_id": "primary_scatter",
+            "path": "/recorded-session/workspace/outputs/af0e35fde1aa/mr_primary_ott7l6ku/plots/primary_scatter.png",
+            "title": "Primary MR scatter plot",
+            "source": "mr_primary_result",
+            "explanation_path": "/local/jyxProject/MRCAT-langgraph/skills/mr-primary/plot_explanations/primary_scatter.md"
+          },
+          {
+            "plot_id": "primary_estimates_forest",
+            "path": "/recorded-session/workspace/outputs/af0e35fde1aa/mr_primary_ott7l6ku/plots/primary_estimates_forest.png",
+            "title": "Primary MR estimates forest plot",
+            "source": "mr_primary_result",
+            "explanation_path": "/local/jyxProject/MRCAT-langgraph/skills/mr-primary/plot_explanations/primary_estimates_forest.md"
+          }
+        ]
+      },
+      "result_record_path": "/recorded-session/workspace/outputs/af0e35fde1aa/mr_primary_ott7l6ku/reports/mr_primary_result_record.json"
+    }
+  },
+  "details": {
+    "result_status": "ok",
+    "failure_class": null
+  },
+  "artifacts": [
+    {
+      "path": "/recorded-session/workspace/outputs/af0e35fde1aa/mr_primary_ott7l6ku/reports/mr_primary_result_record.json",
+      "kind": "json",
+      "summary": "primary MR result record"
+    },
+    {
+      "path": "/recorded-session/workspace/outputs/af0e35fde1aa/mr_primary_ott7l6ku/reports/selected_mrdat.tsv",
+      "kind": "tsv",
+      "summary": "selected instruments used by primary MR"
+    },
+    {
+      "path": "/recorded-session/workspace/outputs/af0e35fde1aa/mr_primary_ott7l6ku/plots/primary_scatter.png",
+      "kind": "png",
+      "summary": "Primary MR scatter plot"
+    },
+    {
+      "path": "/recorded-session/workspace/outputs/af0e35fde1aa/mr_primary_ott7l6ku/plots/primary_estimates_forest.png",
+      "kind": "png",
+      "summary": "Primary MR estimates forest plot"
+    }
+  ]
+}

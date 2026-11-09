@@ -1,0 +1,18 @@
+{
+  "side": "study",
+  "input_path": "/recorded-session/workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/canonical/study.canonical.tsv.gz",
+  "formatted_path": "/recorded-session/workspace/outputs/2e821ee13ee5/gwas_qc_tyet1gcx/formatted/study.mrapss.tsv.gz",
+  "n_input": 21327062,
+  "n_final": 1056297,
+  "native_usable_rows": 1056297,
+  "n_removed": 20270765,
+  "log_pval": false,
+  "derived_in_format_stage": {
+    "beta_from_or": false,
+    "z_from_beta_p_or_beta_se": true,
+    "n_from_case_control": false,
+    "freq_qc_from_case_control": false
+  },
+  "sample_size_summary": "Sample size used for study: source=side_level_sample_size (side-level sample_size=500348); final formatted N is fixed at 500348 for 1056297 rows.",
+  "messages": ["Begin formatting .... \n", "The raw data set has 21327062 dat lines\n", "Remove ambiguous SNPs ..., remaining 18292344 SNPs.\n", "Remove SNPs in MHC region ..., remaining 18242211 SNPs.\n", "Remove duplicated SNPs ..., remaining 17409372 SNPs.\n", "Merge SNPs with the hapmap3 snplist ..., remaining 1195372 SNPs.\n", "Remove SNPs with alleles not matched with the hapmap3 snplist, remaining 1195335 SNPs.\n", "Remove SNPs with MAF less than0.05, remaining 1056310 SNPs.\n", "Generating sample size from specified sample size\n", "Remove SNPs with p-value < 0 or p-value > 1, remaining 1056310 SNPs.\n", "Remove missing values, remaining 1056310 SNPs.\n", "Remove SNPs with sample size 5 standard deviations away from the mean, remaining 1056310 SNPs.\n", "Remove SNPs with chi2 > chi2_max ... , remaining 1056297 SNPs.\n", "The formatted data has 1056297 dat lines. \n\n"]
+}

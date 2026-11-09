@@ -1,0 +1,73 @@
+{
+  "summary": "GWAS search blocked: No executable downloadable candidate was found for trait=coronary artery disease.",
+  "outputs": {
+    "status": "blocked"
+  },
+  "details": {
+    "result_status": "blocked",
+    "failure_class": "no_downloadable_candidates",
+    "message": "No executable downloadable candidate was found for trait=coronary artery disease.",
+    "diagnostics": {
+      "candidate_count": 0,
+      "sources_attempted": [
+        "finngen"
+      ],
+      "search_exhausted": true,
+      "preferred_sources": [
+        "finngen"
+      ],
+      "allow_source_fallback": false,
+      "source_reports": [
+        {
+          "source": "finngen",
+          "status": "empty",
+          "n_results": 0,
+          "message": "target: no matches across 2 query variant(s).",
+          "metadata_endpoint": "https://storage.googleapis.com/finngen-public-data-r12/summary_stats/finngen_R12_manifest.tsv"
+        }
+      ],
+      "source_timings": {
+        "finngen": {
+          "status": "empty",
+          "n_results": 0,
+          "elapsed_ms": 2080,
+          "probe_total": 0,
+          "probe_success_count": 0,
+          "probe_failure_count": 0,
+          "cache_scope": "process_only",
+          "session_cache_hits": 0,
+          "session_cache_misses": 0,
+          "release": "R12",
+          "manifest_url": "https://storage.googleapis.com/finngen-public-data-r12/summary_stats/finngen_R12_manifest.tsv",
+          "rows_scanned": 2469,
+          "matched_candidate_count": 0,
+          "probe_budget": 20,
+          "probe_count": 0,
+          "search_mode": "manifest",
+          "raw_candidate_count": 0,
+          "ancestry_filter_drop_count": 0,
+          "unique_candidate_count": 0,
+          "executable_candidate_count": 0,
+          "dedup_drop_count": 0
+        }
+      }
+    }
+  },
+  "artifacts": [
+    {
+      "path": "/recorded-session/workspace/outputs/9036a151705d/gwas_search_db7acslb/gwas_search_shortlists.xlsx",
+      "kind": "xlsx",
+      "summary": "gwas_search_shortlists.xlsx"
+    },
+    {
+      "path": "/recorded-session/workspace/outputs/9036a151705d/gwas_search_db7acslb/gwas_search_shortlists.json",
+      "kind": "json",
+      "summary": "gwas_search_shortlists.json"
+    },
+    {
+      "path": "/recorded-session/workspace/outputs/9036a151705d/gwas_search_db7acslb/gwas_search_raw.json",
+      "kind": "json",
+      "summary": "gwas_search_raw.json"
+    }
+  ]
+}

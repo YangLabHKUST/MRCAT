@@ -1,0 +1,18 @@
+[gwas-search] Starting trait target search: trait=coronary artery disease; query=coronary artery disease; sources=finngen.
+[gwas-search] Searching target.
+[gwas-search] Searching target in finngen: query variants=2.
+[gwas-search] Downloading FinnGen R12 manifest.
+[gwas-search] Downloading FinnGen R12 manifest: 0.7 MiB / 0.7 MiB (100.0%).
+[gwas-search] Completed download FinnGen R12 manifest: 0.7 MiB.
+[gwas-search] Decompressing FinnGen R12 manifest.
+[gwas-search] Decompressed FinnGen R12 manifest: 0.7 MiB in 2 ms.
+[gwas-search] Scanning FinnGen R12 manifest.
+[gwas-search] Scanned FinnGen R12 manifest: rows=2469 in 15 ms.
+[gwas-search] Finished target in finngen: candidates=0; probes=0; downloadable=0; elapsed_ms=2080.
+[gwas-search] Finished target: downloadable_candidates=0.
+[gwas-search] Writing shortlist artifact: /recorded-session/workspace/outputs/9036a151705d/gwas_search_db7acslb/gwas_search_shortlists.json.
+[gwas-search] Writing human-readable shortlist workbook: /recorded-session/workspace/outputs/9036a151705d/gwas_search_db7acslb/gwas_search_shortlists.xlsx.
+[gwas-search] Writing raw search artifact: /recorded-session/workspace/outputs/9036a151705d/gwas_search_db7acslb/gwas_search_raw.json.
+GWAS search blocked: No executable downloadable candidate was found for trait=coronary artery disease.
+Search failed or returned no usable outputs.
+Details: {'result_status': 'blocked', 'failure_class': 'no_downloadable_candidates', 'message': 'No executable downloadable candidate was found for trait=coronary artery disease.', 'diagnostics': {'candidate_count': 0, 'sources_attempted': ['finngen'], 'search_exhausted': True, 'preferred_sources': ['finngen'], 'allow_source_fallback': False, 'source_reports': [{'source': 'finngen', 'status': 'empty', 'n_results': 0, 'message': 'target: no matches across 2 query variant(s).', 'metadata_endpoint': 'https://storage.googleapis.com/finngen-public-data-r12/summary_stats/finngen_R12_manifest.tsv'}], 'source_timings': {'finngen': {'status': 'empty', 'n_results': 0, 'elapsed_ms': 2080, 'probe_total': 0, 'probe_success_count': 0, 'probe_failure_count': 0, 'cache_scope': 'process_only', 'session_cache_hits': 0, 'session_cache_misses': 0, 'release': 'R12', 'manifest_url': 'https://storage.googleapis.com/finngen-public-data-r12/summary_stats/finngen_R12_manifest.tsv', 'rows_scanned': 2469, 'matched_candidate_count': 0, 'probe_budget': 20, 'probe_count': 0, 'search_mode': 'manifest', 'raw_candidate_count': 0, 'ancestry_filter_drop_count': 0, 'unique_candidate_count': 0, 'executable_candidate_count': 0, 'dedup_drop_count': 0}}}}
