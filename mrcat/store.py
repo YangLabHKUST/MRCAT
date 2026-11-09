@@ -70,7 +70,11 @@ class Store:
                     state = writes[-1] if writes else saved.checkpoint['channel_values'].get('session')
                     if state is not None:
                         return state
-        raise FileNotFoundError(f"Session checkpoint is missing or contains no session state: {path}")
+        # Legacy sessions may be inspected or forked, but not silently migrated.
+        state = json.loads((self.directory(sid) / "session.json").read_text())
+        if state.get('persistence') == 'langgraph':
+            raise ValueError('Session checkpoint is missing; an export cannot restore workflow state.')
+        return state
 
     def has_checkpoint(self, sid):
         path = self.checkpoint_path(sid)
@@ -92,7 +96,7 @@ class Store:
 
     def save(self, state):
         if state.get('persistence') != 'langgraph':
-            raise ValueError('Only current LangGraph sessions can be saved.')
+            raise ValueError('Legacy sessions are read-only. Use Continue in a copy to import one.')
         state["updated_at"] = now()
         active = _active_state.get()
         if active is None or active[0] is not self or active[1] is not state:

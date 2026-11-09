@@ -7,7 +7,7 @@ from typing import Any
 
 import yaml
 
-from mrcat.config.llm_limits import LLM_TIMEOUT_SECONDS
+from mrcat.config.llm_limits import LLM_MAX_OUTPUT_TOKENS, LLM_TIMEOUT_SECONDS
 
 
 _DEFAULT_PROVIDER = "anthropic"
@@ -15,6 +15,7 @@ _DEFAULT_MODEL = "claude-opus-4-6"
 _DEFAULT_BASE_URL = "https://api.anthropic.com"
 _DEFAULT_TIMEOUT_SEC = LLM_TIMEOUT_SECONDS
 _DEFAULT_RETRY_COUNT = 3
+_DEFAULT_RECURSION_LIMIT = 200
 _SUPPORTED_PROVIDERS = ("anthropic", "openai", "deepseek", "qwen", "glm", "grok", "custom")
 _PROVIDER_DEFAULTS: dict[str, dict[str, str]] = {
     "anthropic": {"model": "claude-opus-4-6", "base_url": "https://api.anthropic.com"},
@@ -26,8 +27,14 @@ _PROVIDER_DEFAULTS: dict[str, dict[str, str]] = {
     "custom": {"model": "custom-model", "base_url": ""},
 }
 _ROLE_MODEL_ENV_NAMES = {
+    "manager": "MANAGER_MODEL",
     "reporter": "REPORTER_MODEL",
 }
+
+
+@dataclass(frozen=True, slots=True)
+class RuntimeConfig:
+    recursion_limit: int = _DEFAULT_RECURSION_LIMIT
 
 
 @dataclass(frozen=True, slots=True)
@@ -41,6 +48,7 @@ class GatewayConfig:
 
 @dataclass(frozen=True, slots=True)
 class RoleModelOverrides:
+    manager: str | None = None
     reporter: str | None = None
 
     def for_role(self, role_name: str) -> str | None:
@@ -58,6 +66,7 @@ class ModelConfig:
 
 @dataclass(frozen=True, slots=True)
 class RoleTemperatureConfig:
+    manager: float = 0.0
     reporter: float = 0.0
 
     def for_role(self, role_name: str) -> float:
@@ -67,6 +76,30 @@ class RoleTemperatureConfig:
 @dataclass(frozen=True, slots=True)
 class TemperatureConfig:
     roles: RoleTemperatureConfig = RoleTemperatureConfig()
+    json_repair: float = 0.0
+
+
+@dataclass(frozen=True, slots=True)
+class MaxTokensConfig:
+    memory_contract: int = LLM_MAX_OUTPUT_TOKENS
+    confirmation_question: int = LLM_MAX_OUTPUT_TOKENS
+    merge_question_confirmation: int = LLM_MAX_OUTPUT_TOKENS
+    draft_plan: int = LLM_MAX_OUTPUT_TOKENS
+    report_summary: int = 32768
+    report_writer: int = 32768
+    report_judge: int = 8192
+    report_literature_claims: int = 4096
+    report_literature_verify: int = 8192
+    json_repair: int = LLM_MAX_OUTPUT_TOKENS
+    memory_extract_contract: int = LLM_MAX_OUTPUT_TOKENS
+    memory_parse_reply: int = LLM_MAX_OUTPUT_TOKENS
+
+
+@dataclass(frozen=True, slots=True)
+class MemoryLimitsConfig:
+    memory_note_reason_max_chars: int = 300
+    ask_user_question_max_chars: int = 300
+    planner_summary_max_chars: int = 220
 
 
 @dataclass(frozen=True, slots=True)
@@ -74,10 +107,13 @@ class LLMConfig:
     gateway: GatewayConfig = GatewayConfig()
     models: ModelConfig = ModelConfig()
     temperatures: TemperatureConfig = TemperatureConfig()
+    max_tokens: MaxTokensConfig = MaxTokensConfig()
+    memory_limits: MemoryLimitsConfig = MemoryLimitsConfig()
 
 
 @dataclass(frozen=True, slots=True)
 class AgentConfig:
+    runtime: RuntimeConfig = RuntimeConfig()
     llm: LLMConfig = LLMConfig()
 
 
@@ -215,9 +251,19 @@ def load_repo_config(*, repo_root: Path) -> ConfigLoadResult:
 
 def _parse_agent_config(payload: dict[str, Any]) -> AgentConfig:
     default = default_agent_config()
-    _reject_unknown_keys(payload, {"llm"}, "root")
+    _reject_unknown_keys(payload, {"runtime", "llm"}, "root")
+    runtime_payload = _require_mapping(payload.get("runtime"), "runtime")
     llm_payload = _require_mapping(payload.get("llm"), "llm")
-    _reject_unknown_keys(llm_payload, {"gateway", "models", "temperatures"}, "llm")
+    _reject_unknown_keys(runtime_payload, {"recursion_limit"}, "runtime")
+    _reject_unknown_keys(
+        llm_payload,
+        {"gateway", "models", "temperatures", "max_tokens", "memory_limits"},
+        "llm",
+    )
+
+    runtime = RuntimeConfig(
+        recursion_limit=_positive_int(runtime_payload.get("recursion_limit"), "runtime.recursion_limit", default.runtime.recursion_limit),
+    )
 
     gateway_payload = _require_mapping(llm_payload.get("gateway"), "llm.gateway")
     _reject_unknown_keys(
@@ -254,12 +300,13 @@ def _parse_agent_config(payload: dict[str, Any]) -> AgentConfig:
     _reject_unknown_keys(models_payload, {"default", "roles"}, "llm.models")
     _reject_unknown_keys(
         role_models_payload,
-        {"reporter"},
+        {"manager", "reporter"},
         "llm.models.roles",
     )
     models = ModelConfig(
         default=_string(models_payload.get("default"), "llm.models.default", _provider_default_model(gateway_provider)),
         roles=RoleModelOverrides(
+            manager=_optional_string(role_models_payload.get("manager"), "llm.models.roles.manager", default.llm.models.roles.manager),
             reporter=_optional_string(
                 role_models_payload.get("reporter"),
                 "llm.models.roles.reporter",
@@ -270,23 +317,136 @@ def _parse_agent_config(payload: dict[str, Any]) -> AgentConfig:
 
     temperatures_payload = _require_mapping(llm_payload.get("temperatures"), "llm.temperatures")
     role_temperatures_payload = _require_mapping(temperatures_payload.get("roles"), "llm.temperatures.roles")
-    _reject_unknown_keys(temperatures_payload, {"roles"}, "llm.temperatures")
+    _reject_unknown_keys(temperatures_payload, {"roles", "json_repair"}, "llm.temperatures")
     _reject_unknown_keys(
         role_temperatures_payload,
-        {"reporter"},
+        {"manager", "reporter"},
         "llm.temperatures.roles",
     )
     temperatures = TemperatureConfig(
         roles=RoleTemperatureConfig(
+            manager=_required_number(role_temperatures_payload.get("manager"), "llm.temperatures.roles.manager"),
             reporter=_number(
                 role_temperatures_payload.get("reporter"),
                 "llm.temperatures.roles.reporter",
                 default.llm.temperatures.roles.reporter,
             ),
         ),
+        json_repair=_number(temperatures_payload.get("json_repair"), "llm.temperatures.json_repair", default.llm.temperatures.json_repair),
     )
 
-    return AgentConfig(llm=LLMConfig(gateway=gateway, models=models, temperatures=temperatures))
+    max_tokens_payload = _require_mapping(llm_payload.get("max_tokens"), "llm.max_tokens")
+    _reject_unknown_keys(
+        max_tokens_payload,
+        {
+            "memory_contract",
+            "confirmation_question",
+            "merge_question_confirmation",
+            "draft_plan",
+            "report_summary",
+            "report_writer",
+            "report_judge",
+            "report_literature_claims",
+            "report_literature_verify",
+            "json_repair",
+            "memory_extract_contract",
+            "memory_parse_reply",
+        },
+        "llm.max_tokens",
+    )
+    max_tokens = MaxTokensConfig(
+        memory_contract=_positive_int(
+            max_tokens_payload.get("memory_contract"),
+            "llm.max_tokens.memory_contract",
+            default.llm.max_tokens.memory_contract,
+        ),
+        confirmation_question=_positive_int(
+            max_tokens_payload.get("confirmation_question"),
+            "llm.max_tokens.confirmation_question",
+            default.llm.max_tokens.confirmation_question,
+        ),
+        merge_question_confirmation=_positive_int(
+            max_tokens_payload.get("merge_question_confirmation"),
+            "llm.max_tokens.merge_question_confirmation",
+            default.llm.max_tokens.merge_question_confirmation,
+        ),
+        draft_plan=_positive_int(max_tokens_payload.get("draft_plan"), "llm.max_tokens.draft_plan", default.llm.max_tokens.draft_plan),
+        report_summary=_positive_int(
+            max_tokens_payload.get("report_summary"),
+            "llm.max_tokens.report_summary",
+            default.llm.max_tokens.report_summary,
+        ),
+        report_writer=_positive_int(
+            max_tokens_payload.get("report_writer"),
+            "llm.max_tokens.report_writer",
+            default.llm.max_tokens.report_writer,
+        ),
+        report_judge=_positive_int(
+            max_tokens_payload.get("report_judge"),
+            "llm.max_tokens.report_judge",
+            default.llm.max_tokens.report_judge,
+        ),
+        report_literature_claims=_positive_int(
+            max_tokens_payload.get("report_literature_claims"),
+            "llm.max_tokens.report_literature_claims",
+            default.llm.max_tokens.report_literature_claims,
+        ),
+        report_literature_verify=_positive_int(
+            max_tokens_payload.get("report_literature_verify"),
+            "llm.max_tokens.report_literature_verify",
+            default.llm.max_tokens.report_literature_verify,
+        ),
+        json_repair=_positive_int(max_tokens_payload.get("json_repair"), "llm.max_tokens.json_repair", default.llm.max_tokens.json_repair),
+        memory_extract_contract=_positive_int(
+            max_tokens_payload.get("memory_extract_contract"),
+            "llm.max_tokens.memory_extract_contract",
+            default.llm.max_tokens.memory_extract_contract,
+        ),
+        memory_parse_reply=_positive_int(
+            max_tokens_payload.get("memory_parse_reply"),
+            "llm.max_tokens.memory_parse_reply",
+            default.llm.max_tokens.memory_parse_reply,
+        ),
+    )
+
+    memory_limits_payload = _require_mapping(llm_payload.get("memory_limits"), "llm.memory_limits")
+    _reject_unknown_keys(
+        memory_limits_payload,
+        {
+            "memory_note_reason_max_chars",
+            "ask_user_question_max_chars",
+            "planner_summary_max_chars",
+        },
+        "llm.memory_limits",
+    )
+    memory_limits = MemoryLimitsConfig(
+        memory_note_reason_max_chars=_positive_int(
+            memory_limits_payload.get("memory_note_reason_max_chars"),
+            "llm.memory_limits.memory_note_reason_max_chars",
+            default.llm.memory_limits.memory_note_reason_max_chars,
+        ),
+        ask_user_question_max_chars=_positive_int(
+            memory_limits_payload.get("ask_user_question_max_chars"),
+            "llm.memory_limits.ask_user_question_max_chars",
+            default.llm.memory_limits.ask_user_question_max_chars,
+        ),
+        planner_summary_max_chars=_positive_int(
+            memory_limits_payload.get("planner_summary_max_chars"),
+            "llm.memory_limits.planner_summary_max_chars",
+            default.llm.memory_limits.planner_summary_max_chars,
+        ),
+    )
+
+    return AgentConfig(
+        runtime=runtime,
+        llm=LLMConfig(
+            gateway=gateway,
+            models=models,
+            temperatures=temperatures,
+            max_tokens=max_tokens,
+            memory_limits=memory_limits,
+        ),
+    )
 
 
 def _require_mapping(value: Any, path: str) -> dict[str, Any]:
@@ -417,6 +577,14 @@ def _env_positive_int(value: str, path: str) -> int:
 def _number(value: Any, path: str, default: float) -> float:
     if value is None:
         return float(default)
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ValueError(f"Invalid config.yaml: {path} must be a number.")
+    return float(value)
+
+
+def _required_number(value: Any, path: str) -> float:
+    if value is None:
+        raise ValueError(f"Invalid config.yaml: {path} is required.")
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise ValueError(f"Invalid config.yaml: {path} must be a number.")
     return float(value)

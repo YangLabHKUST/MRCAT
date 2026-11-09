@@ -53,6 +53,13 @@ else:
 
 ## Interpretation checks
 
+A causal interpretation of a prioritized exposure remains conditional on its
+own contributing methods' assumptions and relevant diagnostics. Prioritization
+does not test those assumptions or adjust causal effects for the other exposures.
+Explain whether ranking differences reflect scale, precision, coverage or actual
+method sensitivity. Missing diagnostic evidence is unassessed, not reassuring.
+
+
 Do not treat absolute beta as a universal risk score across differently scaled exposures.
 BH q-values are adjusted within each method across the submitted exposures.
 Preserve missing method cells and coverage differences; a ranking or a small
@@ -65,3 +72,4 @@ Use actual inner `result_record_path` files from producers. Keep input_scale con
 On success, `result["outputs"]["mr_risk_factor_prioritization_result"]` holds the data described below.
 
 Contains long-form `summary_table_path`, forest figure, method matrix, BH q-values, coverage diagnostics, `plot_manifest` and `result_record_path`.
+

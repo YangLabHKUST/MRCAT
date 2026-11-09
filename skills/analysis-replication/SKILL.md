@@ -60,6 +60,16 @@ else:
 
 ## Interpretation checks
 
+Interpret each branch using its contributing methods' assumptions and actual
+diagnostics. Compare phenotype definitions, ancestry, scales, instrument lineage
+and sample overlap before attributing differences to replication failure. Shared
+exposure data or instruments are expected in some replication designs; different
+outcome IDs alone neither establish nor refute independent outcome samples.
+Unknown overlap limits an independence claim but is not observed overlap or
+proof that the estimates disagree. Compare magnitudes and uncertainty, not just
+whether P values fall on opposite sides of a threshold.
+
+
 `alpha` defaults to 0.05; `p_adjust_method` is `bh` (within method across analyses) or `none`. Different IDs do not prove sample independence. Shared effect axes require documented comparable units; this is a descriptive comparison, not meta-analysis or automatic independent replication.
 
 Use actual inner `result_record_path` files from producers. Keep input_scale consistent (native, standardize and mrmix_standardize are distinct); equal labels alone do not establish comparable phenotype units. Legacy missing scale remains unknown. Never manufacture estimates or metadata to satisfy an input contract.
@@ -69,3 +79,4 @@ Use actual inner `result_record_path` files from producers. Keep input_scale con
 On success, `result["outputs"]["mr_replication_result"]` holds the data described below.
 
 Contains normalized analyses/estimates, `summary_table_path`, forest matrix, coverage/concordance diagnostics, `plot_manifest` and `result_record_path`.
+

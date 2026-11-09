@@ -147,3 +147,4 @@ otherwise usable standardized rows.
 On success, `result["outputs"]["gwas_qc_result"]` holds the data described below.
 
 `canonical_path` feeds CAUSE; `formatted_path` feeds pair preparation. Also returned: `report_path`, `explanation_path`, `genome_build`, `genome_build_reason`, and known label/ancestry/sample size. Preserve `risk_notes` and `missing_requirements`. Native beta/SE/frequency columns are retained; QC does not assign pair roles or harmonize a pair.
+

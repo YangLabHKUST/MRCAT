@@ -27,13 +27,14 @@ if (!nzchar(workspace_dir)) {
   workspace_dir <- normalizePath(file.path(script_dir, "..", "..", "..", ".."), winslash = "/", mustWork = TRUE)
 }
 skill_root <- normalizePath(file.path(script_dir, "..", ".."), winslash = "/", mustWork = TRUE)
-source(file.path(workspace_dir, "mrcat", "tool", "mr", "mr_input_scale.R"))
-source(file.path(workspace_dir, "mrcat", "tool", "mr", "mr_presso_results.R"))
+source(file.path(workspace_dir, "mrcat", "tool", "MRTool", "mr_input_scale.R"))
+source(file.path(workspace_dir, "mrcat", "tool", "MRTool", "mr_presso_results.R"))
+source(file.path(workspace_dir, "mrcat", "tool", "MRTool", "mr_inference.R"))
 plot_explanation_path <- function(plot_id) {
   normalizePath(file.path(skill_root, "plot_explanations", paste0(plot_id, ".md")), winslash = "/", mustWork = TRUE)
 }
 normalize_path <- function(path) normalizePath(path, winslash = "/", mustWork = FALSE)
-source(file.path(workspace_dir, "mrcat", "tool", "mr", "mr_instrument_selection.R"))
+source(file.path(workspace_dir, "mrcat", "tool", "MRTool", "mr_instrument_selection.R"))
 
 num_or_null <- function(x) {
   if (is.null(x) || length(x) == 0) return(NULL)
@@ -46,19 +47,6 @@ int_param <- function(x, default) {
   value <- suppressWarnings(as.integer(x)[1])
   if (length(value) == 0 || !is.finite(value)) return(default)
   value
-}
-
-ci_from_se <- function(beta, se) {
-  beta_value <- num_or_null(beta)
-  se_value <- num_or_null(se)
-  ranges <- list()
-  if (!is.null(beta_value) && !is.null(se_value) && se_value > 0) {
-    ranges <- list(list(
-      lower = beta_value - 1.96 * se_value,
-      upper = beta_value + 1.96 * se_value
-    ))
-  }
-  list(level = 0.95, ranges = ranges)
 }
 
 clean_name <- function(value) gsub("[^a-z0-9]+", "", tolower(as.character(value)))
@@ -109,7 +97,7 @@ write_blocked <- function(selection, min_instruments) {
   quit(save = "no", status = 0)
 }
 
-estimate_at <- function(main_df, row_index, estimate_type) {
+estimate_at <- function(main_df, row_index, estimate_type, fitted_nsnp) {
   if (nrow(main_df) < row_index) return(NULL)
   estimate_col <- find_column(main_df, c("causalestimate", "estimate", "beta", "b"), 3)
   se_col <- find_column(main_df, c("sd", "se", "stderr", "standarderror"), 4)
@@ -124,7 +112,7 @@ estimate_at <- function(main_df, row_index, estimate_type) {
     "beta.hat" = beta,
     se = se,
     pval = pval,
-    ci = ci_from_se(beta, se)
+    ci = mr_ci_from_se(beta, se, df = fitted_nsnp - 1)
   )
 }
 
@@ -227,8 +215,9 @@ main_df <- as_frame(fit[["Main MR results"]])
 if (nrow(main_df) == 0) main_df <- as_frame(fit[[1]])
 if (nrow(main_df) == 0) stop("MRPRESSO::mr_presso returned no main MR rows")
 
-raw_estimate <- estimate_at(main_df, 1L, "raw")
-corrected_estimate <- estimate_at(main_df, 2L, "outlier_corrected")
+raw_estimate <- estimate_at(main_df, 1L, "raw", nsnp)
+corrected_nsnp <- nsnp - length(presso$outlier_indices)
+corrected_estimate <- estimate_at(main_df, 2L, "outlier_corrected", corrected_nsnp)
 if (is.null(raw_estimate) && is.null(corrected_estimate)) stop("MRPRESSO::mr_presso returned no finite estimate")
 selected_estimate <- if (!is.null(corrected_estimate)) corrected_estimate else raw_estimate
 
@@ -241,7 +230,7 @@ method_row <- c(
   list(
     method = "MR-PRESSO",
     Threshold = threshold,
-    nsnp = as.integer(nsnp)
+    nsnp = as.integer(if (!is.null(corrected_estimate)) corrected_nsnp else nsnp)
   ),
   selected_estimate,
   list(selected_row = if (!is.null(corrected_estimate)) 2L else 1L)

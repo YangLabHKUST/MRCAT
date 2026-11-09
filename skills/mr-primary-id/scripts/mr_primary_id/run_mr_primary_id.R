@@ -25,9 +25,10 @@ script_dir <- if (length(script_file) > 0) {
   getwd()
 }
 workspace_dir <- normalizePath(file.path(script_dir, "..", "..", "..", ".."), mustWork = TRUE)
-source(file.path(workspace_dir, "mrcat", "tool", "mr", "mr_input_scale.R"))
-source(file.path(workspace_dir, "mrcat", "tool", "mr", "gwas_statistics.R"))
-source(file.path(workspace_dir, "mrcat", "tool", "mr", "ld_clumping.R"))
+source(file.path(workspace_dir, "mrcat", "tool", "MRTool", "mr_input_scale.R"))
+source(file.path(workspace_dir, "mrcat", "tool", "MRTool", "mr_inference.R"))
+source(file.path(workspace_dir, "mrcat", "tool", "MRTool", "gwas_statistics.R"))
+source(file.path(workspace_dir, "mrcat", "tool", "MRTool", "ld_clumping.R"))
 source(file.path(script_dir, "prepare_scale.R"))
 input_scale <- mr_input_scale(payload$input_scale)
 skill_root <- normalizePath(file.path(script_dir, "..", ".."), winslash = "/", mustWork = TRUE)
@@ -44,19 +45,6 @@ num_or_null <- function(x) {
   value <- suppressWarnings(as.numeric(x)[1])
   if (length(value) == 0 || !is.finite(value)) return(NULL)
   value
-}
-
-ci_from_se <- function(beta, se) {
-  beta_value <- num_or_null(beta)
-  se_value <- num_or_null(se)
-  ranges <- list()
-  if (!is.null(beta_value) && !is.null(se_value) && se_value > 0) {
-    ranges <- list(list(
-      lower = beta_value - 1.96 * se_value,
-      upper = beta_value + 1.96 * se_value
-    ))
-  }
-  list(level = 0.95, ranges = ranges)
 }
 
 int_or_default <- function(x, default) {
@@ -98,9 +86,9 @@ save_ggplot <- function(path, plots, width = 7, height = 5) {
 save_estimates_forest <- function(path, rows) {
   method <- vapply(rows, function(row) as.character(row$method), character(1))
   beta <- vapply(rows, function(row) as.numeric(row[["beta.hat"]]), numeric(1))
-  se <- vapply(rows, function(row) as.numeric(row$se), numeric(1))
-  lower <- beta - 1.96 * se
-  upper <- beta + 1.96 * se
+  bounds <- t(vapply(rows, function(row) mr_ci_bounds(row$ci), numeric(2)))
+  lower <- bounds[, "lower"]
+  upper <- bounds[, "upper"]
   measure <- "Beta"
   null_value <- 0
   plot_data <- data.frame(method = factor(method, levels = rev(method)), estimate = beta, lower = lower, upper = upper)
@@ -354,7 +342,7 @@ for (required in required_methods) {
     "beta.hat" = num_or_null(matched$b[[1]]),
     se = num_or_null(matched$se[[1]]),
     pval = num_or_null(matched$pval[[1]]),
-    ci = ci_from_se(matched$b[[1]], matched$se[[1]])
+    ci = mr_primary_ci(matched$b[[1]], matched$se[[1]], required, matched$nsnp[[1]])
   )
   log_step("Collected method: ", required, "; beta=", rows[[length(rows)]][["beta.hat"]], "; se=", rows[[length(rows)]]$se, "; pval=", rows[[length(rows)]]$pval, ".")
 }

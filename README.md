@@ -1,37 +1,40 @@
 # MRCAT
 
-MRCAT is a skill-guided agent for Mendelian randomization (MR). It finds GWAS datasets,
-prepares exposure–outcome inputs, runs MR methods and diagnostics, and writes reports
-from saved evidence. Follow-up questions can reuse results within the same session.
-
-![MRCAT Web console with synthetic test records](demo.png)
-
-The interface above uses synthetic test records.
+MRCAT is a skill-guided agent for Mendelian randomization (MR). It finds GWAS
+studies, prepares exposure/outcome data, runs MR methods and diagnostics, and
+writes reports grounded in saved results. Conversations can reuse saved evidence.
 
 ## Install
 
-Linux and Python 3.11 or newer are required. The analysis tools also need R and
-specialist MR packages. Run these commands from the cloned repository:
+Linux and Python 3.11 or newer are required:
 
 ```bash
+git clone https://github.com/77JULIE/MRCAT.git
+cd MRCAT
 conda env create -f environment.yml
 conda activate mrcat
 Rscript scripts/install_r_dependencies.R
 cp .env.example .env
 ```
 
-Set your provider, API key and model in `.env`. Reference datasets are prepared
-separately; see [data and reference resources](docs/data.md). The environment is an
-installation recipe, not a complete dependency lock.
+Set your provider, model and API key in `.env`. R libraries and GWAS/reference
+resources are separate dependencies; see [data preparation](docs/data.md).
+The environment file is an installation recipe, not a complete dependency lock.
+The installer reports missing R packages and retrieves the pinned BWMR helper
+under its upstream terms. Check an existing installation without modifying it:
 
-For a Python environment that already has R and the required libraries:
+```bash
+Rscript scripts/install_r_dependencies.R --check
+```
+
+If Python and the analysis dependencies are already available:
 
 ```bash
 python -m pip install .
 ```
 
-The Python distribution includes the Skills, prompts, R wrappers and Web assets.
-Python installation alone does not install the specialist R packages or reference data.
+The distribution includes Skills, prompts, Python/R wrappers and Web assets.
+Python installation alone does not install R libraries or reference data.
 
 ## Start
 
@@ -39,100 +42,120 @@ Python installation alone does not install the specialist R packages or referenc
 mrcat-web --port 7869
 ```
 
-Open <http://127.0.0.1:7869> and select the provider configured in `.env`.
-Ask a research question, inspect the proposed analysis
-plan, and confirm it to start. The console provides the conversation, execution
-Notebook, result tables, plots and downloadable files. It supports study setup
-with local files, stopping a turn, and continuing an idle session in a copy.
-
-The same agent is available from the command line:
+Open `http://127.0.0.1:7869`, choose your configured provider and ask a research
+question. Review and confirm the proposed plan. The console provides conversation,
+execution cells, tables, interactive figures, reports and downloads. It supports
+study setup with local files, stopping a turn and continuing in an independent copy.
 
 ```bash
 mrcat --question "Find GWAS studies of systolic blood pressure and coronary artery disease."
 mrcat --session session_ID
 ```
 
-Configuration is read from the current directory by the command-line entry points.
-`MRCAT_CONFIG_DIR` selects another directory containing `.env` and `config.yaml`.
-`--env-file /path/to/settings.env` selects an explicit environment file. Exported
-variables take priority, followed by the explicit file and then the directory's `.env`.
-Outputs default to `runtime_artifacts/` in the current directory; use
-`--artifact-dir /path/to/sessions` to choose another location.
+`python main.py` and `python -m mrcat.web.server` use the same implementation.
+New sessions use `session_` IDs. Existing `bridge_` IDs and directories remain
+valid; both use `/api/sessions` and the same access checks.
 
-## Analysis tools
+For a shared console, follow [Cloudflare Access setup](docs/multi_user.md).
+Authenticated users have separate session stores. Model-generated code still
+runs under the operator's OS account; web ownership checks are not an OS sandbox.
 
-The [26 built-in Skills](docs/skills.md) cover GWAS search, selection, download,
-QC and pair preparation; primary and alternative MR estimators; and sensitivity,
-bidirectional, mediation, replication and cross-result summaries.
+## Configuration and outputs
 
-Tools can also be called directly from Python:
+Command-line entry points read `.env` and `config.yaml` from the current directory.
+`MRCAT_CONFIG_DIR` chooses another settings directory. `--env-file` selects an
+explicit environment file. Exported variables take priority, followed by the
+explicit file, then the settings directory's `.env`.
+
+Sessions default to `runtime_artifacts/` in the current directory; use
+`--artifact-dir /path/to/sessions` for another location. Checkpoints own workflow
+state; generated JSON/Markdown and trace files are readable projections.
+See [checkpoint storage](docs/checkpoint_storage.md) before backing up sessions
+whose SQLite entries link to host-local storage.
+
+`MRCAT_DATABASE_DIR` points directly to your reference database directory.
+It does not change the installed code location. Never distribute private `.env`
+files, API keys or user sessions.
+
+Supported providers are `anthropic`, `openai`, `deepseek`, `qwen`, `glm`, `grok`
+and `custom`. The Web selector currently exposes deepseek, openai and qwen; the
+CLI supports the full list. Configure provider-specific `*_API_KEY`, `*_MODEL`
+and, if required, `*_BASE_URL`. The `custom` provider uses an OpenAI-compatible
+endpoint. `REPORTER_MODEL` optionally overrides the report model.
+
+Match `MRCAT_CONTEXT_TOKENS`, `MRCAT_MAX_OUTPUT_TOKENS` and
+`MRCAT_MAX_RETRY_OUTPUT_TOKENS` to the served model. These are explicit capacities,
+not values discovered from the provider. `MRCAT_DISABLE_PROXY=1` removes inherited
+proxy variables for this process.
+
+## Skills and use
+
+The [26 built-in Skills](docs/skills.md) include GWAS search, selection, download,
+QC and pair preparation; MR estimators; and sensitivity, bidirectional, mediation,
+replication and cross-result summaries. Skills and generated code use the same
+saved result store. Tool completion is an execution status, not proof of a causal
+claim. Confirm phenotype definitions, direction, ancestry, assumptions and scales.
+
+Tools can be called from Python as documented in the owning Skill, for example:
 
 ```python
 from pathlib import Path
 from mrcat.tools import mr_primary
-
-result = mr_primary(
-    mrdat_path=Path("prepared_pair.tsv"),
-    output_dir=Path("outputs/primary"),
-)
+result = mr_primary(mrdat_path=Path("prepared_pair.tsv"), output_dir=Path("outputs/primary"))
 print(result["summary"])
 ```
 
-This example requires a prepared MR table with the fields and effect scale
-documented in [mr-primary](skills/mr-primary/SKILL.md). Tool completion is an
-execution status; study selection, estimator assumptions and causal interpretation
-still need scientific assessment.
+This requires the prepared input contract and R environment in
+[mr-primary](skills/mr-primary/SKILL.md).
 
-## Model configuration
+## Offline installation example
 
-Supported providers are `anthropic`, `openai`, `deepseek`, `qwen`, `glm`, `grok` and
-`custom`. Use the provider's `*_API_KEY`, `*_MODEL` and, when needed, `*_BASE_URL`.
-The `custom` provider uses an OpenAI-compatible endpoint. `REPORTER_MODEL` optionally
-overrides the report model. `MRCAT_CODING_AGENT_PROVIDER` optionally selects a
-provider for custom coding items; otherwise it inherits the process provider.
+```bash
+python examples/offline_smoke.py
+```
 
-`LLM_BACKEND=sdk` and `LLM_BACKEND=http` select explicit transports. A transport
-failure is reported without switching protocols. Hosted search has its own
-`SEARCH_PROVIDER` setting and retains its documented DeepSeek-to-OpenAI fallback.
-
-Set `MRCAT_CONTEXT_TOKENS` to the model's full context capacity,
-`MRCAT_MAX_OUTPUT_TOKENS` to the initial output budget and
-`MRCAT_MAX_RETRY_OUTPUT_TOKENS` to the cap for one truncation retry. These limits
-are declared by the user, not discovered from the model service.
+This uses a deterministic local model fixture, makes no external model calls,
+and checks conversation persistence. It does not perform MR or reproduce a paper
+experiment. Scientific analysis requires the real dependencies and inputs above.
 
 ## Repository
 
 ```text
-mrcat/       Agent, graphs, model gateway, result storage and Web console
-skills/      Skill guides, Python wrappers and R analysis scripts
-benchmarks/  Query set and benchmark usage
+mrcat/       Agent, model gateway, state, results, reporting and Web console
+skills/      Skill guides, Python/R analysis wrappers and plot explanations
 scripts/     R dependency installation
-tests/       Runtime, scientific-output and browser checks
-docs/        Architecture, Skills, data preparation and benchmarking
+examples/    Small software usage examples
+tests/       Product behavior, method output and browser regressions
+docs/        Architecture, installation resources and user documentation
 ```
 
-See [architecture and session storage](docs/architecture.md),
-[Skills](docs/skills.md), [reference data](docs/data.md), and
-[benchmarking](docs/benchmarking.md).
+This repository contains the MRCAT software and its usage examples. Paper
+benchmark inputs, experiment runners and result archives are maintained
+separately and are not included here. The offline example above checks software
+installation; it does not reproduce the manuscript experiments.
 
 ## Development
 
 ```bash
 python -m pip install -e ".[dev]"
 ruff check mrcat skills tests
-python -m pytest -m "not r and not sandbox" -q
-python -m pytest -m r -q        # needs the documented R environment
-python -m pytest -m sandbox -q  # also needs bubblewrap and user namespaces
+python -m pytest -m "not r" -q
+python -m pytest -m r -q
+node tests/test_result_formatters.cjs
 python -m build
 ```
 
-The default CI checks Python code, offline runtime behavior and package building.
-The R and sandbox groups exercise additional dependencies. Test results do not
-establish live-model scientific accuracy or reproduce historical benchmark scores.
+Browser scenarios in `tests/browser_*.cjs` use Playwright and deterministic fixture
+servers. R tests require the documented analysis libraries. Software tests do not
+establish scientific accuracy for every live-model analysis.
+
+Checkpoint tests need a local temporary filesystem. On a machine with an NFS
+temporary directory, prefix the test commands with `TMPDIR=/var/tmp`.
 
 ## License and citation
 
-Original MRCAT code is provided under [BSD-3-Clause](LICENSE). Third-party
-components retain their own terms; see [THIRD_PARTY.md](THIRD_PARTY.md).
-Software citation metadata is in [CITATION.cff](CITATION.cff). Identify experiments
-by the actual software commit, inputs and recorded configuration.
+Original code uses [BSD-3-Clause](LICENSE). Third-party code and data retain their
+own terms; see [THIRD_PARTY.md](THIRD_PARTY.md). [CITATION.cff](CITATION.cff) contains
+software citation metadata. Record the actual software version and configuration
+used for an analysis. Authorship metadata currently uses MRCAT contributors and
+must be finalized before publication.

@@ -36,6 +36,16 @@ Agent(ROOT,store,model=Model([action('end', 'The supplied file identifies study 
     evaluations=[dict(route='finalize',reason='Blocked: the supplied input differs from confirmed study A.')],
     finalizations=['blocked\nThe analysis is unfinished. Please supply study A or explicitly authorize a change.\n[END_FINAL_SUMMARY]']
 )).run(blocked,'Analyze the confirmed synthetic study A')
-Path('/tmp/mrcat-browser-roles.json').write_text(json.dumps({'proposal':proposal,'completed':completed,'search':search,'blocked':blocked,'store':str(store.base)}))
+notebook = store.create('Synthetic Notebook file provenance', 'openai')
+notebook.update(status='completed')
+directory = store.directory(notebook['session_id'])
+for name, content in [('summary.csv', 'name,value\nA,2\n'),
+                      ('report.md', '# Report\nSynthetic data only.')]:
+    (directory / 'workspace' / name).write_text(content)
+    store.event(notebook, 'code_execution', f'Saved workspace/{name}.',
+                execution_id=name, language='python', code='print("Synthetic fixture")',
+                stdout='Synthetic fixture', stderr='', status='exited', returncode=0,
+                agent='search', generated_files=[f'workspace/{name}'])
+Path('/tmp/mrcat-browser-roles.json').write_text(json.dumps({'proposal':proposal,'completed':completed,'search':search,'blocked':blocked,'notebook':notebook['session_id'],'store':str(store.base)}))
 import uvicorn
 uvicorn.run(app,host='127.0.0.1',port=args.port,log_level='warning')

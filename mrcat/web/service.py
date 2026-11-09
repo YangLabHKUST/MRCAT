@@ -117,7 +117,7 @@ class Service:
         question=(state.get("pending") or {}).get("question", "") if state["status"]=="waiting_user" else ""
         images=[dict(summary=f["path"],title=f["summary"],url=self.url(sid,f["path"]),source="execution") for f in files if f["kind"]=="image"]
         mr_state=dict(session_id=sid,run_id=sid,status=state["status"],events=events,pending=state.get("pending"),active_task=task_view(state.get("active_task")),task_history=[task_view(task) for task in state.get("task_history",[])])
-        return dict(session_id=sid,state=session,active_job=job if running else None,latest_job=job,mr=dict(session_id=sid,run_id=sid,state=mr_state,events=events,manifest={"artifacts":{sid:{"files":files}},"runs":{sid:{"artifacts":{"files":[f["path"] for f in files]}}}}),images=images,pending_question=question,final_report=report)
+        return dict(session_id=sid,state=session,active_job=job if running else None,latest_job=job,mr=dict(session_id=sid,run_id=sid,state=mr_state,events=events,manifest={"artifacts":{sid:{"files":files}},"runs":{sid:{"artifacts":{"files":[f["path"] for f in files]}}}}),search={"session_id":None,"state":None,"events":[]},images=images,pending_question=question,brief=None,data_search=None,scan_design=None,final_report=report,double_check=None,trace_files={})
     def final_report(self, sid, state):
         # Report artifacts already expose status; use the existing response shape.
         work = state.get("role_memory", {}).get("report", {})
@@ -155,11 +155,12 @@ class Service:
     def session_state(state):
         sid=state['session_id'];job=state.get('job')
         running=bool(job and job['status']=='running')
-        return dict(session_id=sid,question=state["question"],provider=state["provider"],status=state.get("active_agent","manager")+"_running" if running else state["status"],active_agent=state.get("active_agent","manager"),study_setup=state["study_setup"],created_at=state["created_at"],updated_at=state["updated_at"])
-    def sessions(self):
+        return dict(session_id=sid,question=state["question"],provider=state["provider"],status=state.get("active_agent","manager")+"_running" if running else state["status"],active_agent=state.get("active_agent","manager"),mr_session_id=sid,mr_run_id=sid,search_session_id=None,study_setup=state["study_setup"],created_at=state["created_at"],updated_at=state["updated_at"])
+    def sessions(self, *, local_only=False):
         rows = []
         for path in self.store.base.iterdir():
             if not path.is_dir() or path.name.startswith('.'): continue
+            if local_only and path.is_symlink(): continue
             try: rows.append(self.views.get(path.name).summary())
             except (OSError, ValueError): continue
         return sorted(rows, key=lambda row: row['updated_at'], reverse=True)

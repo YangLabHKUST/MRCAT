@@ -8,7 +8,7 @@ if (!dir.exists(lib)) stop("R library does not exist: ", lib)
 .libPaths(lib, include.site = FALSE)
 options(repos = c(MRCIEU = "https://mrcieu.r-universe.dev", CRAN = "https://cloud.r-project.org"),
         timeout = 600)
-cran <- c("data.table", "jsonlite", "ggplot2", "glmnet", "robustbase", "remotes", "MendelianRandomization")
+cran <- c("data.table", "jsonlite", "ggplot2", "glmnet", "robustbase", "remotes", "MendelianRandomization", "mvtnorm")
 # Commits match the working development environment; transitive dependencies
 # are resolved by the upstream repositories rather than claimed to be locked.
 github <- c(

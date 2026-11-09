@@ -30,12 +30,12 @@ if (!nzchar(workspace_dir)) {
   workspace_dir <- normalizePath(file.path(script_dir, "..", "..", "..", ".."), winslash = "/", mustWork = TRUE)
 }
 skill_root <- normalizePath(file.path(script_dir, "..", ".."), winslash = "/", mustWork = TRUE)
-source(file.path(workspace_dir, "mrcat", "tool", "mr", "mr_input_scale.R"))
+source(file.path(workspace_dir, "mrcat", "tool", "MRTool", "mr_input_scale.R"))
 plot_explanation_path <- function(plot_id) {
   normalizePath(file.path(skill_root, "plot_explanations", paste0(plot_id, ".md")), winslash = "/", mustWork = TRUE)
 }
 
-source(file.path(workspace_dir, "mrcat", "tool", "mr", "mr_instrument_selection.R"))
+source(file.path(workspace_dir, "mrcat", "tool", "MRTool", "mr_instrument_selection.R"))
 bwmr_source <- Sys.getenv("MRCAT_BWMR_SOURCE", unset = "")
 if (!nzchar(bwmr_source)) bwmr_source <- file.path(.Library, "mrcat-methods", "BWMR_updated.R")
 if (!file.exists(bwmr_source)) stop("BWMR source is missing. Run scripts/install_r_dependencies.R or set MRCAT_BWMR_SOURCE.")

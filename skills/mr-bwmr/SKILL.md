@@ -75,10 +75,23 @@ The payload contains `methods`, `diagnostics`, `interpretation`, `plot_manifest`
 BWMR also returns `weights_path`; its plot manifest contains `bwmr_weighted_fit`.
 
 ## Method Interpretation
+
 Explain findings in the user's language. Describe the fitted input representation and supported units once in the final report; missing source units alone do not require extra analysis.
 
-- **What it models:** BWMR propagates uncertainty in SNP-exposure associations, models many small balanced horizontal-pleiotropic effects, and adaptively downweights a small number of large pleiotropic outliers.
-- **Use when:** weak or moderately estimated SNP-exposure effects and occasional pleiotropic outliers are plausible in a two-sample summary-data analysis.
-- **Interpret:** compare BWMR with IVW and methods with different assumptions. A large difference means the conclusion is sensitive to instrument uncertainty or influential variants; posterior weights alone do not identify biological pleiotropy.
-- **Limitations:** the prepared SNPs should be LD-independent. The method is not designed to solve sample overlap, population mismatch, reverse causation, colocalization failure, or systematic directional pleiotropy.
+### Key assumptions
+
+BWMR propagates SNP-exposure uncertainty and models small, centered horizontal-pleiotropic effects with adaptive weighting for outliers. Its causal interpretation remains conditional on that pleiotropy model and approximately LD-independent prepared instruments; systematic directional or correlated pleiotropy is not generally resolved by downweighting.
+
+### Relevant evidence
+
+Use fitted estimates and intervals, instrument selection/strength, convergence/warnings and posterior weights when supplied. Compare with IVW and available pleiotropy/influence diagnostics. Near-one weights show little extreme downweighting, not that every SNP is valid or that pleiotropy is absent.
+
+### Interpretation
+
+Compare magnitudes and uncertainty before attributing a BWMR-IVW difference to exposure uncertainty or influential variants. A similar estimate with a wider null-inclusive interval can reflect uncertainty propagation rather than contradictory evidence. Weights alone cannot establish the biological source of a difference.
+
+### Limits
+
+BWMR does not itself resolve sample overlap, population mismatch, reverse causation or colocalization failure. State how any observed directional-pleiotropy signal bears on its centered-pleiotropy model without claiming that a diagnostic from another estimator directly tests all BWMR assumptions.
+
 - **Original method reference:** [Zhao et al. 2020](https://doi.org/10.1093/bioinformatics/btz749).

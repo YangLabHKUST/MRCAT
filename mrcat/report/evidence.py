@@ -41,7 +41,7 @@ def session_evidence(state, directory):
                 figures=_catalog_plot_metadata(outputs)))
         if steps:
             rows.append(dict(task_id=task['task_id'], status=task['status'],
-                             user_goal=task['request'], steps=steps))
+                             user_goal=task['request'], task_memory=task.get('memory', ''), steps=steps))
     return rows
 
 
@@ -125,12 +125,14 @@ def select_evidence(reporter, state, data, execution):
     selection['required_step_refs_added'] = sorted(added_qc)
     selection['available_step_refs'] = sorted(by_ref)
     data['report_selection'] = selection
-    tasks, scientific, workflow, goals = [], [], [], []
+    tasks, scientific, workflow, goals, memories = [], [], [], [], []
     for task in rows:
         steps = [s for s in task['steps'] if s['step_ref'] in selected]
         if not steps:
             continue
         goals.append(dict(task_id=task['task_id'], user_goal=task['user_goal']))
+        if task.get('task_memory'):
+            memories.append(dict(task_id=task['task_id'], memory=task['task_memory']))
         projected = dict(task_id=task['task_id'], plan={'items': []}, step_outputs={})
         for step in steps:
             projected['plan']['items'].append(dict(item_id=step['step_id'], skill_id=step['skill_id']))
@@ -145,6 +147,7 @@ def select_evidence(reporter, state, data, execution):
     figures, assets = _collect_session_report_figures(tasks)
     data.update(figure_catalog=figures, figure_assets={key: str(path) for key, path in assets.items()},
         report_context=dict(task_contract=dict(user_question=state['request'], selected_task_goals=goals),
+            task_memories=memories,
             workflow_completion=workflow,
             selected_studies={row['step_id']: row['structured_outputs'] for row in scientific
                               if row['skill_id'] in {'gwas-select', 'gwas-download', 'gwas-qc'}},

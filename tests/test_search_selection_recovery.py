@@ -116,6 +116,31 @@ def test_review_receives_scale_and_instrument_recovery_guidance(tmp_path):
     assert 'Scale failure recovery' in guidance
     assert 'Instrument-count recovery' in guidance
     assert 'does not turn tool defaults' in guidance
+    assert 'Do not reinterpret this as absent instruments' in guidance
+    assert 'never guess endpoints or invent N' in guidance
+
+
+def test_review_preserves_middle_requirements_in_long_skill_guidance(tmp_path):
+    from mrcat.review import evidence_context
+    scale_rule = 'Missing sample size must be resolved from the same study; never invent N.'
+    instrument_rule = 'Preserve the user-fixed threshold and minimum instrument count.'
+    skill = SimpleNamespace(skill_dir=tmp_path/'long-method', instruction_body=(
+        '# Long method\n\n## Input checks\nPreserve the selected study IDs.\n'
+        + 'Documented input requirements.\n' * 240
+        + '\n## Scale failure recovery\n' + scale_rule + '\n'
+        + 'Documented recovery constraints.\n' * 240
+        + '\n## Instrument-count recovery\n' + instrument_rule + '\n'))
+    agent = SimpleNamespace(store=SimpleNamespace(directory=lambda _: tmp_path),
+                            skills={'long-method': skill})
+    task = dict(task_id='task1', request='Review the method', plan='Fit the selected study',
+                guide='long-method', artifacts=[])
+    context = evidence_context(agent, dict(active_task=task, events=[], session_id='session_test',
+                                         task_history=[]))
+    guidance = context['skill_requirements'][0]['requirements']
+    assert len(guidance) > 12000
+    assert 'Preserve the selected study IDs.' in guidance
+    assert scale_rule in guidance
+    assert instrument_rule in guidance
 
 
 def test_catalog_optional_publication_failure_preserves_candidate(monkeypatch):
@@ -144,7 +169,7 @@ def test_id_metadata_recovery_preserves_identity_existing_n_and_overrides(tmp_pa
     root = Path(__file__).resolve().parents[1]
     script = tmp_path/'sample_size_recovery.R'
     script.write_text('''
-source("mrcat/tool/mr/gwas_statistics.R")
+source("mrcat/tool/MRTool/gwas_statistics.R")
 source("skills/mr-primary-id/scripts/mr_primary_id/prepare_scale.R")
 d <- data.frame(SNP=c("xxx_1","xxx_2"), beta.exposure=c(.1,.2), se.exposure=c(.02,.03),
  beta.outcome=c(.01,.02), se.outcome=c(.01,.02), pval.exposure=c(.001,.002),

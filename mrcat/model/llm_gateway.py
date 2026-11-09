@@ -214,8 +214,22 @@ def call_text(
     resolved_timeout = current_timeout(timeout, agent_config)
 
     if current_backend(agent_config) == "sdk":
-        if provider == "anthropic":
-            return _call_anthropic_sdk(
+        try:
+            if provider == "anthropic":
+                return _call_anthropic_sdk(
+                    system=system,
+                    user=user,
+                    model=resolved_model,
+                    temperature=temperature,
+                    max_tokens=max_tokens,
+                    timeout=resolved_timeout,
+                    agent_config=agent_config,
+                    thinking=thinking,
+                    **({"action_tool": action_tool} if action_tool else {}),
+                    **({"tools": tools} if tools else {}),
+                    **({"request_messages": request_messages} if request_messages is not None else {}),
+                )
+            return _call_openai_compatible_sdk(
                 system=system,
                 user=user,
                 model=resolved_model,
@@ -228,19 +242,13 @@ def call_text(
                 **({"tools": tools} if tools else {}),
                 **({"request_messages": request_messages} if request_messages is not None else {}),
             )
-        return _call_openai_compatible_sdk(
-            system=system,
-            user=user,
-            model=resolved_model,
-            temperature=temperature,
-            max_tokens=max_tokens,
-            timeout=resolved_timeout,
-            agent_config=agent_config,
-            thinking=thinking,
-            **({"action_tool": action_tool} if action_tool else {}),
-            **({"tools": tools} if tools else {}),
-            **({"request_messages": request_messages} if request_messages is not None else {}),
-        )
+        except (OutputTruncatedError, ProviderResponseError):
+            # A protocol fallback cannot repair truncation or an explicit API error.
+            raise
+        except Exception:
+            # SDK support varies across local environments and third-party gateways.
+            # Fall back to the wire protocol so one provider issue does not block runtime startup.
+            pass
 
     return _call_text_http(
         system=system,

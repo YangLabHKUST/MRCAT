@@ -119,6 +119,20 @@ The payload contains `methods`, `diagnostics`, `interpretation`, `plot_manifest`
 
 ## Method Interpretation
 
-CAUSE addresses correlated pleiotropy by comparing causal and sharing models using genome-wide data. Favor causal evidence only when the comparison and posterior diagnostics support it; a nonzero effect alone is insufficient. Do not apply a per-SNP F>10 rule to reject genome-wide CAUSE input.
+Explain findings in the user's language. Describe the fitted input representation and supported units once in the final report; missing source units alone do not require extra analysis.
 
-`beta.hat` is the causal-model gamma posterior median; `ci` is its 95% posterior credible interval. `pval` is the one-sided causal-versus-sharing ELPD test, not a Wald test of beta=0. For the sharing-versus-causal row, negative `delta_elpd` favors the causal model. `se` is approximated from credible-interval width/(2*1.96), not a native frequentist SE. Report nonconverged/forced nuisance fits as numerically unstable. Interpret agreement with other methods against their different assumptions.
+### Key assumptions
+
+CAUSE compares genome-wide causal and sharing models, allowing a shared factor to affect a subset of variants as well as uncorrelated pleiotropy. Distinguishing a causal effect from sharing depends on these model/distributional assumptions, appropriate genome-wide inputs and nuisance/error-correlation estimation.
+
+### Relevant evidence
+
+Read causal-versus-sharing predictive comparison, posterior effect/interval, convergence and nuisance-fit warnings, and LD/input provenance. Do not apply per-SNP F > 10 to reject genome-wide CAUSE input or substitute a primary estimator's selected instrument set.
+
+### Interpretation
+
+beta.hat is the causal-model gamma posterior median and ci its 95% posterior credible interval. pval is the one-sided causal-versus-sharing ELPD test, not a Wald test of beta=0. For the sharing-versus-causal row, negative delta_elpd favors the causal model. A nonzero gamma alone is insufficient; assess whether the causal model improves on sharing and whether diagnostics support the fit.
+
+### Limits
+
+Model preference does not establish biological causality or that a shared factor has been identified. Report nonconverged/forced nuisance fits as numerically unstable. se is null; posterior intervals cannot be converted to frequentist SEs or used in SE-based delta-method mediation. Agreement with other methods remains conditional on their different assumptions.

@@ -55,12 +55,26 @@ The payload contains `methods`, `diagnostics`, `interpretation`, `plot_manifest`
 
 ## Method Interpretation
 
-MR-GRIP modifies MR-Egger to make its estimate invariant to allele recoding.
-Report the standard and weak-instrument-adjusted estimates separately, with
-their uncertainty. Neither estimate guarantees instrument validity. The
-adjustment does not replace instrument-strength assessment, and this estimator
-does not itself resolve sample overlap or residual population structure.
-Interpret agreement or disagreement with other methods through their
-assumptions and diagnostics, rather than selecting the most significant result.
-Use the supplied effect-scale provenance; an absent input_scale is unknown,
-not permission to label the estimate as standardized or log odds.
+Both ordinary and weak-instrument-adjusted estimates use t-based confidence
+intervals with K-2 degrees of freedom, matching the package P values. Missing
+adjusted uncertainty remains unavailable rather than being inferred from P.
+
+Explain findings in the user's language. Describe the fitted input representation and supported units once in the final report; missing source units alone do not require extra analysis.
+
+### Key assumptions
+
+MR-GRIP modifies MR-Egger to achieve invariance to allele recoding. It relies on VICE (Variance Independent of Covariance Explained), an identifying independence condition on genetic-variance and direct-covariance contributions. VICE is not simply ordinary MR-Egger's InSIDE under a new name. The ordinary fit also relies on sufficiently small exposure measurement error; the adjusted fit targets weak-instrument bias.
+
+### Relevant evidence
+
+Read standard and weak-instrument-adjusted slopes and their own uncertainty, intercept/strength diagnostics and numerical warnings when supplied. Allele-recoding invariance, convergence or an intercept test does not verify VICE. Missing adjusted uncertainty remains unavailable.
+
+### Interpretation
+
+Compare the two fits and other completed methods using their respective identifying conditions. An intercept signal does not by itself invalidate a slope designed to allow directional pleiotropy. Explain actual uncertainty or instability rather than choosing the adjusted or more significant estimate automatically.
+
+### Limits
+
+Adjustment does not guarantee validity or replace strength assessment. This implementation does not itself resolve overlap, residual population structure or arbitrary correlated pleiotropy. Preserve supplied scale provenance; an absent input_scale remains unknown.
+
+- **Original method reference:** [Dudbridge et al.](https://doi.org/10.1371/journal.pgen.1011967).

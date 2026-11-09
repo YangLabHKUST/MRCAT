@@ -1,4 +1,3 @@
-import sys
 """Real R tests for directionality, metadata safeguards and opt-in refitting."""
 import csv
 import hashlib
@@ -7,21 +6,23 @@ import math
 import os
 from pathlib import Path
 import subprocess
+import sys
 
 import pytest
 
-from mrcat import tools
-
 pytestmark = pytest.mark.r
 
+from mrcat import tools
+
 ROOT = Path(__file__).resolve().parents[1]
-RSCRIPT = os.environ.get("RSCRIPT_BIN", str(Path(sys.executable).parent / "Rscript"))
+RSCRIPT = os.environ.get("RSCRIPT_BIN", str(Path(sys.executable).with_name("Rscript")))
 HELPER = ROOT / "skills/analysis-sensitivity/scripts/mr_sensitivity/steiger.R"
 
 
 def run_r(tmp_path, body):
     output = tmp_path / "result.json"
     setup = f'''
+    source({json.dumps(str(ROOT / "mrcat/tool/MRTool/mr_inference.R"))})
     source({json.dumps(str(HELPER))})
     library(data.table)
     d <- data.table(SNP=paste0("rs", 1:8), b.exp=seq(.08,.15,.01),
@@ -150,6 +151,12 @@ def test_filtering_preserves_subset_scale_and_refits_only_when_sufficient(tmp_pa
     original <- copy(d)
     result <- execute(TRUE)
     stopifnot(identical(d, original))
+    for (row in result$result$filtering$estimates) {{
+      df <- switch(row$method,"MR Egger"=row$nsnp-2,"Weighted mode"=row$nsnp-1,NULL)
+      critical <- if(is.null(df)) qnorm(.975) else qt(.975,df)
+      stopifnot(isTRUE(all.equal(row$lo_ci,row$b-critical*row$se)),
+                isTRUE(all.equal(row$up_ci,row$b+critical*row$se)))
+    }}
     ''')
     filtering = response["result"]["filtering"]
     assert filtering["nsnp_retained"] == retained

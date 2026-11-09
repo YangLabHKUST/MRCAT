@@ -53,8 +53,9 @@ def evidence_context(agent, state):
         relevant = [s for s in sections[1:] if any(w in s.split('\n', 1)[0].lower()
                     for w in ('input', 'check', 'interpret', 'reference', 'read and decide', 'preserve', 'recovery'))]
         text = re.sub(r'```.*?```', '', '\n\n'.join(relevant), flags=re.S)
+        # Keep scientific requirements complete; Agent checks the whole prompt budget.
         requirements.append(dict(skill=name, path=str(skill.skill_dir/'SKILL.md'),
-                                 requirements=memory.excerpt(text, 6000)))
+                                 requirements=text))
     works = [task, *memory.referenced_tasks(state['task_history'], task['request'], task['plan'])]
     records = []
     seen = set()

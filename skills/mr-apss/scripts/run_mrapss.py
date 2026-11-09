@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from mrcat.tool.mr import RMethodSpec, run_method_cli, run_r_method
+from mrcat.tool.MRTool import RMethodSpec, run_method_cli, run_r_method
 
 
 SPEC = RMethodSpec(

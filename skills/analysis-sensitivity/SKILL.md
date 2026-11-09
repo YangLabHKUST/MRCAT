@@ -155,6 +155,18 @@ The tool computes statistics and plots only; it does not call another model to i
 
 ## Scientific interpretation checks
 
+A diagnostic finding is specific to the fitted relation. A nonzero Egger
+intercept challenges an IVW-only interpretation; it does not by itself invalidate
+the Egger slope, whose interpretation remains conditional on InSIDE and
+measurement-error assumptions. Neither Q nor the intercept directly tests those
+identifying conditions. Explain effect/interval and influence changes together;
+heterogeneity alone does not determine the overall causal verdict.
+
+Single-SNP forest plots retain normal Wald intervals for individual variants
+and IVW, and use t(K-2) intervals for the all-SNP MR-Egger row. Steiger-filtered
+refits use the same method-specific interval rules as mr-primary.
+
+
 Integrate primary estimates with each available diagnostic; missing or excerpted
 evidence remains unknown. Do not recalculate or invent missing results merely
 to make a reassuring report. These are checks of one selected instrument set,
@@ -169,6 +181,19 @@ not independent causal confirmations.
 - For MR-PRESSO report global test, outlier identities/count, raw and corrected
   estimates and distortion test when available. Do not select the corrected
   result because it is more significant or call outliers proven pleiotropic.
+  SNP-specific outlier testing requires `OUTLIERtest=TRUE` and the MR-PRESSO
+  global P value below `signif_threshold`, not a significant causal-effect P
+  value. Report that global P value together with `mr_presso.outlier_status`.
+  When `not_tested` follows a global P value that does not meet the cutoff,
+  explain: "The MR-PRESSO global test was not significant (P=...), so
+  SNP-specific outlier testing was not triggered and no outlier-corrected
+  estimate was produced." Insert the recorded P value; this is not a failed
+  MR-PRESSO run. Report another reason only when supported by the evidence.
+  `none` means SNP-specific testing ran without significant outliers;
+  `not_tested` and a null count do not mean zero outliers after testing. Use
+  the structured status over generic package warnings, task-memory shorthand,
+  empty SNP lists, or unmarked plots. A non-significant global test does not
+  establish absence of pleiotropy.
   The global test concerns horizontal pleiotropy; the distortion test concerns
   the change in the estimate after outlier removal. A significant global test
   does not establish significant distortion. A null distortion result means

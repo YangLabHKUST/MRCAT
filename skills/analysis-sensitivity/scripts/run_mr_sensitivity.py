@@ -1,5 +1,5 @@
 from pathlib import Path
-from mrcat.tool.mr import RMethodSpec, run_r_method, run_method_cli
+from mrcat.tool.MRTool import RMethodSpec, run_r_method, run_method_cli
 
 SPEC = RMethodSpec(
     skill_id="analysis-sensitivity",

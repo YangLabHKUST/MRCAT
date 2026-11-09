@@ -1,9 +1,9 @@
+import pytest
 import json
 import os
 from pathlib import Path
 import shlex
 import sys
-import pytest
 
 from mrcat.execution import CodeExecutor, execution_environment, runtime_context
 
@@ -26,7 +26,7 @@ def test_shell_python_uses_server_environment_with_hostile_path(tmp_path, monkey
     assert result['stdout'].splitlines()[0] == sys.executable
     r = executor.execute("Rscript -e 'cat(R.home())'", 'bash', 'r')
     assert r['returncode'] == 0, r
-    assert Path(r['stdout']).is_relative_to(Path(sys.prefix))
+    assert Path(r['stdout']).resolve().is_relative_to(Path(sys.prefix).resolve())
     assert runtime_context()['python_executable'] == sys.executable
     assert runtime_context()['rscript_executable'] == str(Path(sys.executable).parent / 'Rscript')
 

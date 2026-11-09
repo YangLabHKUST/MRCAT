@@ -4,34 +4,15 @@ const state = {
   snapshot: null,
   eventSource: null,
   activityConnection: "connecting",
-  traces: { mr: [] },
-  mrTraceEvents: [],
-  mrTraceEventKeys: new Set(),
-  mrSkillRunning: false,
-  activeMrTraceSkill: "",
-  activeMrTraceScopeKey: "",
-  selectedMrTaskId: "",
-  mrTaskSelectionTouched: false,
-  lastActiveMrTaskId: "",
   expandedSearchReportSections: new Set(),
   jsonArtifactCache: new Map(),
   tableArtifactCache: new Map(),
-  invocationPayloadCache: new Map(),
-  invocationPayloadRenderQueued: false,
-  plotGeneration: null,
-  plotGenerationPollTimer: null,
-  reportProgress: null,
-  reportProgressTimer: null,
-  expandedReportReviews: new Set(),
   busy: false,
-  dataSelection: {},
   expandedDataSearchTargets: new Set(),
   dataSearchSourceFilters: new Map(),
   scanSelection: {},
-  scanDesignCache: {},
   studyMethodOptions: [],
   studySourceOptions: [],
-  workflowSelection: {},
   sessionsSidebarCollapsed: false,
   studySetupCollapsed: true,
   studySetupDraft: {
@@ -42,9 +23,6 @@ const state = {
     methods: [],
     dirty: false,
   },
-  jobLogLinesByJob: {},
-  jobLogMetaByJob: {},
-  jobLogOrder: [],
   pendingUserMessage: null,
 };
 
@@ -116,54 +94,6 @@ const AGENT_ICON_ASSETS = {
   mr: "/static/icons/agent-mr.png",
   report: "/static/icons/agent-report.png",
 };
-
-const METHOD_OPTIONS = [
-  {
-    id: "primary",
-    label: "Primary MR",
-    description: "Primary estimates from IVW, MR-Egger, weighted median, and weighted mode.",
-  },
-  {
-    id: "mrapss",
-    label: "MR-APSS",
-    description: "Robust MR for horizontal pleiotropy and sample overlap.",
-  },
-  {
-    id: "bwmr",
-    label: "BWMR",
-    description: "Bayesian weighted MR for uncertain SNP effects, balanced pleiotropy, and outliers.",
-  },
-  {
-    id: "divw",
-    label: "dIVW",
-    description: "Debiased IVW for weak-instrument bias control.",
-  },
-  {
-    id: "raps",
-    label: "MR-RAPS",
-    description: "Robust adjusted profile score MR.",
-  },
-  {
-    id: "presso",
-    label: "MR-PRESSO",
-    description: "Outlier detection with raw and outlier-corrected MR estimates.",
-  },
-  {
-    id: "mrmix",
-    label: "MRMix",
-    description: "Mixture-model MR for invalid instruments.",
-  },
-  {
-    id: "cml_ma",
-    label: "cML-MA",
-    description: "Constrained maximum likelihood with model averaging.",
-  },
-  {
-    id: "cause",
-    label: "CAUSE",
-    description: "Models correlated and uncorrelated horizontal pleiotropy.",
-  },
-];
 
 const STUDY_METHOD_ALIASES = {
   primary: "mr-primary",
@@ -441,56 +371,10 @@ function eventText(event) {
   return text(event.text || event.summary || event.message || event.decision || event.result);
 }
 
-
-function conversationEvents(snapshot, target) {
-  if (target === "mr") {
-    return Array.isArray(snapshot?.mr?.events) ? snapshot.mr.events : [];
-  }
-  return Array.isArray(snapshot?.search?.events) ? snapshot.search.events : [];
-}
-
-
-function eventCountForTarget(snapshot, target) {
-  return conversationEvents(snapshot, target).length;
-}
-
-
-
-
-
-function hasTrackedMrJob(snapshot) {
-  return text(snapshot?.state?.status) === "mr_running"
-    && text(snapshot?.active_job?.status) === "running";
-}
-
-
 function canStopActiveJob(snapshot) {
   return text(snapshot?.active_job?.status) === "running"
     && text(snapshot?.active_job?.kind) !== "benchmark_case";
 }
-
-function runningThinkingTarget(snapshot) {
-  const status = text(snapshot?.state?.status);
-  if (hasTrackedMrJob(snapshot)) return activeMrTask(snapshot) ? "mr" : "manager";
-  if (status === "report_running") return "report";
-  if (status === "search_running" || status === "double_check_running") return "search";
-  return "";
-}
-
-
-function thinkingTarget(snapshot) {
-  const pending = state.pendingUserMessage;
-  const runningTarget = runningThinkingTarget(snapshot);
-  if (runningTarget) return runningTarget;
-  if (pending && !pending.persisted) return pending.thinkingTarget || pending.target;
-  return "";
-}
-
-
-
-
-
-
 
 function shortId(value) {
   const raw = text(value);
@@ -499,7 +383,7 @@ function shortId(value) {
 }
 
 function displaySessionId(value) {
-  return shortId(text(value).replace(/^session_/, ""));
+  return shortId(text(value).replace(/^(?:session|bridge)_/, ""));
 }
 
 function statusLabel(status) {
@@ -536,7 +420,6 @@ function setBusy(isBusy) {
   state.busy = isBusy;
   updateComposer();
   renderStudySetup(state.snapshot);
-  updateQcPlotButtons(state.snapshot);
   document.querySelectorAll("[data-report-action]").forEach(button => {
     button.disabled = Boolean(isBusy || state.snapshot?.active_job);
   });
@@ -833,31 +716,13 @@ async function selectSession(sessionId) {
   }
   state.currentSessionId = sessionId;
   window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}#${encodeURIComponent(sessionId)}`);
-  clearReportProgress();
-  state.expandedReportReviews.clear();
   if (preservePendingNewSession) state.pendingUserMessage.sessionId = sessionId;
   state.snapshot = null;
-  state.traces = { mr: [] };
-  state.mrTraceEvents = [];
-  state.mrTraceEventKeys = new Set();
-  state.mrSkillRunning = false;
-  state.activeMrTraceSkill = "";
-  state.activeMrTraceScopeKey = "";
-  state.selectedMrTaskId = "";
-  state.mrTaskSelectionTouched = false;
-  state.lastActiveMrTaskId = "";
   state.jsonArtifactCache.clear();
   state.tableArtifactCache.clear();
-  state.invocationPayloadCache.clear();
-  state.invocationPayloadRenderQueued = false;
-  clearPlotGeneration();
   state.expandedDataSearchTargets.clear();
   state.dataSearchSourceFilters.clear();
   state.scanSelection = {};
-  state.scanDesignCache = {};
-  state.jobLogLinesByJob = {};
-  state.jobLogMetaByJob = {};
-  state.jobLogOrder = [];
   resetStudySetupDraft();
   renderHeader(null);
   renderTimeline(null);
@@ -871,33 +736,15 @@ async function selectSession(sessionId) {
 }
 
 function newChat() {
-  clearReportProgress();
-  state.expandedReportReviews.clear();
   state.currentSessionId = null;
   window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
   state.snapshot = null;
   state.pendingUserMessage = null;
-  state.traces = { mr: [] };
-  state.mrTraceEvents = [];
-  state.mrTraceEventKeys = new Set();
-  state.mrSkillRunning = false;
-  state.activeMrTraceSkill = "";
-  state.activeMrTraceScopeKey = "";
-  state.selectedMrTaskId = "";
-  state.mrTaskSelectionTouched = false;
-  state.lastActiveMrTaskId = "";
   state.jsonArtifactCache.clear();
   state.tableArtifactCache.clear();
-  state.invocationPayloadCache.clear();
-  state.invocationPayloadRenderQueued = false;
-  clearPlotGeneration();
   state.expandedDataSearchTargets.clear();
   state.dataSearchSourceFilters.clear();
   state.scanSelection = {};
-  state.scanDesignCache = {};
-  state.jobLogLinesByJob = {};
-  state.jobLogMetaByJob = {};
-  state.jobLogOrder = [];
   resetStudySetupDraft();
   if (state.eventSource) {
     state.eventSource.close();
@@ -1079,7 +926,6 @@ function applySnapshot(snapshot) {
 
 function renderHeader(snapshot) {
   const session = snapshot?.state || {};
-  if (session.provider) els.providerSelect.value = session.provider;
   els.sessionTitle.textContent = session.session_id ? `MRCAT Session · ${displaySessionId(session.session_id)}` : "New Chat";
   els.sessionSubtitle.textContent = session.question || "Ask a research question or describe a coding task.";
   els.statusChip.textContent = sessionActivity(snapshot)?.title || session.status || "Ready";
@@ -1385,9 +1231,6 @@ function renderNativeReport(snapshot, started, laterEvents) {
   card.appendChild(actions); row.querySelector(".message-body").appendChild(card);
 }
 
-
-
-
 function appendEmptyConversation(message) {
   const empty = document.createElement("div");
   empty.className = "empty-note";
@@ -1431,7 +1274,6 @@ function appendMessage(role, label, body, options = {}) {
   els.conversationFeed.appendChild(row);
   return row;
 }
-
 
 function parseSearchReportMarkdown(value) {
   const source = String(value || "").replace(/\r\n?/g, "\n").trim();
@@ -1760,7 +1602,6 @@ function searchReportSectionKey(event, body, section, index) {
   return `${searchReportEventKey(event, body)}|${index}|${text(section?.heading)}`;
 }
 
-
 function buildSearchReportCard(report, event, body) {
   const card = document.createElement("article");
   card.className = "search-report-card";
@@ -1880,23 +1721,6 @@ function buildSearchReportCard(report, event, body) {
   return card;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function skillVisualKind(skillId) {
   const normalizedSkillId = text(skillId).toLowerCase();
   if (normalizedSkillId.includes("analysis-sensitivity")) return "sensitivity";
@@ -1917,35 +1741,6 @@ function skillVisualKind(skillId) {
   return "workflow";
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function studyDisplayTrait(study, fallback = "") {
   return text(
     study?.label
@@ -1959,8 +1754,6 @@ function studyDisplayId(study) {
   return text(study?.study_id || study?.study_metadata?.study_id);
 }
 
-
-
 function buildExternalLink(url, label) {
   const link = document.createElement("a");
   link.className = "skill-inline-link";
@@ -1970,17 +1763,6 @@ function buildExternalLink(url, label) {
   link.textContent = label;
   return link;
 }
-
-
-
-
-
-
-
-
-
-
-
 
 function formatPercent(value) {
   const number = Number(value);
@@ -2128,8 +1910,6 @@ function formatThreshold(value) {
   return Number(number.toPrecision(4)).toString();
 }
 
-
-
 function buildAggregateAnalysisTable(rows, mediation = false) {
   const scroll = document.createElement("div");
   scroll.className = "aggregate-analysis-table";
@@ -2177,10 +1957,6 @@ function buildAggregateAnalysisTable(rows, mediation = false) {
   scroll.appendChild(table);
   return scroll;
 }
-
-
-
-
 
 const SKILL_SUMMARY_METRICS = [
   ["canonical_rows", "Canonical rows"],
@@ -2256,8 +2032,6 @@ function formatSkillMetricValue(key, value) {
   return formatInteger(number);
 }
 
-
-
 function buildSkillMetricGrid(metrics, options = {}) {
   const grid = document.createElement("div");
   grid.className = "skill-summary-metrics";
@@ -2279,10 +2053,6 @@ function buildSkillMetricGrid(metrics, options = {}) {
 function skillMetric(metrics, ...keys) {
   return metrics.find((metric) => keys.includes(metric.key)) || null;
 }
-
-
-
-
 
 function buildQcRetentionVisual(metrics) {
   const canonicalMetric = skillMetric(metrics, "canonical_rows");
@@ -2333,7 +2103,6 @@ function buildQcRetentionVisual(metrics) {
   visual.appendChild(progress);
   return visual;
 }
-
 
 function planReferenceTarget(value, currentTaskId) {
   const reference = text(value);
@@ -2429,7 +2198,6 @@ function buildPairPreparationVisual(metrics, studies = {}) {
   return visual;
 }
 
-
 function buildSkillDataPreview(views, snapshot, options = {}) {
   const panel = document.createElement("section");
   panel.className = `skill-data-preview${options.compact ? " is-compact" : ""}`;
@@ -2493,11 +2261,6 @@ function buildSkillDataPreview(views, snapshot, options = {}) {
   showView(0);
   return panel;
 }
-
-
-
-
-
 
 function loadJsonArtifact(snapshot, path, phase = "mr", version = "") {
   const baseUrl = artifactRawUrl(snapshot, path, phase);
@@ -2613,7 +2376,6 @@ function formatShortlistCell(value) {
   return String(value);
 }
 
-
 function formatDuration(value) {
   const seconds = Number(value);
   if (!Number.isFinite(seconds) || seconds < 0) return "";
@@ -2630,8 +2392,6 @@ function formatDuration(value) {
   return remainingSeconds > 0 ? `${minutes}m ${remainingSeconds}s` : `${minutes}m`;
 }
 
-
-
 function artifactUiIcon(artifact) {
   const kind = text(artifact?.kind || artifactKind(artifact?.path)).toLowerCase();
   if (["tsv", "tsv.gz", "csv", "csv.gz", "xlsx", "json", "jsonl", "rds"].includes(kind)) return "database";
@@ -2640,17 +2400,10 @@ function artifactUiIcon(artifact) {
   return "download";
 }
 
-
-
 function isPreviewableTableArtifact(artifact) {
   const name = artifactBasename(artifact?.path).toLowerCase();
   return [".xlsx", ".tsv", ".csv", ".tsv.gz", ".csv.gz"].some((suffix) => name.endsWith(suffix));
 }
-
-
-
-
-
 
 function artifactBelongsToExecutionScope(path, executionScope) {
   const cleanPath = text(path).replaceAll("\\", "/").replace(/\/+$/, "");
@@ -2663,38 +2416,6 @@ function artifactBelongsToExecutionScope(path, executionScope) {
     || cleanPath.endsWith(`/skills/${scopeTail}`)
   );
 }
-
-function collectPathArtifacts(value, addArtifact, key = "") {
-  if (!value) return;
-  if (Array.isArray(value)) {
-    for (const item of value) collectPathArtifacts(item, addArtifact, key);
-    return;
-  }
-  if (typeof value !== "object") return;
-  for (const [rawKey, rawValue] of Object.entries(value)) {
-    const cleanKey = text(rawKey).toLowerCase();
-    if (typeof rawValue === "string" && isArtifactPathKey(cleanKey) && looksLikePath(rawValue)) {
-      addArtifact({ path: rawValue, label: artifactLabelFromKey(cleanKey, rawValue), kind: artifactKind(rawValue) });
-      continue;
-    }
-    if (rawValue && typeof rawValue === "object") collectPathArtifacts(rawValue, addArtifact, cleanKey || key);
-  }
-}
-
-function isArtifactPathKey(key) {
-  return key === "path" || key === "uri" || key.endsWith("_path");
-}
-
-function looksLikePath(value) {
-  const clean = text(value);
-  return clean.startsWith("/") || clean.startsWith("runs/") || clean.includes("/skills/");
-}
-
-function artifactLabelFromKey(key, path) {
-  const clean = text(key).replace(/_path$/, "").replaceAll("_", " ");
-  return clean || artifactBasename(path);
-}
-
 
 function artifactBasename(path) {
   const clean = text(path).replaceAll("\\", "/");
@@ -2818,50 +2539,10 @@ function renderSpreadsheetPreview(container, payload, options = {}) {
   showSheet(0);
 }
 
-
-
-
-function updateQcPlotButton(button, snapshot) {
-  const scope = button.dataset.executionScope;
-  const plots = mrTasksInOrder(snapshot).flatMap((task) => [
-    ...Object.values(task.milestones || {}).map((record) => record?.payload),
-    ...Object.values(task.step_outputs || {}).flatMap((outputs) => Object.values(outputs || {})),
-  ]).flatMap((payload) => payload?.plot_manifest?.plots || []);
-  button.textContent = plots.some((plot) => artifactBelongsToExecutionScope(plot.path, scope)) ? "Regenerate QC plots" : "Generate QC plots";
-  const status = text(snapshot?.state?.status);
-  button.disabled = !scope || Boolean(state.busy) || status.endsWith("_running") || isLocalPlotGenerationRunning() || isSnapshotPlotGenerationRunning(snapshot);
-}
-
-function updateQcPlotButtons(snapshot) {
-  for (const button of els.notebookOutput?.querySelectorAll(".qc-plot-button") || []) {
-    updateQcPlotButton(button, snapshot);
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function compactSummary(value) {
   const raw = text(value).replace(/\s+/g, " ");
   return raw.length > 150 ? `${raw.slice(0, 147)}...` : raw;
 }
-
-
-
-
 
 function buildScanTraitTable(side, items, artifactPath, exposureCount, outcomeCount, onToggle = null) {
   const section = document.createElement("section");
@@ -2959,8 +2640,6 @@ function scanTraitAliases(item) {
   const aliases = Array.isArray(item?.aliases) ? item.aliases.map(text).filter(Boolean) : [];
   return aliases.length > 0 ? aliases.join(", ") : "-";
 }
-
-
 
 function renderStudySetup(snapshot) {
   if (!els.studySetupContent) return;
@@ -3535,216 +3214,9 @@ function buildDataSearchTarget(target, artifactPath, targetIndex, onChange) {
   return section;
 }
 
-
-function scientificReportArtifact(snapshot, expectedKind) {
-  const tasks = mrTasksInOrder(snapshot);
-  const task = tasks.length > 0 ? tasks[tasks.length - 1] : null;
-  const artifacts = Array.isArray(task?.artifacts) ? task.artifacts : [];
-  return [...artifacts].reverse().find((artifact) => {
-    const kind = text(artifact?.kind).toLowerCase();
-    const label = `${text(artifact?.artifact_id)} ${text(artifact?.summary)} ${text(artifact?.uri)}`.toLowerCase();
-    return kind === expectedKind
-      && label.includes("scientific_report");
-  }) || null;
-}
-
-function scientificReportHtmlArtifact(snapshot) {
-  return scientificReportArtifact(snapshot, "html");
-}
-
-function reportArtifacts(snapshot) {
-  const tasks = mrTasksInOrder(snapshot);
-  return tasks.length ? (tasks[tasks.length - 1]?.artifacts || []) : [];
-}
-
-function reportExecutionArtifact(snapshot) {
-  return [...reportArtifacts(snapshot)].reverse().find((artifact) =>
-    text(artifact.kind) === "json"
-    && `${text(artifact.summary)} ${text(artifact.artifact_id)}`.includes("report_execution")) || null;
-}
-
-function reportArtifactUrl(snapshot, artifact) {
-  return `/api/sessions/${encodeURIComponent(state.currentSessionId)}/artifacts/raw?phase=mr&summary=${encodeURIComponent(text(artifact.summary || artifact.uri))}&run_id=${encodeURIComponent(text(snapshot?.mr?.run_id))}`;
-}
-
-function reportJob(snapshot) {
-  return [snapshot?.active_job, snapshot?.latest_job].find((job) =>
-    text(job?.kind) === "scientific_report_generate") || null;
-}
-
-function reportIsRunning(snapshot) {
-  return text(snapshot?.state?.status) === "report_running"
-    || text(reportJob(snapshot)?.status) === "running";
-}
-
-function clearReportProgress() {
-  clearTimeout(state.reportProgressTimer);
-  state.reportProgressTimer = null;
-  state.reportProgress = null;
-}
-
-
-async function refreshReportProgress(snapshot, progress) {
-  if (state.reportProgress !== progress || progress.loading) return;
-  clearTimeout(state.reportProgressTimer);
-  const previousView = JSON.stringify(reportPresentation(state.snapshot));
-  progress.loading = true;
-  try {
-    const payload = await requestJson(reportArtifactUrl(snapshot, reportExecutionArtifact(snapshot)), { cache: "no-store" });
-    if (state.reportProgress !== progress) return;
-    if (!Array.isArray(payload.stages) || !text(payload.status)) throw new Error("Report progress unavailable");
-    progress.data = payload;
-    progress.error = false;
-  } catch (_) {
-    if (state.reportProgress !== progress) return;
-    progress.error = true;
-  } finally {
-    progress.loading = false;
-    if (state.reportProgress === progress) {
-      if (JSON.stringify(reportPresentation(state.snapshot)) !== previousView) {
-        renderConversation(state.snapshot);
-        renderTimeline(state.snapshot);
-        updateComposer();
-      }
-      if (reportIsRunning(state.snapshot)) {
-        state.reportProgressTimer = setTimeout(() => refreshReportProgress(state.snapshot, progress), 2000);
-      }
-    }
-  }
-}
-
-function reportArtifactTime(artifact) {
-  const match = `${text(artifact?.summary)} ${text(artifact?.uri)}`.match(/(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z/);
-  return match ? Date.parse(`${match[1]}-${match[2]}-${match[3]}T${match[4]}:${match[5]}:${match[6]}Z`) : NaN;
-}
-
-function reportPresentation(snapshot) {
-  const artifact = scientificReportHtmlArtifact(snapshot);
-  const isDraft = Boolean(artifact && `${text(artifact.artifact_id)} ${text(artifact.summary)} ${text(artifact.uri)}`.includes("scientific_report_draft"));
-  const running = reportIsRunning(snapshot);
-  const job = reportJob(snapshot);
-  const jobStart = Date.parse(job?.started_at);
-  let execution = state.reportProgress?.error ? null : state.reportProgress?.data;
-  // A new job can appear before its execution artifact is registered.
-  if (execution && Date.parse(execution.started_at) < jobStart) execution = null;
-  const started = Date.parse(execution?.started_at) || jobStart;
-  const artifactTime = reportArtifactTime(artifact);
-  const previous = Boolean(artifact && (Number.isFinite(started)
-    ? !Number.isFinite(artifactTime) || artifactTime < Math.floor(started / 1000) * 1000
-    : running));
-  const currentDraft = isDraft && !previous;
-  const currentFinal = artifact && !isDraft && !previous;
-  const stages = execution?.stages || [];
-  const activeStage = [...stages].reverse().find((item) => item.status === "running");
-  const failedStage = [...stages].reverse().find((item) => item.status === "failed");
-  const reviewed = stages.some((item) => ["judge", "judge_revision"].includes(item.stage));
-  const result = text(execution?.status);
-  const view = { artifact, isDraft, previous, running, phase: "pending", title: "Report not generated", description: "Generate a scientific report from the completed analysis.", steps: ["pending", "pending", "pending"] };
-  if (currentFinal) {
-    return { ...view, phase: "final", title: "Final report · Review passed", description: "Automated review passed. The final report is ready to read or download.", steps: ["complete", "complete", "complete"] };
-  }
-  if (["accepted", "accepted_after_revision"].includes(result)) {
-    return { ...view, phase: "saving", title: "Review passed · Saving final report", description: "Review is complete. The final document is being made available.", steps: ["complete", "complete", "active"] };
-  }
-  if (["needs_review", "last_valid_draft_retained"].includes(result)) {
-    return { ...view, phase: "needs-review", title: "Draft · Changes still required", description: "Review finished with unresolved issues. This is a draft, not a final report.", steps: ["complete", "failed", "pending"] };
-  }
-  if (result.startsWith("judge_failed")) {
-    return { ...view, phase: "failed", title: "Draft · Review could not finish", description: "The review encountered an error. The saved draft is available; review has not passed.", steps: ["complete", "failed", "pending"] };
-  }
-  if (result === "failed" || (!running && ["failed", "cancelled"].includes(text(job?.status)))) {
-    const reviewFailed = ["judge", "judge_revision"].includes(failedStage?.stage);
-    return { ...view, phase: "failed", title: reviewFailed ? "Draft · Review interrupted" : "Report generation interrupted", description: currentDraft ? "The saved draft is available. Review has not passed." : "No new final report was produced. You can retry generation.", steps: [currentDraft ? "complete" : "failed", reviewFailed ? "failed" : "pending", "pending"] };
-  }
-  if (running) {
-    const stage = text(activeStage?.stage);
-    if (["judge", "judge_revision"].includes(stage)) {
-      return { ...view, phase: "review", title: stage === "judge_revision" ? "Judge · Reviewing revised draft" : "Judge · Reviewing draft", description: "Draft available below. Review is in progress.", steps: ["complete", "active", "pending"] };
-    }
-    if (stage === "writer_revision") {
-      return { ...view, phase: "revision", title: "Writer · Revising draft", description: "Review requested changes. The Writer is revising the draft before another review.", steps: ["active", "pending", "pending"] };
-    }
-    if (["writer", "validate", "save_draft"].includes(stage)) {
-      return { ...view, phase: "writing", title: reviewed ? "Writer · Preparing revised draft" : "Writer · Writing draft", description: reviewed ? "Checking and saving the revision before another review." : "Draft in progress. Review has not started.", steps: ["active", "pending", "pending"] };
-    }
-    return { ...view, phase: "preparing", title: "Report generation in progress", description: execution ? (currentDraft ? "The draft is saved. Preparing the next review step." : "Preparing analysis evidence and references before writing.") : "Waiting for the current generation stage to become available.", steps: [currentDraft ? "complete" : "active", "pending", "pending"] };
-  }
-  if (currentDraft || (execution && result === "running")) {
-    return { ...view, phase: "draft", title: currentDraft ? "Draft · Review not confirmed" : "Report progress not confirmed", description: "No completed review is recorded. The report has not been confirmed as final.", steps: [currentDraft ? "complete" : "pending", reviewed ? "failed" : "pending", "pending"] };
-  }
-  return view;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-function isLocalPlotGenerationRunning() {
-  return text(state.plotGeneration?.status) === "running";
-}
-
-function isSnapshotPlotGenerationRunning(snapshot) {
-  if (text(snapshot?.state?.status) === "plot_running") return true;
-  const job = snapshot?.active_job || snapshot?.latest_job || {};
-  const status = text(job.status);
-  return text(job.kind) === "plot_generate" && ["queued", "running"].includes(status);
-}
-
-
-function clearPlotGeneration() {
-  stopPlotGenerationPolling();
-  state.plotGeneration = null;
-}
-
-function stopPlotGenerationPolling() {
-  if (!state.plotGenerationPollTimer) return;
-  clearTimeout(state.plotGenerationPollTimer);
-  state.plotGenerationPollTimer = null;
-}
-
-function schedulePlotSnapshotRefresh(delayMs = 1800) {
-  stopPlotGenerationPolling();
-  state.plotGenerationPollTimer = setTimeout(async () => {
-    state.plotGenerationPollTimer = null;
-    if (!state.currentSessionId || !state.plotGeneration) return;
-    try {
-      await loadSnapshot();
-    } catch (error) {
-      if (state.plotGeneration) {
-        state.plotGeneration.message = "Waiting for plot refresh...";
-        renderExecutionNotebook();
-      }
-    }
-    if (state.plotGeneration && text(state.plotGeneration.status) === "running") {
-      schedulePlotSnapshotRefresh(2500);
-    }
-  }, delayMs);
-}
-
-
-
-
-
-
-
-
-
-
-
-
 function skillResultSkillId(event, details = {}) {
   return text(event?.skill_id || details.skill_id || details.skill_name || event?.decision_name);
 }
-
-
 
 function planItemForSnapshot(snapshot, taskId, planItemId) {
   const wantedTask = text(taskId);
@@ -3763,7 +3235,6 @@ function activeMrTask(snapshot) {
   const active = snapshot?.mr?.state?.active_task;
   return active && typeof active === "object" ? active : null;
 }
-
 
 function mrTasksInOrder(snapshot) {
   const mrState = snapshot?.mr?.state;
@@ -3819,18 +3290,12 @@ function skillResultTaskId(snapshot, event) {
   return matchedTaskId;
 }
 
-
-
-
-
-
 function formatParameterValue(value) {
   if (value === null) return "null";
   if (typeof value === "string") return value;
   if (typeof value === "number" || typeof value === "boolean") return String(value);
   return JSON.stringify(value, null, 2);
 }
-
 
 function updateComposer() {
   const running = Boolean(state.snapshot?.active_job);
@@ -3900,11 +3365,7 @@ async function stopActiveJob() {
 async function startSessionWithQuestion(question) {
   state.pendingUserMessage = {
     text: question,
-    target: "search",
-    thinkingTarget: "manager",
     sessionId: null,
-    baselineEventCount: 0,
-    baselineUpdatedAt: "",
   };
   els.replyInput.value = "";
   renderConversation(state.snapshot);
@@ -3938,16 +3399,11 @@ async function sendReply(event, request = null) {
   }
 
   const snapshot = state.snapshot || {};
-  const replyTarget = text(snapshot.state?.active_agent) === "mr" ? "mr" : "search";
-  const endpoint = `/api/sessions/${encodeURIComponent(state.currentSessionId)}/reply`;
+  const endpoint = `/api/sessions/${encodeURIComponent(state.currentSessionId)}/mr/reply`;
 
   state.pendingUserMessage = {
     text: reply,
-    target: replyTarget,
-    thinkingTarget: "manager",
     sessionId: state.currentSessionId,
-    baselineEventCount: eventCountForTarget(snapshot, replyTarget),
-    baselineUpdatedAt: text(snapshot.state?.updated_at),
   };
   if (!request) els.replyInput.value = "";
   renderConversation(snapshot);
@@ -3964,7 +3420,6 @@ async function sendReply(event, request = null) {
     setBusy(false);
   }
 }
-
 
 async function submitStudySetup() {
   const draft = state.studySetupDraft;
@@ -3986,7 +3441,7 @@ async function submitStudySetup() {
   form.append("methods", JSON.stringify(draft.methods));
   form.append("sources", JSON.stringify(draft.sources));
   if (!state.currentSessionId) {
-    form.append("provider", text(els.providerSelect.value) || "anthropic");
+    form.append("provider", text(els.providerSelect.value) || "deepseek");
   }
   setBusy(true);
   try {
@@ -4024,14 +3479,6 @@ function buildStudyDatasetManifest(datasets, form, fieldName) {
     return item;
   });
 }
-
-
-
-
-
-
-
-
 
 function normalizeMessageParagraphs(value) {
   // Repair escaped paragraph breaks in prose while preserving code and single escapes.
@@ -4239,7 +3686,6 @@ function bindEvents() {
       els.replyForm.requestSubmit();
     }
   });
-
   els.refreshButton.addEventListener("click", refreshSessions);
   els.sessionStatusToggle.addEventListener("change", () => {
     setSessionStatusVisible(els.sessionStatusToggle.checked);

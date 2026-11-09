@@ -4,7 +4,7 @@ description: Compute separate two-step mediation estimates from completed X-to-Y
   X-to-M and M-to-Y MR results.
 accepts-milestones: [mr_primary_result, mrapss_result, mr_bwmr_result, mr_divw_result,
   mr_raps_result, mr_mrmix_result, mr_cml_ma_result, mr_robust_result, mr_lasso_result,
-  mr_conmix_result, cause_result]
+  mr_conmix_result]
 produces-milestone: mr_mediation_result
 reusable-outputs: [mediation_table_path, forest_plot_paths, result_record_path]
 ---
@@ -50,7 +50,23 @@ else:
 
 ## Interpretation checks
 
+A mediated causal interpretation requires credible IV assumptions for both
+component links, compatible effect units/populations and a linear/additive path
+interpretation without an unmodeled interaction that changes the product
+estimand. Two significant links alone do not establish mediation. Explain which
+component's assumptions or diagnostics limit the indirect estimate; different
+valid instrument subsets across links are not by themselves a violation.
+Zero covariance is a computational assumption, not evidence of independent
+samples. If covariance is unknown, disclose the uncertainty approximation.
+
+
 Indirect beta is the product of the two component estimates. Delta-method uncertainty assumes zero component covariance. Proportion mediated needs a nonzero total effect. Treat mediators separately; do not sum correlated indirect effects or claim joint adjustment.
+
+Preserve each component's reported confidence intervals, including their level
+and disjoint ranges, in tables and path plots. Normal delta-method intervals
+apply only to the newly derived indirect effect and mediation proportion.
+CAUSE results are not accepted: posterior interval widths are not sampling SEs,
+including compatibility SEs present in older CAUSE records.
 
 Use actual inner `result_record_path` files from producers. Keep input_scale consistent (native, standardize and mrmix_standardize are distinct); equal labels alone do not establish comparable phenotype units. Legacy missing scale remains unknown. Never manufacture estimates or metadata to satisfy an input contract.
 
@@ -59,3 +75,4 @@ Use actual inner `result_record_path` files from producers. Keep input_scale con
 On success, `result["outputs"]["mr_mediation_result"]` holds the data described below.
 
 Contains `mediation_paths`, `mediation_table_path`, `forest_plot_paths`, diagnostics, `plot_manifest` and `result_record_path`.
+

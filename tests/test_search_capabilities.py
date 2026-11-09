@@ -306,30 +306,3 @@ def test_deepseek_hosted_search_keeps_citations_and_bounded_uses(monkeypatch):
     message.content=[]
     with pytest.raises(providers.WebSearchNoTextError):provider.search(SearchRequest('q','',[]))
     assert len(usage)==2
-
-
-@pytest.mark.sandbox
-def test_search_tools_import_and_build_documents_in_existing_sandbox(tmp_path):
-    from mrcat import sandbox
-    import subprocess
-    import sys
-    private_file = tmp_path.with_name(tmp_path.name + '-private.txt')
-    private_file.write_text('Unlisted sibling input')
-    command, env, _ = sandbox.prepare_worker(ROOT, tmp_path, [])
-    code=f'''
-from pathlib import Path
-from mrcat import tools
-from mrcat.search import documents, inspection, providers
-def fixture(**kwargs):
-    return kwargs['validator']({brief()!r})
-documents.call_validated_json=fixture
-out=tools.research_brief(request='Only FinnGen European BMI to CAD', evidence=[], output_dir=Path.cwd()/'brief')['outputs']
-assert Path(out['artifact_path']).is_file()
-assert inspection._route(dict(source='opengwas', ancestry='european'))['sources']==['opengwas']
-assert set(providers.build_provider_registry())=={{'deepseek','openai','qwen'}}
-assert not Path({str(private_file)!r}).exists()
-print('native-search-sandbox-ok')
-'''
-    completed=subprocess.run(command+[sys.executable,'-c',code],env=env,capture_output=True,text=True,timeout=45)
-    assert completed.returncode==0, completed.stdout+completed.stderr
-    assert 'native-search-sandbox-ok' in completed.stdout

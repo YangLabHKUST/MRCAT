@@ -49,7 +49,7 @@ const assert = require('node:assert/strict');
     assert.equal(await page.evaluate(()=>state.snapshot.mr.state.active_task),null);
     // The existing reply transport receives the exact selected query, not the full design.
     let sent;
-    await page.route('**/api/sessions/*/reply',async route=>{
+    await page.route('**/api/sessions/*/mr/reply',async route=>{
       sent=route.request().postDataJSON();
       await route.fulfill({status:200,contentType:'application/json',body:'{}'});
     });

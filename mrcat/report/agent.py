@@ -72,11 +72,13 @@ class ReportAgent:
             analysis_evidence = dict(finalization_context)
             analysis_evidence.pop("literature_evidence", None)
             guidance = analysis_evidence.pop("skill_interpretation_guidance", [])
+            task_memories = analysis_evidence.pop("task_memories", [])
             reference_ids = _verified_reference_ids(literature_evidence)
             prompt = self.build_structured_prompt(
                 stage="report_writer",
                 sections={
                     "Original Analysis Evidence": analysis_evidence,
+                    "Task Memory": task_memories,
                     "Skill Interpretation Guidance": guidance,
                     "Verified Literature Evidence": literature_evidence,
                     "Allowed Reference IDs": reference_ids,
@@ -109,6 +111,7 @@ class ReportAgent:
                 stage="report_judge",
                 sections={
                     "Original Analysis Evidence": compact_evidence,
+                    "Task Memory": finalization_context.get("task_memories", []),
                     "Skill Interpretation Guidance": finalization_context.get("skill_interpretation_guidance", []),
                     "Verified Literature Evidence": literature_evidence,
                     "Figure Catalog": figure_catalog,

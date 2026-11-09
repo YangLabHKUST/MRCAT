@@ -16,7 +16,7 @@ from .codeact import CodeActNodes, role_graph
 class ManagerNodes(CodeActNodes):
     def intake(self, flow, state):
         if state.get('version') != 2:
-            raise ValueError('Unsupported session schema. Start a new session.')
+            raise ValueError('Upgrade this saved session before continuing.')
         state.update(status='running', active_agent='manager', request=flow['request'])
         self.agent._record(state, 'user', flow['request'])
         self.agent._event(state, 'user_message', flow['request'])
@@ -104,7 +104,7 @@ def run_graph(agent, sid, request):
     config = {'configurable': {'thread_id': sid}, 'recursion_limit': agent.max_rounds * 10 + 100}
     session = agent.store.load(sid)
     if not agent.store.has_checkpoint(sid):
-        raise ValueError('Session checkpoint is missing. Start a new session.')
+        raise ValueError('Import this legacy session into a new store before continuing.')
     session.pop('coding_agent', None)
     if session.get('pending_coding_tool'):
         from .coding_agent import CodingAgentNodes

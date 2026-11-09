@@ -27,7 +27,8 @@ script_dir <- if (length(script_file) > 0) {
 skill_root <- normalizePath(file.path(script_dir, "..", ".."), winslash = "/", mustWork = TRUE)
 source(file.path(script_dir, "steiger.R"))
 workspace_dir <- normalizePath(file.path(skill_root, "..", ".."), mustWork = TRUE)
-source(file.path(workspace_dir, "mrcat", "tool", "mr", "mr_presso_results.R"))
+source(file.path(workspace_dir, "mrcat", "tool", "MRTool", "mr_presso_results.R"))
+source(file.path(workspace_dir, "mrcat", "tool", "MRTool", "mr_inference.R"))
 plot_explanation_path <- function(plot_id) {
   normalizePath(file.path(skill_root, "plot_explanations", paste0(plot_id, ".md")), winslash = "/", mustWork = TRUE)
 }
@@ -55,6 +56,22 @@ save_first_plot <- function(plot_obj, path, width = 7, height = 5) {
   if (is.list(plot_obj) && length(plot_obj) > 0 && !inherits(plot_obj, "ggplot")) plot_obj <- plot_obj[[1]]
   ggplot2::ggsave(path, plot_obj, width = width, height = height, dpi = 300, limitsize = FALSE)
   normalize_path(path)
+}
+
+single_snp_forest <- function(results) {
+  results$SNP <- as.character(results$SNP)
+  summary <- grepl("^All", results$SNP)
+  order <- c(which(summary), which(!summary)[order(results$b[!summary])])
+  results$SNP <- factor(results$SNP, levels = unique(results$SNP[order]))
+  results$summary <- summary
+  ggplot2::ggplot(results, ggplot2::aes(x = b, y = SNP, colour = summary)) +
+    ggplot2::geom_vline(xintercept = 0, linetype = "dotted") +
+    ggplot2::geom_errorbarh(ggplot2::aes(xmin = lo_ci, xmax = up_ci), height = 0) +
+    ggplot2::geom_point() +
+    ggplot2::scale_colour_manual(values = c("black", "red")) +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(legend.position = "none", axis.text.y = ggplot2::element_text(size = 8)) +
+    ggplot2::labs(x = "MR effect estimate (95% CI)", y = NULL)
 }
 
 build_twosamplemr_dat <- function(selected) {
@@ -123,6 +140,12 @@ heterogeneity_df <- tryCatch(TwoSampleMR::mr_heterogeneity(dat), error = functio
 pleiotropy_df <- tryCatch(TwoSampleMR::mr_pleiotropy_test(dat), error = function(e) write_failure("pleiotropy_failed", conditionMessage(e)))
 leave_one_out_df <- tryCatch(TwoSampleMR::mr_leaveoneout(dat), error = function(e) write_failure("leave_one_out_failed", conditionMessage(e)))
 single_snp_df <- tryCatch(TwoSampleMR::mr_singlesnp(dat), error = function(e) write_failure("single_snp_failed", conditionMessage(e)))
+single_bounds <- t(vapply(seq_len(nrow(single_snp_df)), function(i) {
+  method <- if (grepl("Egger", single_snp_df$SNP[i])) "MR-Egger" else "IVW"
+  mr_ci_bounds(mr_primary_ci(single_snp_df$b[i], single_snp_df$se[i], method, nrow(selected)))
+}, numeric(2)))
+single_snp_df$lo_ci <- single_bounds[, "lower"]
+single_snp_df$up_ci <- single_bounds[, "upper"]
 steiger <- run_steiger(selected, payload$steiger_metadata, steiger_filter, dat, execution_dir, seed)
 log_step("Steiger status=", steiger$result$status,
          if (!is.null(steiger$result$reason)) paste0("; ", steiger$result$reason) else "",
@@ -263,7 +286,7 @@ plots <- list()
 skipped_plots <- list()
 if (nrow(selected) <= detailed_plot_max_instruments) {
   single_plot <- save_first_plot(
-    TwoSampleMR::mr_forest_plot(single_snp_df),
+    single_snp_forest(single_snp_df),
     file.path(execution_dir, "plots", "sensitivity_single_snp_forest.png"),
     height = max(5, 1.5 + 0.18 * nrow(single_snp_df))
   )

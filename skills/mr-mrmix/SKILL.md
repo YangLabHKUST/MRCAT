@@ -80,10 +80,23 @@ On success, `result["outputs"]["mr_mrmix_result"]` holds the data described belo
 The payload contains `methods`, `diagnostics`, `interpretation`, `plot_manifest` and `result_record_path`. Reuse the inner result record for downstream comparison; inspect effective threshold, selected SNP count, scale and warnings. Plot paths are listed in the manifest; do not guess filenames.
 
 ## Method Interpretation
+
 Explain findings in the user's language. Describe the fitted input representation and supported units once in the final report; missing source units alone do not require extra analysis.
 
-- **Use when:** widespread horizontal pleiotropy is plausible but valid IVs are expected to form an identifiable mixture component. MRMix fits a mixture distribution to separate the causal signal from pleiotropic components.
-- **Interpret:** inspect the profile plot for a stable solution. A result that differs from IVW can indicate that IVW is driven by pleiotropic components, but MRMix alone does not rule out correlated pleiotropy or weak-IV problems.
-- **Interpretation guardrail:** a stable mixture solution supports robustness to some pleiotropic components, but it does not provide an expected effect direction or rule out correlated pleiotropy.
-- **Recommendation:** use it as a mixture-model sensitivity analysis with enough independent instruments, then compare with CAUSE or MR-APSS when genetic sharing or sample structure may explain disagreement.
+### Key assumptions
+
+MRMix uses a mixture model of exposure/outcome effects to identify a valid-instrument component under a zero-modal-pleiotropy condition. Its interpretation depends on an identifiable valid component and the mixture assumptions; fitting several components does not guarantee that the valid component was recovered.
+
+### Relevant evidence
+
+Use instrument count, the actual profile/solution stability, estimates, intervals, scale and numerical warnings. A sparse instrument set or unstable profile affects identification; do not manufacture a stability assessment when absent.
+
+### Interpretation
+
+Compare the mixture estimate with IVW and other completed methods using comparable units. Discordance can reflect mixture/variant sensitivity but does not identify which method or biological explanation is correct.
+
+### Limits
+
+A stable solution does not establish the validity condition or exclude weak-IV, correlated-pleiotropy or population-structure problems. Retain unstable or ambiguous fits and avoid selecting a preferred direction or P value.
+
 - **Original paper:** [Qi and Chatterjee 2019](https://doi.org/10.1038/s41467-019-09432-2).

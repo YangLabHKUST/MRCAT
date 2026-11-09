@@ -1,4 +1,4 @@
-"""Regression cases for the baseline26 failures, without model/API dependence."""
+"""Regression tests for study metadata, MR execution and input scale."""
 import csv
 import importlib
 import json
@@ -151,7 +151,7 @@ def test_neale_check_requires_complete_signature(tmp_path):
 @pytest.mark.r
 def test_id_scale_separates_missing_n_from_instrument_count(tmp_path):
     code = '''
-source("mrcat/tool/mr/gwas_statistics.R")
+source("mrcat/tool/MRTool/gwas_statistics.R")
 source("skills/mr-primary-id/scripts/mr_primary_id/prepare_scale.R")
 d <- data.frame(SNP=c("rs1","rs2"), beta.exposure=c(.1,.2), se.exposure=c(.02,.03),
  beta.outcome=c(.01,.02), se.outcome=c(.01,.02), pval.exposure=c(.001,.002),

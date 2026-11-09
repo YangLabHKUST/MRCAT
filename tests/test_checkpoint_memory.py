@@ -41,7 +41,7 @@ def test_export_is_not_an_input_or_recovery_source(tmp_path):
     (store.directory(sid) / 'session.json').write_text(json.dumps(export))
     assert Store(tmp_path).load(sid)['question'] == state['question']
     (store.directory(sid) / 'graph.sqlite').unlink()
-    with pytest.raises(FileNotFoundError, match='checkpoint is missing'):
+    with pytest.raises(ValueError, match='checkpoint is missing'):
         Store(tmp_path).load(sid)
 
 
@@ -54,7 +54,7 @@ def test_fork_reads_checkpoint_even_without_exports(tmp_path):
     assert restored['persistence'] == 'langgraph'
 
 
-def test_json_only_session_is_rejected_without_modifying_source(tmp_path):
+def test_legacy_session_import_is_explicit_and_preserves_source(tmp_path):
     store, sid = create(tmp_path / 'original')
     state = store.load(sid)
     state.pop('persistence')
@@ -67,12 +67,13 @@ def test_json_only_session_is_rejected_without_modifying_source(tmp_path):
     (directory / 'graph.sqlite').unlink()
     source = json.dumps(state)
     (directory / 'session.json').write_text(source)
-    with pytest.raises(FileNotFoundError, match='checkpoint is missing'):
-        store.load(sid)
-    with pytest.raises(ValueError, match='Only current LangGraph sessions'):
+    assert store.load(sid) == state
+    with pytest.raises(ValueError, match='Legacy sessions are read-only'):
         store.save(state)
-    with pytest.raises(FileNotFoundError, match='checkpoint is missing'):
-        fork_session(directory, tmp_path / 'copies')
+    copied = fork_session(directory, tmp_path / 'copies')
+    imported = Store(tmp_path / 'copies')
+    assert imported.has_checkpoint(copied)
+    assert imported.load(copied)['active_task']['coding']['fit']['step'] == 1
     assert (directory / 'session.json').read_text() == source
     assert not (directory / 'graph.sqlite').exists()
 

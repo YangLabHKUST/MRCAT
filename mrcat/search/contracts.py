@@ -1,4 +1,4 @@
-"""Research brief and scan-design output contracts."""
+"""Legacy brief and scan-design output contracts."""
 
 from typing import Any
 

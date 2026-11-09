@@ -1,5 +1,4 @@
 import hashlib
-from pathlib import Path
 import fcntl
 import sqlite3
 
@@ -15,9 +14,11 @@ from test_agent import ROOT, Model, action, decision, verified_value
 
 
 def digests(directory):
+    # Readers may create SQLite sidecars without changing authoritative content.
     return {str(p.relative_to(directory)): hashlib.sha256(p.read_bytes()).hexdigest()
             for p in directory.rglob('*') if p.is_file()
-            and p.name not in {'graph.sqlite-wal', 'graph.sqlite-shm'}}
+            and not (p.parent == directory and p.name in {
+                'graph.sqlite-wal', 'graph.sqlite-shm', 'graph.sqlite-journal'})}
 
 
 def test_copy_reuses_results_and_writes_only_to_copy(tmp_path):
@@ -86,7 +87,7 @@ def test_web_linked_sources_are_read_only_and_can_be_copied(tmp_path):
     before = digests(source)
     assert client.get(url).status_code == 200
     assert client.get('/api/sessions').status_code == 200
-    assert client.post(url + '/reply', json={'reply': 'Continue'}).status_code == 403
+    assert client.post(url + '/mr/reply', json={'reply': 'Continue'}).status_code == 403
     assert client.post(url + '/stop').status_code == 403
     assert client.post(url + '/study-setup', data={'analysis_request': 'Change'}).status_code == 403
     assert client.post(url + '/fork').status_code == 400
@@ -161,11 +162,11 @@ def test_copy_allows_checkpoint_reader_during_copy(tmp_path, monkeypatch):
 
     def read_during_copy(src, dst, remap):
         copy_file(src, dst, remap)
-        reader = sqlite3.connect(source / 'graph.sqlite')
+        checkpoint = original.checkpoint_path(state['session_id'])
+        reader = sqlite3.connect(checkpoint)
         reader.execute('SELECT checkpoint_id FROM checkpoints LIMIT 1').fetchone()
         readers.append(reader)
-        checkpoint = (source / 'graph.sqlite').resolve()
-        assert Path(str(checkpoint) + '-shm').exists()
+        assert checkpoint.with_name('graph.sqlite-shm').exists()
 
     monkeypatch.setattr(fork, 'copy_file', read_during_copy)
     before = digests(source)

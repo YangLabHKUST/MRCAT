@@ -25,22 +25,13 @@ workspace_dir <- Sys.getenv("MRCAT_WORKSPACE_DIR", unset = "")
 if (!nzchar(workspace_dir)) {
   workspace_dir <- normalizePath(file.path(script_dir, "..", "..", "..", ".."), winslash = "/", mustWork = FALSE)
 }
-source(file.path(workspace_dir, "mrcat", "tool", "mr", "mr_instrument_selection.R"))
+source(file.path(workspace_dir, "mrcat", "tool", "MRTool", "mr_instrument_selection.R"))
+source(file.path(workspace_dir, "mrcat", "tool", "MRTool", "mr_inference.R"))
 
 num_or_null <- function(x) {
   value <- suppressWarnings(as.numeric(x)[1])
   if (length(value) == 0 || !is.finite(value)) return(NULL)
   value
-}
-
-ci_from_se <- function(beta, se) {
-  beta_value <- num_or_null(beta)
-  se_value <- num_or_null(se)
-  ranges <- list()
-  if (!is.null(beta_value) && !is.null(se_value) && se_value > 0) {
-    ranges <- list(list(lower = beta_value - 1.96 * se_value, upper = beta_value + 1.96 * se_value))
-  }
-  list(level = 0.95, ranges = ranges)
 }
 
 normalize_path <- function(path) normalizePath(path, winslash = "/", mustWork = FALSE)
@@ -119,7 +110,7 @@ rows <- list(
     "beta.hat" = num_or_null(fit$b),
     se = num_or_null(fit$se),
     pval = num_or_null(fit$pval),
-    ci = ci_from_se(fit$b, fit$se)
+    ci = mr_ci_from_se(fit$b, fit$se, df = nsnp - 2)
   ),
   list(
     method = "MR-GRIP weak-instrument adjusted",
@@ -128,7 +119,7 @@ rows <- list(
     "beta.hat" = num_or_null(fit$b.adj),
     se = num_or_null(fit$se.adj),
     pval = num_or_null(fit$pval.adj),
-    ci = ci_from_se(fit$b.adj, fit$se.adj)
+    ci = mr_ci_from_se(fit$b.adj, fit$se.adj, df = nsnp - 2)
   )
 )
 

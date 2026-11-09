@@ -7,7 +7,7 @@ from pathlib import Path
 from dotenv import dotenv_values, load_dotenv
 
 
-DISABLE_PROXY_ENV = "MRCAT_BENCHMARK_DISABLE_PROXY"
+DISABLE_PROXY_ENV = "MRCAT_DISABLE_PROXY"
 PROXY_ENV_NAMES = (
     "HTTP_PROXY",
     "HTTPS_PROXY",
@@ -37,13 +37,13 @@ def load_repo_dotenv(*, repo_root: Path) -> DotenvLoadResult:
     return DotenvLoadResult(found=True, loaded=loaded, path=dotenv_path)
 
 
-def benchmark_disable_proxy_enabled() -> bool:
+def disable_proxy_enabled() -> bool:
     value = str(os.environ.get(DISABLE_PROXY_ENV) or "").strip().lower()
     return value in TRUTHY_VALUES
 
 
 def disable_proxy_from_env_if_requested() -> tuple[str, ...]:
-    if not benchmark_disable_proxy_enabled():
+    if not disable_proxy_enabled():
         return ()
     removed: list[str] = []
     for name in PROXY_ENV_NAMES:

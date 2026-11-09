@@ -31,12 +31,12 @@ mrcat_est_paras <- function(dat1,
                       ldscore.dir = NULL,
                       ld=NULL,
                       M=NULL){
-
+  
   dat1 <- dplyr::mutate_if(dat1, is.integer, as.numeric)
   dat2 <- dplyr::mutate_if(dat2, is.integer, as.numeric)
   dat1 <- dplyr::mutate_if(dat1, is.factor, as.character)
   dat2 <- dplyr::mutate_if(dat2, is.factor, as.character)
-
+      
   for (field in c("beta_native", "se_native", "freq_native")) {
     if (!(field %in% names(dat1))) dat1[[field]] <- NA_real_
     if (!(field %in% names(dat2))) dat2[[field]] <- NA_real_
@@ -59,14 +59,14 @@ mrcat_est_paras <- function(dat1,
   if(is.null(ldscore.dir)&is.null(ld)) stop("Please provide the information on LD scores")
 
   if(is.null(ld) & !is.null(ldscore.dir)){
-
+    
   ld <- suppressMessages(readr::read_delim(paste0(ldscore.dir,"/1.l2.ldscore.gz"), "\t", escape_double = FALSE, trim_ws = TRUE,progress = F))
 
   for(i in 2:22){
     ld <- rbind(ld,suppressMessages(readr::read_delim(paste0(ldscore.dir, "/", i,".l2.ldscore.gz"), "\t", escape_double = FALSE, trim_ws = TRUE,progress = F)))
   }
  }
-
+  
   if(is.null(M) & !is.null(ldscore.dir)){
   m.chr  <- suppressMessages(readr::read_csv(paste0(ldscore.dir,"/1.l2.M_5_50"),  col_names = FALSE))
 
@@ -121,3 +121,7 @@ if(LDSC){
               C = C,
               Omega = Omega))
 }
+
+
+
+

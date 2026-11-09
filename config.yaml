@@ -1,14 +1,44 @@
+runtime:
+  recursion_limit: 200
+
 llm:
   gateway:
-    provider: anthropic
-    backend: sdk
-    base_url: https://api.anthropic.com
+    # Supported providers: anthropic, openai, deepseek, qwen, glm, grok, custom.
+    # anthropic uses the native Messages API; the others use OpenAI-compatible chat completions.
+    provider: "anthropic"
+    backend: "sdk"
+    base_url: "https://api.anthropic.com"
     timeout_sec: 1200
     retry_count: 3
+
   models:
-    default: claude-opus-4-6
+    default: "claude-opus-4-6"
     roles:
+      # Leave null to inherit models.default or the active provider's env/default model.
+      manager: null
       reporter: null
+
   temperatures:
     roles:
+      manager: 0.0
       reporter: 0.0
+    json_repair: 0.0
+
+  max_tokens:
+    memory_contract: 384000
+    confirmation_question: 384000
+    merge_question_confirmation: 384000
+    draft_plan: 384000
+    report_summary: 32768
+    report_writer: 32768
+    report_judge: 8192
+    report_literature_claims: 4096
+    report_literature_verify: 8192
+    json_repair: 384000
+    memory_extract_contract: 384000
+    memory_parse_reply: 384000
+
+  memory_limits:
+    memory_note_reason_max_chars: 500
+    ask_user_question_max_chars: 2000
+    planner_summary_max_chars: 220

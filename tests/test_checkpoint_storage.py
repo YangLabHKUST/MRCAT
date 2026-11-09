@@ -130,9 +130,9 @@ def test_frozen_snapshot_never_modifies_original(storage, monkeypatch):
 
 
 def test_migration_refuses_live_connections(tmp_path):
-    # A migration source is an ordinary database, before Store relocates it.
-    entry = tmp_path / 'source' / 'graph.sqlite'
-    entry.parent.mkdir()
+    store = Store(tmp_path / 'source')
+    sid = store.create('Test', 'openai')['session_id']
+    entry = store.directory(sid) / 'graph.sqlite'
     conn = sqlite3.connect(entry)
     try:
         with pytest.raises(ValueError, match='active PIDs'):

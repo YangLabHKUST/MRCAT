@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>MRCAT</title>
-    <link rel="stylesheet" href="/static/styles.css?v=0.1.0" />
+    <link rel="stylesheet" href="/static/styles.css?v=mrcat-frontend-cleanup-20261102" />
   </head>
   <body>
     <main class="app-shell">
@@ -20,13 +20,9 @@
             title="Copy this session and its files. Continue independently while preserving the original.">Continue in a copy</button>
           <label for="provider-select">Model provider</label>
           <select id="provider-select" aria-label="Model provider">
-            <option value="anthropic">anthropic</option>
-            <option value="openai">openai</option>
             <option value="deepseek">deepseek</option>
+            <option value="openai">openai</option>
             <option value="qwen">qwen</option>
-            <option value="glm">glm</option>
-            <option value="grok">grok</option>
-            <option value="custom">custom</option>
           </select>
         </section>
 
@@ -147,10 +143,10 @@
       </section>
     </main>
 
-    <script src="/static/primary-scatter.js?v=0.1.0"></script>
-    <script src="/static/replication-forest.js?v=0.1.0"></script>
-    <script src="/static/qc-explorer.js?v=0.1.0"></script>
-    <script src="/static/notebook.js?v=0.1.0"></script>
-    <script src="/static/app.js?v=0.1.0"></script>
+    <script src="/static/primary-scatter.js?v=mrcat-readable-20261029"></script>
+    <script src="/static/replication-forest.js?v=mrcat-readable-20261029"></script>
+    <script src="/static/qc-explorer.js?v=mrcat-readable-20261029"></script>
+    <script src="/static/notebook.js?v=mrcat-session-api-20261102"></script>
+    <script src="/static/app.js?v=mrcat-frontend-cleanup-20261102"></script>
   </body>
 </html>

@@ -71,7 +71,7 @@ warning("Third-party warning fixture", immediate. = TRUE)
 from pathlib import Path
 from dataclasses import replace
 from mrcat import tools
-from mrcat.tool.mr import run_method_cli
+from mrcat.tool.MRTool import run_method_cli
 method = importlib.import_module('skills.mr-bwmr.scripts.run_mr_bwmr')
 method.SPEC = replace(method.SPEC, script_path=Path({str(fixture)!r}))
 '''

@@ -70,10 +70,23 @@ On success, `result["outputs"]["mr_lasso_result"]` holds the data described belo
 The payload contains `methods`, `diagnostics`, `interpretation`, `plot_manifest` and `result_record_path`. Reuse the inner result record for downstream comparison; inspect effective threshold, selected SNP count, scale and warnings. Plot paths are listed in the manifest; do not guess filenames.
 
 ## Method Interpretation
+
 Explain findings in the user's language. Describe the fitted input representation and supported units once in the final report; missing source units alone do not require extra analysis.
 
-- **Use when:** a limited subset of IVs may have large direct effects on the outcome. MR-Lasso penalizes SNP-specific pleiotropic effects so that the remaining IVs define the causal estimate.
-- **Interpret:** report penalized SNPs as a sensitivity diagnosis, not confirmed biological pleiotropy. A large change from IVW to MR-Lasso means the claim depends on a subset of variants and should be checked with leave-one-out, MR-PRESSO, or robust regression.
-- **Interpretation guardrail:** when penalization materially changes the estimate, report dependence on influential variants and do not assume the penalized or unpenalized direction is the expected answer.
-- **Recommendation:** use when sparse influential IVs are suspected; it is not a correction for weak-IV bias or broad correlated pleiotropy.
+### Key assumptions
+
+MR-Lasso penalizes SNP-specific direct effects, relying on a sufficiently informative valid-instrument subset and a sparse enough invalid-IV configuration for that subset to identify the causal relation. Its inference depends on the penalization/selection procedure; arbitrary pervasive pleiotropy is not solved by fitting a penalty.
+
+### Relevant evidence
+
+Read penalization settings, selected/penalized SNPs, fitted estimates and intervals, warnings, and available influence diagnostics. The selected subset is model-dependent and does not establish biological validity.
+
+### Interpretation
+
+Compare with IVW and any completed influence/outlier analyses. A changed estimate indicates dependence on variant selection or penalization; state the observed change and uncertainty without presuming which result is correct.
+
+### Limits
+
+Penalized SNPs are not proven biologically pleiotropic. MR-Lasso is not a general correction for weak-IV bias, sample overlap or broad correlated pleiotropy; significance alone cannot validate the selected model.
+
 - **Original paper:** [Rees et al. 2019](https://doi.org/10.1371/journal.pone.0222362).

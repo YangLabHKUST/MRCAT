@@ -89,6 +89,17 @@ def fork_session(source, destination):
         before = inventory(source)
         original_state = Store(source.parent).load(source.name)
         state = deepcopy(original_state)
+        if state.get('persistence') != 'langgraph':
+            if (source / 'report_checkpoint.json').exists():
+                state['report_state'] = json.loads((source / 'report_checkpoint.json').read_text())
+            tasks = [*state.get('task_history', []), *([state['active_task']] if state.get('active_task') else [])]
+            for task in tasks:
+                for item in task.get('plan_items', []):
+                    journal = source / 'workspace' / 'outputs' / task['task_id'] / item['step_id'] / '.coding_agent' / 'journal.json'
+                    if not journal.resolve().is_relative_to(source):
+                        raise ValueError('Legacy coding history must remain inside its session.')
+                    if journal.exists():
+                        task.setdefault('coding', {})[item['step_id']] = json.loads(journal.read_text())
         if state.get('version') != 2:
             raise ValueError('Only version 2 sessions can be copied.')
         if (state.get('status') == 'running' or (state.get('job') or {}).get('status') == 'running'

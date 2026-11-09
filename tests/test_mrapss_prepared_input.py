@@ -1,4 +1,3 @@
-import sys
 """Verify the fit-only MR-APSS contract against the installed author package."""
 
 import csv
@@ -6,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 
 import pytest
 
@@ -13,7 +13,7 @@ pytestmark = pytest.mark.r
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "skills/mr-apss/scripts/mrapss/run_mrapss.R"
-RSCRIPT = os.environ.get("RSCRIPT_BIN", str(Path(sys.executable).parent / "Rscript"))
+RSCRIPT = os.environ.get("RSCRIPT_BIN", str(Path(sys.executable).with_name("Rscript")))
 
 
 def run_r(args):

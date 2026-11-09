@@ -22,7 +22,7 @@ fit_primary <- function(selected, threshold) {
         "beta.hat" = num_or_null(fit$b),
         se = num_or_null(fit$se),
         pval = num_or_null(fit$pval),
-        ci = ci_from_se(fit$b, fit$se)
+        ci = mr_primary_ci(fit$b, fit$se, method, fit$nsnp)
       )
       log_step(
         "Completed method: ", method,

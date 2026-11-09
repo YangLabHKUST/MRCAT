@@ -1,4 +1,4 @@
-/* Read-only notebook projection of the existing session, trace and artifact APIs. */
+/* Read-only notebook projection of saved session events and artifacts. */
 const notebook = {
   session: "",
   task: "",

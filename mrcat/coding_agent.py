@@ -209,7 +209,12 @@ class CodingAgentNodes(CodeActNodes):
 
     @staticmethod
     def _journal(task, item):
-        return task.setdefault('coding', {}).setdefault(item['step_id'], dict(step=0, entries=[], summary=''))
+        journal = task.setdefault('coding', {}).setdefault(item['step_id'], dict(step=0, entries=[]))
+        if 'summary' not in journal:
+            # Adopt the only available summary from an older checkpoint once.
+            # Keep the original task note intact; never discard compacted evidence.
+            journal['summary'] = task.get('memory', '') if journal.get('summary_upto', 0) else ''
+        return journal
 
     @staticmethod
     def _inside(root, path):

@@ -52,6 +52,13 @@ else:
 
 ## Interpretation checks
 
+Carry forward each contributing estimator's key assumptions and material
+branch-specific diagnostic findings. A collection of significant estimates does
+not establish validity, a common effect unit or independent causal effects.
+Explain whether contrasts reflect different estimands, uncertainty or observed
+method sensitivity; missing diagnostics remain unassessed.
+
+
 The inferred design can be many-to-one, one-to-many or a matrix; raw betas are not universally comparable across traits/units.
 
 Use actual inner `result_record_path` files from producers. Keep input_scale consistent (native, standardize and mrmix_standardize are distinct); equal labels alone do not establish comparable phenotype units. Legacy missing scale remains unknown. Never manufacture estimates or metadata to satisfy an input contract.
@@ -61,3 +68,4 @@ Use actual inner `result_record_path` files from producers. Keep input_scale con
 On success, `result["outputs"]["mr_result_synthesis"]` holds the data described below.
 
 Contains `design`, normalized pairs/estimates, `summary_table_path`, `forest_plot_path`, diagnostics, `plot_manifest` and `result_record_path`.
+

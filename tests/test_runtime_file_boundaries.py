@@ -37,7 +37,7 @@ def test_r_runners_use_execution_directory_and_absolute_script(tmp_path, monkeyp
         return SimpleNamespace(returncode=0)
 
     if kind == 'shared':
-        module = importlib.import_module('mrcat.tool.mr.mr_method_runner')
+        module = importlib.import_module('mrcat.tool.MRTool.mr_method_runner')
         spec = importlib.import_module('skills.mr-robust.scripts.run_mr_robust').SPEC
         monkeypatch.setattr(module, 'run_streaming', run)
         result = module.run_r_method({'mrdat_path': 'xxx.tsv'}, spec)

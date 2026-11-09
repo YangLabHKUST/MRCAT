@@ -122,3 +122,4 @@ selection passed or that populations are equivalent.
 On success, `result["outputs"]["gwas_pair_prepare_result"]` holds the data described below.
 
 `mrdat_path`, `c_path`, `omega_path` feed MR-APSS; `mrdat_path` also feeds other local MR estimators. Keep all three from the same preparation. Read actual thresholds, SNP counts, LD reference and warnings; do not interpret successful preparation as a causal finding.
+

@@ -1,19 +1,19 @@
-import sys
 """Scale interpretation must not replace numeric processing checks."""
 import csv
 import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 
 import pytest
 
-from mrcat import tools
-
 pytestmark = pytest.mark.r
 
+from mrcat import tools
+
 ROOT = Path(__file__).resolve().parents[1]
-RSCRIPT = os.environ.get('RSCRIPT_BIN', str(Path(sys.executable).parent / "Rscript"))
+RSCRIPT = os.environ.get('RSCRIPT_BIN', str(Path(sys.executable).with_name("Rscript")))
 
 
 @pytest.mark.parametrize('scale', ['standardize', 'native'])
@@ -47,7 +47,7 @@ def test_primary_preserves_fitted_representation_without_unit_label(tmp_path, sc
 
 
 def test_missing_native_statistics_still_fail():
-    script = ROOT / 'mrcat/tool/mr/mr_input_scale.R'
+    script = ROOT / 'mrcat/tool/MRTool/mr_input_scale.R'
     code = f'''source({json.dumps(str(script))})
     dat <- data.table::data.table(b.exp=1,b.out=2,se.exp=.1,se.out=.2)
     err <- tryCatch(mr_apply_input_scale(dat, "native"), error=function(e) conditionMessage(e))

@@ -15,7 +15,7 @@ dependencies = [
   "PyYAML>=6", "python-dotenv>=1", "requests>=2.31",
   "anthropic>=0.42", "openai>=1.6",
   "fastapi>=0.110", "python-multipart>=0.0.9", "uvicorn>=0.30",
-  "Markdown>=3.6", "bleach>=6.1", "matplotlib>=3.7",
+  "PyJWT[crypto]>=2.10,<3", "Markdown>=3.6", "bleach>=6.1", "matplotlib>=3.7",
   "openpyxl>=3.1", "pandas>=2", "scipy>=1.11",
   "langchain-core==1.2.15", "langgraph==0.6.11",
   "langgraph-checkpoint-sqlite==2.0.11",
@@ -27,12 +27,11 @@ dev = ["pytest>=8", "httpx>=0.27", "build>=1", "ruff>=0.8"]
 [project.scripts]
 mrcat = "mrcat.cli:main"
 mrcat-web = "mrcat.web.server:main"
-mrcat-bench = "mrcat.benchmark:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["mrcat*", "skills*"]
-exclude = ["*.tests", "*.tests.*"]
+exclude = ["*.tests", "*.tests.*", "*.execution", "*.execution.*"]
 namespaces = true
 
 [tool.setuptools.package-data]
@@ -43,8 +42,10 @@ namespaces = true
 testpaths = ["tests"]
 markers = [
   "r: runs real R analysis and needs the documented R packages",
-  "sandbox: needs Linux bubblewrap and unprivileged user namespaces",
 ]
 
 [tool.ruff.lint]
 select = ["E9", "F63", "F7", "F82"]
+
+[tool.setuptools.exclude-package-data]
+"*" = ["**/execution/**", "**/tests/**", "**/BWMR_updated.R", "**/build_contract.json", "**/build_validation.json", "**/Rplots.pdf"]

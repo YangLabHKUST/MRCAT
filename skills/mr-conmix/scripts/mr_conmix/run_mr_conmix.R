@@ -28,8 +28,8 @@ workspace_dir <- Sys.getenv("MRCAT_WORKSPACE_DIR", unset = "")
 if (!nzchar(workspace_dir)) {
   workspace_dir <- normalizePath(file.path(script_dir, "..", "..", "..", ".."), winslash = "/", mustWork = TRUE)
 }
-source(file.path(workspace_dir, "mrcat", "tool", "mr", "mr_instrument_selection.R"))
-source(file.path(workspace_dir, "mrcat", "tool", "mr", "mr_input_scale.R"))
+source(file.path(workspace_dir, "mrcat", "tool", "MRTool", "mr_instrument_selection.R"))
+source(file.path(workspace_dir, "mrcat", "tool", "MRTool", "mr_input_scale.R"))
 
 num_or_null <- function(x) {
   value <- suppressWarnings(as.numeric(x)[1])

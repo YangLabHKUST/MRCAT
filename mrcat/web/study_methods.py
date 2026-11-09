@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
+from typing import Any
 
-from mrcat.skills import SkillRegistry
+from mrcat.tool.skill_registry import SkillRegistry
 
 
 # These are the MR endpoints that can consume the prepared local GWAS workflow.
@@ -87,6 +89,72 @@ STUDY_METHOD_PURPOSES = {
         "genetic sharing between the exposure and outcome."
     ),
 }
+
+LEGACY_STUDY_METHOD_ALIASES = {
+    "primary": "mr-primary",
+    "mr_primary": "mr-primary",
+    "bwmr": "mr-bwmr",
+    "mr_bwmr": "mr-bwmr",
+    "mrapss": "mr-apss",
+    "mr_apss": "mr-apss",
+    "divw": "mr-divw",
+    "mr_divw": "mr-divw",
+    "raps": "mr-raps",
+    "mr_raps": "mr-raps",
+    "mrmix": "mr-mrmix",
+    "mr_mrmix": "mr-mrmix",
+    "presso": "mr-presso",
+    "mr_presso": "mr-presso",
+    "cml": "mr-cml-ma",
+    "cml_ma": "mr-cml-ma",
+    "mr_cml_ma": "mr-cml-ma",
+    "conmix": "mr-conmix",
+    "mr_conmix": "mr-conmix",
+    "lasso": "mr-lasso",
+    "mr_lasso": "mr-lasso",
+    "robust": "mr-robust",
+    "mr_robust": "mr-robust",
+    "cause": "mr-cause",
+    "mr_cause": "mr-cause",
+}
+
+
+def canonical_study_method(value: Any) -> str | None:
+    normalized = str(value or "").strip().lower().replace("-", "_")
+    if not normalized:
+        return None
+    candidate = LEGACY_STUDY_METHOD_ALIASES.get(normalized, normalized.replace("_", "-"))
+    return candidate if candidate in STUDY_METHOD_IDS else None
+
+
+def normalize_study_methods(value: Any) -> list[str]:
+    if isinstance(value, str):
+        raw_text = value.strip()
+        if not raw_text:
+            raw_values: list[Any] = []
+        else:
+            try:
+                parsed = json.loads(raw_text)
+            except json.JSONDecodeError:
+                raw_values = raw_text.split(",")
+            else:
+                raw_values = parsed if isinstance(parsed, list) else [parsed]
+    elif isinstance(value, (list, tuple, set)):
+        raw_values = list(value)
+    else:
+        raw_values = []
+
+    methods: list[str] = []
+    for item in raw_values:
+        method = canonical_study_method(item)
+        if method is None:
+            raise ValueError(f"unsupported uploaded-data MR method: {item}")
+        if method not in methods:
+            methods.append(method)
+    if not methods:
+        raise ValueError("at least one uploaded-data MR method is required")
+    return methods
+
 
 def study_method_catalog(skills_dir: Path) -> list[dict[str, str]]:
     registry = SkillRegistry(Path(skills_dir))

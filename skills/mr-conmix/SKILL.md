@@ -72,10 +72,23 @@ On success, `result["outputs"]["mr_conmix_result"]` holds the data described bel
 The payload contains `methods`, `diagnostics`, `interpretation`, `plot_manifest` and `result_record_path`. Reuse the inner result record for downstream comparison; inspect effective threshold, selected SNP count, scale and warnings. Plot paths are listed in the manifest; do not guess filenames.
 
 ## Method Interpretation
+
 Explain findings in the user's language. Describe the fitted input representation and supported units once in the final report; missing source units alone do not require extra analysis.
 
-- **Use when:** many IVs may be invalid but valid IVs are expected to form the largest cluster of similar ratio estimates. The contamination-mixture likelihood can also reveal more than one plausible mechanism.
-- **Interpret:** inspect the profile likelihood and report every returned confidence interval. A multimodal profile or disjoint intervals is biological/statistical ambiguity to report, not a reason to present only the point estimate.
-- **Interpretation guardrail:** a single dominant mode is easier to interpret than multiple separated modes, but neither pattern supplies a known biological answer. Report every supported mode and its uncertainty.
-- **Recommendation:** prefer it when conventional estimates are heterogeneous and you want to test for distinct ratio clusters. Pair it with CAUSE when correlated pleiotropy is a concern.
+### Key assumptions
+
+The contamination-mixture model relies on the largest compatible ratio cluster representing valid instruments, with invalid ratios represented by its contamination model. Identification and uncertainty depend on that cluster structure and the specified invalid-effect distribution.
+
+### Relevant evidence
+
+Read the actual profile likelihood, fitted point estimate, all returned confidence intervals, instrument set and warnings. A single convenient interval cannot replace disjoint intervals or supported modes.
+
+### Interpretation
+
+A dominant profile mode supports a conditional cluster-based estimate; separated modes indicate multiple statistically plausible relations. Compare with other completed methods and scales without treating each cluster as a known biological mechanism.
+
+### Limits
+
+The largest cluster is not proven valid. Multimodality does not establish distinct causal pathways, and this fit does not generally resolve correlated pleiotropy or sample structure. Preserve all supported intervals rather than selecting by significance.
+
 - **Original paper:** [Burgess et al. 2020](https://doi.org/10.1038/s41467-019-14156-4).

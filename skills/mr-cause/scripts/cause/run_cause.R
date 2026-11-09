@@ -28,9 +28,9 @@ script_dir <- if (length(script_file) > 0) {
   getwd()
 }
 workspace_dir <- normalizePath(file.path(script_dir, "..", "..", "..", ".."), mustWork = TRUE)
-source(file.path(workspace_dir, "mrcat", "tool", "mr", "mr_input_scale.R"))
-source(file.path(workspace_dir, "mrcat", "tool", "mr", "gwas_statistics.R"))
-source(file.path(workspace_dir, "mrcat", "tool", "mr", "ld_clumping.R"))
+source(file.path(workspace_dir, "mrcat", "tool", "MRTool", "mr_input_scale.R"))
+source(file.path(workspace_dir, "mrcat", "tool", "MRTool", "gwas_statistics.R"))
+source(file.path(workspace_dir, "mrcat", "tool", "MRTool", "ld_clumping.R"))
 input_scale <- mr_input_scale(payload$input_scale)
 skill_root <- normalizePath(file.path(script_dir, "..", ".."), winslash = "/", mustWork = TRUE)
 plot_explanation_path <- function(plot_id) {
@@ -328,10 +328,7 @@ extract_cause_estimate <- function(cause_fit, threshold, nsnp) {
   bounds <- sort(c(lower, upper))
   lower <- bounds[[1]]
   upper <- bounds[[2]]
-  se <- (upper - lower) / (2 * 1.96)
-  if (!is.finite(se) || se <= 0) {
-    stop("CAUSE causal posterior credible interval produced an invalid compatibility standard error.")
-  }
+  if (lower >= upper) stop("CAUSE causal posterior credible interval has invalid bounds.")
   if (is.null(delta_elpd) || is.null(delta_elpd_se) || delta_elpd_se <= 0) {
     stop("CAUSE ELPD comparison returned invalid delta_elpd or se_delta_elpd values.")
   }
@@ -341,7 +338,7 @@ extract_cause_estimate <- function(cause_fit, threshold, nsnp) {
     Threshold = threshold,
     nsnp = as.integer(nsnp),
     "beta.hat" = beta_hat,
-    se = num_or_null(se),
+    se = NULL,
     pval = pval,
     ci = ci_from_bounds(lower, upper),
     delta_elpd = delta_elpd,
@@ -511,7 +508,7 @@ cause_fit <- cause::cause(
   force = force_nonconverged_params
 )
 row <- extract_cause_estimate(cause_fit, pval_thresh, nsnp)
-log_step("Completed method: CAUSE; beta=", row[["beta.hat"]], "; se=", row$se, "; pval=", row$pval, "; delta_elpd=", row$delta_elpd, "; delta_elpd_se=", row$delta_elpd_se, ".")
+log_step("Completed method: CAUSE; beta=", row[["beta.hat"]], "; sampling SE unavailable; pval=", row$pval, "; delta_elpd=", row$delta_elpd, "; delta_elpd_se=", row$delta_elpd_se, ".")
 log_step("CAUSE result JSON: ", jsonlite::toJSON(row, auto_unbox = TRUE, null = "null", digits = NA))
 
 official_data_plots <- plot(

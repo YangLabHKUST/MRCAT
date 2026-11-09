@@ -12,7 +12,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any, TextIO
 
-from mrcat.tool.mr.input_scale import input_scale_issue
+from mrcat.tool.MRTool.input_scale import input_scale_issue
 
 
 PALETTE = [

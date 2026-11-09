@@ -65,7 +65,12 @@ class SessionView:
                 writes = self.conn.execute('SELECT MAX(rowid) FROM writes').fetchone()[0]
                 key = (identity, latest, writes)
         else:
-            raise FileNotFoundError(f"Session checkpoint is missing: {path}")
+            # Frozen legacy sessions are still inspectable; never persist here.
+            path = store.directory(self.sid) / 'session.json'
+            stat = path.stat()
+            version = (stat.st_ino, stat.st_mtime_ns, stat.st_size)
+            changed = self.version != version or self.state is None
+            key = ('legacy', version)
         if changed:
             if self.state is None or key != self.checkpoint_key:
                 self.state = self.service.reconcile(store.load(self.sid))

@@ -68,10 +68,23 @@ On success, `result["outputs"]["mr_divw_result"]` holds the data described below
 The payload contains `methods`, `diagnostics`, `interpretation`, `plot_manifest` and `result_record_path`. Reuse the inner result record for downstream comparison; inspect effective threshold, selected SNP count, scale and warnings. Plot paths are listed in the manifest; do not guess filenames.
 
 ## Method Interpretation
+
 Explain findings in the user's language. Describe the fitted input representation and supported units once in the final report; missing source units alone do not require extra analysis.
 
-- **Use when:** many independent IVs are weak or selected using the same noisy exposure associations. dIVW debiases IVW for weak instruments and selection; it is not designed to resolve directional or correlated pleiotropy.
-- **Interpret:** if dIVW differs materially from IVW, describe the ordinary IVW result as potentially weak-IV biased rather than choosing the more significant estimate. Compare dIVW with RAPS, and add a pleiotropy-focused sensitivity analysis when needed.
-- **Interpretation guardrail:** a material dIVW-IVW difference is evidence of possible weak-instrument attenuation, not a reason to prefer whichever estimate is larger or more significant.
-- **Recommendation:** it is a weak-IV robustness method, not a universal primary method; use it alongside methods that address pleiotropy.
+### Key assumptions
+
+dIVW debiases IVW for noisy SNP-exposure associations under its many-weak-instrument framework. It requires adequate aggregate instrument strength, independent-IV/two-sample conditions and valid IVs or the method's balanced-pleiotropy conditions; directional or correlated pleiotropy is not corrected. Selection-bias protection depends on the selection design and must not be assumed when selection and estimation reuse noisy exposure associations.
+
+### Relevant evidence
+
+Read the actual selection design, strength diagnostics, instrument counts, estimates, uncertainty and warnings. Do not infer an independent selection GWAS or adequate aggregate strength from a relaxed P threshold alone.
+
+### Interpretation
+
+Compare with IVW using comparable scales and instrument sets. A difference is compatible with weak-IV sensitivity, but is not proof of attenuation or permission to prefer the larger estimate. Preserve uncertainty in the debiased fit.
+
+### Limits
+
+A finite or significant result does not verify the selection or pleiotropy assumptions. Do not describe dIVW as a universal correction for invalid IVs, winner's curse or population structure.
+
 - **Original paper:** [Ye et al. 2021](https://doi.org/10.1214/20-AOS2027).

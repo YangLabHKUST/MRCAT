@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
   try {
     const page = await browser.newPage({viewport:{width:1440,height:1000}});
     const errors=[]; page.on('pageerror', e=>errors.push(e.message));
-    const sid=process.env.MRCAT_SEARCH_SESSION || 'session_cd21481727524aaa';
+    const sid=process.env.MRCAT_SEARCH_SESSION || 'bridge_cd21481727524aaa';
     await page.goto(process.env.MRCAT_TEST_URL || 'http://127.0.0.1:7869/');
     await page.waitForFunction(()=>typeof selectSession==='function' && Boolean(state.snapshot));
     await page.evaluate(async id=>selectSession(id),sid);

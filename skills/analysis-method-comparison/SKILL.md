@@ -67,22 +67,12 @@ Use actual normalized estimates, producer diagnostics and participating skills.
 Interpret only methods present in the evidence, by assumptions and failure modes,
 not by counting significant p-values. Do not recompute or invent missing evidence.
 
-| Participating method | What to assess and what it cannot establish |
-| --- | --- |
-| IVW | Reference under valid IVs/balanced pleiotropy; heterogeneity, directional pleiotropy or influential variants weaken an IVW-only conclusion. |
-| MR-Egger | Directional pleiotropy under InSIDE, often imprecise; a discrepant slope/non-null intercept weakens IVW, and a null intercept does not prove no pleiotropy. |
-| Weighted median | Requires at least half the IV weight to be valid; agreement is robustness, not independent replication. |
-| Weighted mode | Requires the largest ratio cluster to be valid; disagreement is cluster sensitivity, not automatic superiority. |
-| mr-divw | Weak-IV and selection bias; differences from IVW suggest possible attenuation, not permission to choose the larger/more significant effect. |
-| mr-raps | Weak/moderate IVs, balanced pleiotropy and some outlier resistance; threshold stability helps but does not exclude directional/correlated pleiotropy. |
-| mr-bwmr | Exposure uncertainty, small balanced pleiotropy and occasional outliers; does not resolve overlap, population mismatch, reverse causation, colocalization failure or systematic directional pleiotropy. |
-| mr-presso | Global outlier distortion and raw/corrected estimates; correction is sensitivity evidence, not biological proof. |
-| mr-robust / mr-lasso | Residual downweighting / sparse pleiotropic-effect penalization; changed estimates show variant dependence, not proven invalid SNPs. |
-| mr-cml-ma | Invalid-IV configurations and model averaging; model-based classifications are not biological proof. |
-| mr-mrmix | Mixture-component stability; does not exclude weak-IV or correlated-pleiotropy problems. |
-| mr-conmix | Largest valid ratio cluster; retain all profile modes/disjoint intervals instead of choosing a single convenient effect. |
-| mr-cause | Genome-wide causal versus sharing comparison; its p-value is not a Wald test. A sharing preference challenges a simple causal claim. |
-| mr-apss | Polygenicity, pleiotropy, population/relatedness/overlap background via C/Omega; IVstrength is total modeled signal, not a per-SNP F statistic. Discordance may reflect selection/background correction rather than an error. |
+Use each participating method's own `Method Interpretation` for its identifying
+assumptions, relevant evidence and limits. Connect those conditions to the actual
+run before judging support. A diagnostic affecting IVW does not automatically
+invalidate a method designed to accommodate that violation. If method guidance
+or an assessment is absent, disclose the material gap rather than inventing a
+validity verdict. Keep method-specific assumptions in their owning Skills.
 
 Start with the reference direction, interval, instrument set and diagnostics.
 Explain which observed threat each additional method addresses. Compare actual

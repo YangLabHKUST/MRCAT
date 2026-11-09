@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from mrcat.tool.mr.input_scale import input_scale_issue
+from mrcat.tool.MRTool.input_scale import input_scale_issue
 
 import argparse
 import csv
@@ -74,6 +74,8 @@ def _load_result_record(
     methods = payload.get("methods")
     if not isinstance(methods, list) or not methods:
         return None, f"result record has no methods: {path_text}"
+    if any(isinstance(row, dict) and _compact_text(row.get("method")).casefold() == "cause" for row in methods):
+        return None, "CAUSE posterior intervals do not supply sampling SEs for delta-method mediation"
     return payload, None
 
 
@@ -122,6 +124,7 @@ def _method_index(record: dict[str, Any]) -> dict[str, dict[str, Any]]:
             "beta": beta,
             "input_scale": record.get("input_scale") or "unknown",
             "se": _float(raw_row.get("se")),
+            "ci": raw_row.get("ci") if isinstance(raw_row.get("ci"), dict) else {"level": None, "ranges": []},
             "nsnp": raw_row.get("nsnp"),
             "source_row": dict(raw_row),
         }
@@ -210,10 +213,13 @@ def _path_row(
         "input_scale": total["input_scale"],
         "beta_x_to_m": beta_x_to_m,
         "se_x_to_m": se_x_to_m,
+        "x_to_m_ci": x_to_m["ci"],
         "beta_m_to_y": beta_m_to_y,
         "se_m_to_y": se_m_to_y,
+        "m_to_y_ci": m_to_y["ci"],
         "total_effect": beta_total,
         "total_effect_se": total_se,
+        "total_effect_ci": total["ci"],
         "indirect_effect": indirect,
         "indirect_se": indirect_se,
         "indirect_pval": _normal_pvalue(indirect, indirect_se),
@@ -238,15 +244,20 @@ def _write_table(rows: list[dict[str, Any]], path: Path) -> None:
         "input_scale",
         "beta_x_to_m",
         "se_x_to_m",
+        "x_to_m_ci",
         "beta_m_to_y",
         "se_m_to_y",
+        "m_to_y_ci",
         "total_effect",
         "total_effect_se",
+        "total_effect_ci",
         "indirect_effect",
         "indirect_se",
         "indirect_pval",
+        "indirect_ci",
         "mediation_proportion",
         "proportion_se",
+        "proportion_ci",
         "nsnp_x_to_m",
         "nsnp_m_to_y",
         "nsnp_total",
@@ -259,7 +270,10 @@ def _write_table(rows: list[dict[str, Any]], path: Path) -> None:
             extrasaction="ignore",
         )
         writer.writeheader()
-        writer.writerows(rows)
+        writer.writerows(
+            {key: json.dumps(value) if isinstance(value, dict) else value for key, value in row.items()}
+            for row in rows
+        )
 
 
 def _plot_interval(
@@ -332,15 +346,19 @@ def _format_estimate(
         return "NA"
     scale = 100.0 if percent else 1.0
     estimate_text = _format_number(estimate * scale)
-    bounds = _interval_bounds(interval)
     suffix = "%" if percent else ""
-    if bounds is None:
+    ranges = [
+        (_float(item.get("lower")), _float(item.get("upper")))
+        for item in interval.get("ranges", [])
+    ]
+    ranges = [(lower, upper) for lower, upper in ranges if lower is not None and upper is not None]
+    if not ranges:
         return f"{estimate_text}{suffix}"
-    lower, upper = bounds
-    return (
-        f"{estimate_text}{suffix} "
+    intervals = " ∪ ".join(
         f"({_format_number(lower * scale)}, {_format_number(upper * scale)})"
+        for lower, upper in ranges
     )
+    return f"{estimate_text}{suffix} {intervals}"
 
 
 def _filename_slug(value: str) -> str:
@@ -475,10 +493,7 @@ def _generate_forest_plot(
         _plot_interval(
             x_to_m_axis,
             estimate=_float(row.get("beta_x_to_m")),
-            interval=_interval(
-                float(row["beta_x_to_m"]),
-                _float(row.get("se_x_to_m")),
-            ),
+            interval=row["x_to_m_ci"],
             y_value=y_value,
             color=color,
             marker="o",
@@ -486,10 +501,7 @@ def _generate_forest_plot(
         _plot_interval(
             m_to_y_axis,
             estimate=_float(row.get("beta_m_to_y")),
-            interval=_interval(
-                float(row["beta_m_to_y"]),
-                _float(row.get("se_m_to_y")),
-            ),
+            interval=row["m_to_y_ci"],
             y_value=y_value,
             color=color,
             marker="o",
@@ -499,10 +511,7 @@ def _generate_forest_plot(
             y_value,
             _format_estimate(
                 _float(row.get("beta_x_to_m")),
-                _interval(
-                    float(row["beta_x_to_m"]),
-                    _float(row.get("se_x_to_m")),
-                ),
+                row["x_to_m_ci"],
             ),
             transform=x_to_m_text_axis.get_yaxis_transform(),
             ha="left",
@@ -516,10 +525,7 @@ def _generate_forest_plot(
             y_value,
             _format_estimate(
                 _float(row.get("beta_m_to_y")),
-                _interval(
-                    float(row["beta_m_to_y"]),
-                    _float(row.get("se_m_to_y")),
-                ),
+                row["m_to_y_ci"],
             ),
             transform=m_to_y_text_axis.get_yaxis_transform(),
             ha="left",
@@ -600,7 +606,7 @@ def _generate_forest_plot(
         axis.set_ylim(y_min, y_max)
 
     x_to_m_text_axis.set_title(
-        f"Exposure →\n{mediator}\nβ (95% CI)",
+        f"Exposure →\n{mediator}\nβ (reported CI)",
         loc="left",
         fontsize=13,
         fontweight="bold",
@@ -613,7 +619,7 @@ def _generate_forest_plot(
         pad=27,
     )
     m_to_y_text_axis.set_title(
-        f"{mediator}\n→ outcome\nβ (95% CI)",
+        f"{mediator}\n→ outcome\nβ (reported CI)",
         loc="left",
         fontsize=13,
         fontweight="bold",

@@ -119,8 +119,11 @@ run_steiger <- function(selected, metadata, filter_requested, dat, execution_dir
       if (is.character(fits)) {
         filtering$reason <- fits
       } else {
-        fits$lo_ci <- fits$b - stats::qnorm(0.975) * fits$se
-        fits$up_ci <- fits$b + stats::qnorm(0.975) * fits$se
+        bounds <- t(vapply(seq_len(nrow(fits)), function(i) {
+          mr_ci_bounds(mr_primary_ci(fits$b[i], fits$se[i], fits$method[i], fits$nsnp[i]))
+        }, numeric(2)))
+        fits$lo_ci <- bounds[, "lower"]
+        fits$up_ci <- bounds[, "upper"]
         reports$steiger_filtered_mr <- save_table(fits, "filtered_mr")
         filtering$estimates_path <- reports$steiger_filtered_mr
         filtering$estimates <- lapply(seq_len(nrow(fits)), function(i) as.list(fits[i, ]))

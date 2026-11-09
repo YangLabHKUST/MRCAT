@@ -445,3 +445,4 @@ def _all_sources_failed(reports: List[Dict[str, Any]]) -> bool:
     if not statuses:
         return False
     return all(status not in {"ok", "empty"} for status in statuses)
+

@@ -277,11 +277,7 @@ def test_guide_and_evaluation_do_not_replan_by_themselves(tmp_path):
     assert "loaded_skills" not in context
 
 
-@pytest.mark.parametrize("language,code,expected", [
-    ("python", "print(7)", "7"),
-    ("bash", "printf shell-ok", "shell-ok"),
-    pytest.param("r", "cat(6*7)", "42", marks=pytest.mark.r),
-])
+@pytest.mark.parametrize("language,code,expected",[("python","print(7)","7"),("bash","printf shell-ok","shell-ok"),pytest.param("r","cat(6*7)","42",marks=pytest.mark.r)])
 def test_languages(tmp_path,language,code,expected):
     result = CodeExecutor(ROOT,tmp_path).execute(code,language,"cell")
     assert result["returncode"] == 0, result
@@ -400,6 +396,30 @@ def test_role_context_uses_summaries_not_other_agents_code(tmp_path):
     text = json.dumps(context)
     assert 'PRIVATE_SEARCH_CODE' not in text and 'HUGE_SEARCH_OUTPUT' not in text
     assert 'workspace/study.json' in text
+
+
+def test_migrate_preserves_prior_files_and_has_no_invented_scientific_facts(tmp_path):
+    from mrcat.migrate import upgrade
+    from mrcat.store import write_json
+    store,sid = create(tmp_path)
+    directory = store.directory(sid)
+    (directory/'workspace/partial.txt').write_text('partial result')
+    old = dict(session_id=sid, question='Hello', provider='openai', status='stopped',
+               created_at='old', updated_at='old', plan='Inspect BMI data.',
+               messages=[dict(role='user',content='Analyze BMI')],
+               loaded_skills={'mr-bwmr':'obsolete full guide'}, study_setup={}, job=None,
+               events=[dict(type='code_execution',content='',details={'status':'cancelled','stdout_path':'executions/a/stdout.log'})])
+    write_json(directory/'session.json',old)
+    (directory/'graph.sqlite').unlink()
+    assert upgrade(store,sid)
+    state = store.load(sid)
+    assert state['active_task']['task_id']=='task1' and state['active_task']['status']=='paused'
+    assert state['active_task']['request']=='Analyze BMI'
+    assert 'inspect saved logs' in state['active_task']['memory']
+    assert state['loaded_skills']==['mr-bwmr']
+    assert json.loads((directory/'session.before_roles.json').read_text())==old
+    assert (directory/'workspace/partial.txt').read_text()=='partial result'
+    assert not upgrade(store,sid)
 
 
 def test_memory_service_failure_does_not_discard_final_answer(tmp_path):

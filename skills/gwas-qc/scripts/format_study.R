@@ -12,7 +12,7 @@ suppressPackageStartupMessages({
 script_file <- sub("^--file=", "", grep("^--file=", commandArgs(FALSE), value = TRUE)[[1]])
 script_dir <- dirname(normalizePath(script_file))
 workspace_dir <- normalizePath(file.path(script_dir, "..", "..", ".."))
-source(file.path(workspace_dir, "mrcat", "tool", "mr", "gwas_statistics.R"))
+source(file.path(workspace_dir, "mrcat", "tool", "MRTool", "gwas_statistics.R"))
 source(file.path(script_dir, "format_data.R"))
 
 input_json <- args[[1]]

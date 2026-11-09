@@ -64,3 +64,4 @@ compatibility, allele orientation or readiness for causal interpretation.
 On success, `result["outputs"]["gwas_download_result"]` holds the data described below.
 
 `downloaded_study` holds `raw_path`, file size, labels, source/ID, ancestry, sample-size facts and `study_metadata`. Pass this entire object to QC. Keep cache-hit metadata and GWAS Catalog file notes; a downloaded file alone is not analysis-ready.
+

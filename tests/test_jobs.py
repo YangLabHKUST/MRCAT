@@ -64,7 +64,9 @@ def gateway(monkeypatch):
             self.send_response(200);self.send_header('Content-Type','application/json');self.send_header('Content-Length',str(len(payload)));self.end_headers();self.wfile.write(payload)
     server=ThreadingHTTPServer(('127.0.0.1',0),Handler)
     thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
-    for key,value in {'LLM_BACKEND':'http','OPENAI_API_KEY':'local-test-not-a-secret','OPENAI_BASE_URL':f'http://127.0.0.1:{server.server_port}/v1','OPENAI_TIMEOUT_SEC':'5','OPENAI_RETRY_COUNT':'1','MRCAT_MAX_ROUNDS':'5'}.items():monkeypatch.setenv(key,value)
+    for key,value in {'LLM_BACKEND':'http','OPENAI_API_KEY':'local-test-not-a-secret','OPENAI_BASE_URL':f'http://127.0.0.1:{server.server_port}/v1','OPENAI_TIMEOUT_SEC':'5','OPENAI_RETRY_COUNT':'1','MRCAT_MAX_ROUNDS':'5',
+                      'MRCAT_CONTEXT_TOKENS':'131072','MRCAT_MODEL_CONTEXT_TOKENS':'{}',
+                      'MRCAT_MAX_OUTPUT_TOKENS':'8192','MRCAT_MAX_RETRY_OUTPUT_TOKENS':'16384'}.items():monkeypatch.setenv(key,value)
     yield
     server.shutdown();thread.join()
 
@@ -89,13 +91,13 @@ def test_real_worker_restart_and_cancel(tmp_path,gateway):
     # A new service instance must restore the same durable conversation.
     other=TestClient(create_app(repo_root=ROOT,artifact_dir=tmp_path))
     assert other.get('/api/sessions/'+sid).json()['mr']['events']==done['mr']['events']
-    assert other.post(f'/api/sessions/{sid}/reply',json={'reply':'slow task'}).status_code==200
+    assert other.post(f'/api/sessions/{sid}/mr/reply',json={'reply':'slow task'}).status_code==200
     wait(other,sid,lambda s:any(e['type']=='code_execution' and 'started' in e['details'].get('stdout','') for e in s['mr']['events']))
-    assert other.post(f'/api/sessions/{sid}/reply',json={'reply':'conflict'}).status_code==409
+    assert other.post(f'/api/sessions/{sid}/mr/reply',json={'reply':'conflict'}).status_code==409
     assert other.post(f'/api/sessions/{sid}/stop').status_code==200
     stopped=wait(other,sid,lambda s:s['state']['status']=='stopped' and s['active_job'] is None)
     assert stopped['latest_job']['status']=='stopped'
-    assert other.post(f'/api/sessions/{sid}/reply',json={'reply':'continue normally'}).status_code==200
+    assert other.post(f'/api/sessions/{sid}/mr/reply',json={'reply':'continue normally'}).status_code==200
     resumed=wait(other,sid,lambda s:s['state']['status']=='completed')
     assert any(e['type']=='interrupted' for e in resumed['mr']['events'])
     assert len([e for e in resumed['mr']['events'] if e['type']=='plan_updated'])==0
@@ -118,13 +120,13 @@ def test_mr_worker_plan_confirmation_stop_and_same_task_resume(tmp_path,gateway)
     proposed=wait(client,sid,lambda s:s['state']['status']=='waiting_user' and not s['active_job'])
     assert proposed['mr']['state']['active_task'] is None
     assert not any(e['type']=='code_execution' for e in proposed['mr']['events'])
-    assert client.post(f'/api/sessions/{sid}/reply',json={'reply':'confirm slow'}).status_code==200
+    assert client.post(f'/api/sessions/{sid}/mr/reply',json={'reply':'confirm slow'}).status_code==200
     running=wait(client,sid,lambda s:any(e['type']=='code_execution' and 'started' in e['details'].get('stdout','') for e in s['mr']['events']))
     assert running['mr']['state']['active_task']['task_id']=='task1'
     client.post(f'/api/sessions/{sid}/stop')
     stopped=wait(client,sid,lambda s:s['state']['status']=='stopped' and not s['active_job'])
     assert stopped['mr']['state']['active_task']['status']=='paused'
-    client.post(f'/api/sessions/{sid}/reply',json={'reply':'continue normally'})
+    client.post(f'/api/sessions/{sid}/mr/reply',json={'reply':'continue normally'})
     done=wait(client,sid,lambda s:s['state']['status']=='completed' and not s['active_job'])
     assert done['mr']['state']['active_task'] is None
     assert done['mr']['state']['task_history'][0]['task_id']=='task1'

@@ -43,7 +43,7 @@ an automated Judge before exporting an accepted report.
 | `mrcat/execution.py` | Child processes, logs, cancellation and execution receipts |
 | `mrcat/store.py`, `checkpoints.py` | Authoritative checkpoint storage |
 | `mrcat/results.py` | Saved result publications and explicit references |
-| `mrcat/tools.py`, `tool/mr/` | Public tool functions and shared MR helpers |
+| `mrcat/tools.py`, `tool/MRTool/` | Public tool functions and shared MR helpers |
 | `mrcat/report/` | Evidence selection, literature, writing, review and export |
 | `mrcat/web/` | HTTP API, session projections and static frontend |
 
@@ -79,8 +79,7 @@ options. Saved evidence supports reporting; an exit code alone does not validate
 causal conclusion.
 
 Ordinary Web and CLI code runs with the launching user's OS permissions. Use the
-localhost default for a personal installation. The benchmark worker additionally
-uses a bubblewrap filesystem boundary, described in [benchmarking](benchmarking.md).
+localhost default for a personal installation. Experiment runners and their optional bubblewrap boundary live in MRCAT-reproduce.
 
 The Web API uses `/api/sessions`, `/api/methods`, and `session_id` consistently.
 Events are delivered as `snapshot` and incremental `events` messages. File access

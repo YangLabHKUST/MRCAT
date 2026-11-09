@@ -79,18 +79,44 @@ On success, `result["outputs"]["mr_presso_result"]` holds the data described bel
 The payload contains `methods`, `diagnostics`, `interpretation`, `plot_manifest` and `result_record_path`. Reuse the inner result record for downstream comparison; inspect effective threshold, selected SNP count, scale and warnings. Plot paths are listed in the manifest; do not guess filenames.
 
 ## Method Interpretation
+
+Raw and outlier-corrected slope confidence intervals use the corresponding
+regression's t distribution. For the single-exposure fit, degrees of freedom
+are K-1, using the instruments actually retained in that fit. The selected
+method row reports that fitted instrument count. Global and distortion tests
+retain their separate Monte Carlo P values.
+
 Explain findings in the user's language. Describe the fitted input representation and supported units once in the final report; missing source units alone do not require extra analysis.
 
-- **Use when:** a small number of horizontally pleiotropic outlier SNPs may
-  distort an IVW-style estimate. MR-PRESSO tests global heterogeneity, detects
-  outliers, and compares raw with outlier-corrected estimates.
-- **Interpret:** report whether the method row is raw or outlier-corrected, then
-  report both estimates when available, the global-test P value, outlier count
-  and identities, and distortion-test P value.
-- **Guardrail:** a significant global test indicates model misfit compatible
-  with horizontal pleiotropy; it does not identify a biological mechanism. A
-  non-significant test does not prove that balanced or correlated pleiotropy is
-  absent, especially with few instruments or too few simulations.
-- **Comparison:** use MR-PRESSO alongside prespecified estimators. Do not select
-  the corrected result post hoc merely because its P value is more favorable.
+### Key assumptions
+
+MR-PRESSO identifies residual outliers relative to an IVW-style relation, relying on a sufficiently large valid-instrument majority and InSIDE for its outlier-correction setting. It targets outlier-driven pleiotropy rather than general correlated or pervasive directional pleiotropy.
+
+### Relevant evidence
+
+Read the global test, outlier-test status and identities/count, raw and corrected estimates with their fitted instrument counts, and distortion test separately. A missing or untriggered test is not a negative result. Preserve simulation resolution and warnings.
+
+### Interpretation
+
+The global test probes residual misfit compatible with horizontal pleiotropy; the distortion test assesses the estimate change after removal. A significant global test does not establish significant distortion. Compare raw/corrected magnitudes and intervals, including a material observed change even if the distortion test is non-significant.
+
+SNP-specific outlier testing requires `OUTLIERtest=TRUE` and the MR-PRESSO
+global P value below `signif_threshold`, not a significant causal-effect P value.
+Report the global P value and outlier-test status together. When `not_tested`
+results from a global P value that does not meet this cutoff, explain:
+"The MR-PRESSO global test was not significant (P=...), so SNP-specific outlier
+testing was not triggered and no outlier-corrected estimate was produced."
+Insert the recorded P value. This is a completed global test, not a failed
+MR-PRESSO run. If another reason is recorded, report that reason instead.
+
+`none` means SNP-specific testing ran without significant outliers;
+`not_tested` does not. A null outlier count is unavailable, not zero. Preserve
+this distinction over generic package warnings such as "No outlier were
+identified", task-memory shorthand, empty SNP lists, or unmarked plots. Do not
+describe an untriggered test as having tested and cleared every SNP.
+
+### Limits
+
+Outliers are not proven biologically pleiotropic, and correction does not verify the remaining IVs or InSIDE. A non-significant global test cannot establish absence of pleiotropy. Do not choose a corrected estimate merely because it is more significant.
+
 - **Original paper:** [Verbanck et al. 2018](https://doi.org/10.1038/s41588-018-0099-7).

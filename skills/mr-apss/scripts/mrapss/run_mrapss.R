@@ -29,7 +29,7 @@ script_dir <- if (length(script_file) > 0) {
 }
 workspace_dir <- normalizePath(file.path(script_dir, "..", "..", "..", ".."), mustWork = TRUE)
 skill_root <- normalizePath(file.path(script_dir, "..", ".."), winslash = "/", mustWork = TRUE)
-source(file.path(workspace_dir, "mrcat", "tool", "mr", "mr_input_scale.R"))
+source(file.path(workspace_dir, "mrcat", "tool", "MRTool", "mr_input_scale.R"))
 plot_explanation_path <- function(plot_id) {
   normalizePath(file.path(skill_root, "plot_explanations", paste0(plot_id, ".md")), winslash = "/", mustWork = TRUE)
 }

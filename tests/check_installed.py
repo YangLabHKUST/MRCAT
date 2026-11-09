@@ -1,5 +1,6 @@
 """Run from outside the checkout after installing the built wheel, without an API key."""
 import importlib
+import importlib.util
 import json
 from pathlib import Path
 import subprocess
@@ -18,14 +19,16 @@ from mrcat.web.server import create_app
 def main():
     root = Path(mrcat.__file__).resolve().parents[1]
     assert root != Path(__file__).resolve().parents[1], "Install the wheel in an independent environment first"
+    for module in ("benchmark", "preflight", "sandbox", "provenance"):
+        assert importlib.util.find_spec(f"mrcat.{module}") is None, module
     registry = SkillRegistry(root / "skills")
     assert len(registry.list_bundles()) == 26
     for skill in registry.list_bundles():
         assert skill.instruction_body
         for script in (skill.skill_dir / "scripts").glob("*.py"):
             importlib.import_module(".".join(script.relative_to(root).with_suffix("").parts))
-    assert (root / "mrcat/tool/mr/mr_input_scale.R").is_file()
-    for command in ("mrcat", "mrcat-web", "mrcat-bench"):
+    assert (root / "mrcat/tool/MRTool/mr_input_scale.R").is_file()
+    for command in ("mrcat", "mrcat-web"):
         process = subprocess.run([str(Path(sys.executable).parent / command), "--help"], capture_output=True, text=True)
         assert process.returncode == 0, process.stderr
     with TemporaryDirectory(prefix="mrcat-installed-") as temporary:

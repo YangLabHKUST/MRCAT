@@ -28,26 +28,17 @@ if (!nzchar(workspace_dir)) {
   workspace_dir <- normalizePath(file.path(script_dir, "..", "..", "..", ".."), winslash = "/", mustWork = TRUE)
 }
 skill_root <- normalizePath(file.path(script_dir, "..", ".."), winslash = "/", mustWork = TRUE)
-source(file.path(workspace_dir, "mrcat", "tool", "mr", "mr_input_scale.R"))
+source(file.path(workspace_dir, "mrcat", "tool", "MRTool", "mr_input_scale.R"))
 plot_explanation_path <- function(plot_id) {
   normalizePath(file.path(skill_root, "plot_explanations", paste0(plot_id, ".md")), winslash = "/", mustWork = TRUE)
 }
-source(file.path(workspace_dir, "mrcat", "tool", "mr", "mr_instrument_selection.R"))
+source(file.path(workspace_dir, "mrcat", "tool", "MRTool", "mr_instrument_selection.R"))
+source(file.path(workspace_dir, "mrcat", "tool", "MRTool", "mr_inference.R"))
 
 num_or_null <- function(x) {
   value <- suppressWarnings(as.numeric(x)[1])
   if (length(value) == 0 || !is.finite(value)) return(NULL)
   value
-}
-
-ci_from_se <- function(beta, se) {
-  beta_value <- num_or_null(beta)
-  se_value <- num_or_null(se)
-  ranges <- list()
-  if (!is.null(beta_value) && !is.null(se_value) && se_value > 0) {
-    ranges <- list(list(lower = beta_value - 1.96 * se_value, upper = beta_value + 1.96 * se_value))
-  }
-  list(level = 0.95, ranges = ranges)
 }
 
 normalize_path <- function(path) normalizePath(path, winslash = "/", mustWork = FALSE)
@@ -154,9 +145,9 @@ save_scatter <- function(selected, rows, path) {
 save_estimates_forest <- function(rows, path) {
   method <- vapply(rows, function(row) as.character(row$method), character(1))
   beta <- vapply(rows, function(row) as.numeric(row[["beta.hat"]]), numeric(1))
-  se <- vapply(rows, function(row) as.numeric(row$se), numeric(1))
-  lower <- beta - 1.96 * se
-  upper <- beta + 1.96 * se
+  bounds <- t(vapply(rows, function(row) mr_ci_bounds(row$ci), numeric(2)))
+  lower <- bounds[, "lower"]
+  upper <- bounds[, "upper"]
   measure <- "Beta"
   null_value <- 0
   plot_data <- data.frame(method = factor(method, levels = rev(method)), estimate = beta, lower = lower, upper = upper)

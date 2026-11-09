@@ -68,9 +68,23 @@ On success, `result["outputs"]["mr_raps_result"]` holds the data described below
 The payload contains `methods`, `diagnostics`, `interpretation`, `plot_manifest` and `result_record_path`. Reuse the inner result record for downstream comparison; inspect effective threshold, selected SNP count, scale and warnings. Plot paths are listed in the manifest; do not guess filenames.
 
 ## Method Interpretation
+
 Explain findings in the user's language. Describe the fitted input representation and supported units once in the final report; missing source units alone do not require extra analysis.
 
-- **Use when:** many independent IVs are weak or moderately associated with the exposure. RAPS corrects weak-IV bias, models idiosyncratic balanced pleiotropy, and uses a robust loss to limit the effect of outliers.
-- **Interpret:** a RAPS result that remains stable as weaker IVs are included is more reassuring than an IVW result that moves sharply. It does not by itself rule out directional or correlated pleiotropy, so compare it with CAUSE, MR-APSS, or another sensitivity method when those are plausible.
-- **Interpretation guardrail:** compare estimates as progressively weaker instruments enter the analysis. Stability is reassuring, while sharp movement indicates weak-instrument or selection sensitivity rather than a known trait-specific answer.
+### Key assumptions
+
+RAPS accounts for exposure-association uncertainty with many weak independent IVs. Its random-effects pleiotropy model is centered and independent of instrument strength; robust loss limits occasional large outliers. Systematic directional or correlated pleiotropy is not generally covered.
+
+### Relevant evidence
+
+Inspect actual strength/selection, fitted estimates and intervals, convergence/warnings, and residual or pleiotropy diagnostics when supplied. Discuss threshold stability only if multiple thresholds were actually fitted; one run cannot establish it.
+
+### Interpretation
+
+Compare RAPS with IVW on comparable instruments and scales. Differences can be compatible with weak-IV sensitivity or residual weighting, but do not identify the cause by themselves. State which observed threat RAPS addresses and what uncertainty remains.
+
+### Limits
+
+Robust fitting or a significant result does not establish the pleiotropy model or exclude overlap/population bias. Do not select the larger or more significant estimate as the answer.
+
 - **Original paper:** [Zhao et al. 2020](https://doi.org/10.1214/19-AOS1866).

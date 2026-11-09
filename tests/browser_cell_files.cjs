@@ -9,11 +9,11 @@ const assert = require('node:assert/strict');
     const page = await browser.newPage({viewport: {width: 1440, height: 1000}});
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
-    await page.goto((process.env.MRCAT_TEST_URL || 'http://127.0.0.1:18789/') + '#' + ids.completed);
+    await page.goto((process.env.MRCAT_TEST_URL || 'http://127.0.0.1:18789/') + '#' + ids.notebook);
     await page.waitForSelector('.codeact-cell');
-    await page.evaluate(async id => selectSession(id), ids.completed);
-    await page.waitForFunction(id => state.snapshot?.session_id === id, ids.completed);
-    await page.waitForSelector('.codeact-cell .notebook-file');
+    await page.evaluate(async id => selectSession(id), ids.notebook);
+    await page.waitForFunction(id => state.snapshot?.session_id === id, ids.notebook);
+    await page.waitForSelector('.codeact-cell .notebook-file', {state: 'attached'});
     const correspondence = () => page.locator('.codeact-cell').evaluateAll(cells => cells.map(cell => ({
       id: cell.dataset.executionId,
       files: [...cell.querySelectorAll('.notebook-file')].map(file => file.dataset.path),
@@ -22,6 +22,7 @@ const assert = require('node:assert/strict');
     assert.deepEqual(original.map(cell => cell.files), [['workspace/summary.csv'], ['workspace/report.md']]);
     assert((await page.locator('#notebook-output > .codeact-artifacts .notebook-file').evaluateAll(files => files.map(file => file.dataset.path))).every(path => path.endsWith('/final_summary.md')));
     const csv = page.locator('.codeact-cell .notebook-file[data-path="workspace/summary.csv"]');
+    await page.locator('.codeact-cell .codeact-artifacts > summary').click();
     await csv.locator('summary').click();
     await csv.locator('.spreadsheet-table').waitFor();
     assert.match(await csv.innerText(), /A\s+2/);

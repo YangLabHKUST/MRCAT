@@ -9,11 +9,12 @@ const assert = require('node:assert/strict');
     const page = await browser.newPage({viewport: {width: 1440, height: 1000}});
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
-    await page.goto((process.env.MRCAT_TEST_URL || 'http://127.0.0.1:18789/') + '#' + ids.completed);
+    await page.goto((process.env.MRCAT_TEST_URL || 'http://127.0.0.1:18789/') + '#' + ids.notebook);
     await page.waitForSelector('.codeact-execution-link');
     const correspondence = () => page.evaluate(() => ({
       conversation: [...document.querySelectorAll('.message-execution')].map(row => ({id: row.dataset.executionId, text: row.querySelector('button').textContent})),
-      cells: [...document.querySelectorAll('.codeact-cell')].map(cell => ({id: cell.dataset.executionId, text: cell.querySelector('strong').textContent})),
+      cells: [...document.querySelectorAll('.codeact-cell')].map(cell => ({id: cell.dataset.executionId,
+        text: `${cell.querySelector('.codeact-cell-meta').textContent} · ${cell.querySelector('.codeact-cell-status').textContent}`})),
     }));
     const actual = await correspondence();
     assert.equal(actual.cells.length, 2);
@@ -82,7 +83,7 @@ const assert = require('node:assert/strict');
     mapped = await correspondence();
     assert.equal(mapped.conversation.length, 3);
     assert.match(mapped.conversation[1].text, /Cell 2 · Completed/);
-    assert.match(mapped.cells[1].text, /Cell 2 · python · Completed/);
+    assert.match(mapped.cells[1].text, /Cell 2 · python.*Completed/);
     assert.equal(await page.locator('.codeact-cell.is-selected').getAttribute('data-execution-id'), 'attempt-a');
     if (process.env.MRCAT_CELLS_SCREENSHOT) await page.screenshot({path: process.env.MRCAT_CELLS_SCREENSHOT, fullPage: true});
     await page.evaluate(async id => selectSession(id), ids.proposal);

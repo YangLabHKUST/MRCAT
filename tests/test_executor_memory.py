@@ -51,6 +51,18 @@ def test_dedup_keeps_native_pairs_and_latest_full_observation_without_changing_j
     assert entries == original
 
 
+def test_legacy_summary_is_adopted_once_and_new_items_are_isolated():
+    original = dict(entries=[read_entry(1, 'old.py')], step=1, summary_upto=1)
+    task = dict(memory='Old compacted evidence', coding={'old': deepcopy(original)})
+    journal = CodingAgentNodes._journal(task, dict(step_id='old'))
+    assert journal['summary'] == task['memory']
+    assert journal['entries'] == original['entries'] and journal['summary_upto'] == 1
+    task['memory'] = 'Updated MR progress'
+    assert CodingAgentNodes._journal(task, dict(step_id='old'))['summary'] == 'Old compacted evidence'
+    assert CodingAgentNodes._journal(task, dict(step_id='new'))['summary'] == ''
+    assert CodingAgentNodes._journal(dict(memory='Other task'), dict(step_id='old'))['summary'] == ''
+
+
 def test_summary_claim_cannot_replace_latest_actual_run(tmp_path):
     agent, state, journal = seeded_history(tmp_path, count=0)
     journal.update(summary='The computation succeeded.', summary_upto=1, step=1)

@@ -77,11 +77,23 @@ On success, `result["outputs"]["mrapss_result"]` holds the data described below.
 The payload contains `methods`, `diagnostics`, `interpretation`, `plot_manifest` and `result_record_path`. Reuse the inner result record for downstream comparison; inspect `methods[].Threshold` and `diagnostics.selection_bias_threshold` as the fitted correction threshold, not the nominal SNP-selection cutoff. Obtain the nominal cutoff from pair preparation. Check the selected SNP count, scale and warnings. Plot paths are listed in the manifest; do not guess filenames.
 
 ## Method Interpretation
+
 Explain findings in the user's language. Describe the fitted input representation and supported units once in the final report; missing source units alone do not require extra analysis.
 
-- **Use when:** traits are highly polygenic, moderately associated IVs are informative, or population structure, cryptic relatedness, and sample overlap may bias conventional two-sample MR. MR-APSS uses the prepared `C` and `Omega` background parameters to model sample structure and pleiotropy.
-- **Instrument strength:** inclusion of moderately associated or individually weak IVs is an intended feature. The reported `IVstrength` is MR-APSS's total IV signal (`IVsignal.sum`), not a conventional per-SNP F statistic; do not apply the `F > 10` rule or call the fit unreliable from this value alone.
-- **Interpret:** the estimate is conditional on this background model. Report the estimate, confidence interval, p-value, `nsnp`, `pi0`/`nvalid`, and `IVstrength`. Compare it with primary MR; discordance can reflect different instrument selection or correction for weak IVs and sample structure, not necessarily an error in either method.
-- **Threshold sensitivity:** describe a result as threshold-sensitive only when multiple MR-APSS thresholds were actually tested and produced materially different results. With one threshold, state that threshold robustness was not assessed.
-- **Interpretation guardrail:** a result that appears only after loosening the instrument threshold is sensitivity evidence, not automatic confirmation. Report how instrument strength, sample structure, and pleiotropy adjustment change the estimate.
+### Key assumptions
+
+MR-APSS separates foreground instrument effects from a genome-wide background modeling polygenicity, pleiotropy and sample structure. Its inference depends on this model and on appropriate C/Omega estimation, LD/reference compatibility, and the supplied selection-bias correction threshold. Modeling background bias is not proof that all bias has been removed.
+
+### Relevant evidence
+
+Read pair-preparation provenance, C/Omega, actual instrument count, fitted correction threshold, convergence/warnings, pi0/nvalid and IVstrength. IVstrength is total modeled IV signal (IVsignal.sum), not per-SNP F; do not apply F > 10 to it. pi0/nvalid are model-based quantities, not validated biological classifications.
+
+### Interpretation
+
+Report the estimate and uncertainty conditional on the foreground/background model. Moderate or individually weak IVs are intended inputs. When comparing primary MR, account for different instruments and selection thresholds before attributing differences to background correction. Threshold sensitivity requires multiple thresholds actually tested; with a single threshold it was not assessed.
+
+### Limits
+
+A significant estimate does not demonstrate that C/Omega captured all population structure or pleiotropy. An Egger-intercept signal from another fit does not directly test or invalidate the APSS model. Explain the remaining modeling uncertainty; do not automatically prefer the more significant method or treat a relaxed threshold alone as low reliability.
+
 - **Original paper:** [Hu et al. 2022](https://doi.org/10.1073/pnas.2106858119).

@@ -1,4 +1,3 @@
-import sys
 """Check package decisions, bounded P values and both real MR-PRESSO entrypoints."""
 import csv
 import hashlib
@@ -6,16 +5,17 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 
 import pytest
 
-from mrcat import tools
-
 pytestmark = pytest.mark.r
 
+from mrcat import tools
+
 ROOT = Path(__file__).resolve().parents[1]
-RSCRIPT = os.environ.get("RSCRIPT_BIN", str(Path(sys.executable).parent / "Rscript"))
-HELPER = ROOT / "mrcat/tool/mr/mr_presso_results.R"
+RSCRIPT = os.environ.get("RSCRIPT_BIN", str(Path(sys.executable).with_name("Rscript")))
+HELPER = ROOT / "mrcat/tool/MRTool/mr_presso_results.R"
 
 
 def run_r(tmp_path, body):
@@ -150,10 +150,20 @@ def test_public_tools_match_unmodified_package_result(tmp_path, monkeypatch, ent
     fit <- readRDS({json.dumps(raw_path)})
     tests <- fit[["MR-PRESSO results"]]
     indices <- tests[["Distortion Test"]][["Outliers Indices"]]
+    main <- fit[["Main MR results"]]
+    if ({json.dumps(entrypoint)} == "analysis_sensitivity") {{
+      single <- read.delim(file.path(dirname({json.dumps(raw_path)}),"sensitivity_single_snp.tsv"))
+      egger <- single[single$SNP=="All - MR Egger",]
+      stopifnot(nrow(egger)==1,
+                isTRUE(all.equal(egger$lo_ci,egger$b-qt(.975,10)*egger$se)),
+                isTRUE(all.equal(egger$up_ci,egger$b+qt(.975,10)*egger$se)))
+    }}
     result <- list(snps=as.list(paste0("rs", indices)), count=length(indices),
                    global=tests[["Global Test"]]$Pvalue,
                    distortion=tests[["Distortion Test"]]$Pvalue,
-                   beta=fit[["Main MR results"]][["Causal Estimate"]])
+                   beta=main[["Causal Estimate"]],p=main[["P-value"]],
+                   raw_ci=main[["Causal Estimate"]][1]+c(-1,1)*qt(.975,11)*main$Sd[1],
+                   corrected_ci=main[["Causal Estimate"]][2]+c(-1,1)*qt(.975,11-length(indices))*main$Sd[2])
     """)
     assert count == native["count"]
     assert snps == native["snps"]
@@ -163,3 +173,10 @@ def test_public_tools_match_unmodified_package_result(tmp_path, monkeypatch, ent
         else:
             assert actual_p == pytest.approx(float(expected_p), abs=5e-5)
     assert [raw_beta, corrected_beta] == pytest.approx(native["beta"], abs=5e-5)
+    if entrypoint == "mr_presso":
+        for key in ("raw", "corrected"):
+            estimate = actual[f"{key}_estimate"]
+            bounds = estimate["ci"]["ranges"][0]
+            assert [bounds["lower"], bounds["upper"]] == pytest.approx(native[f"{key}_ci"])
+        assert record["methods"][0]["nsnp"] == 12 - count
+        assert record["methods"][0]["pval"] == pytest.approx(native["p"][1])

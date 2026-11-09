@@ -144,7 +144,8 @@ class ScientificReportTests(unittest.TestCase):
             },
         )
 
-        self.assertIn("Missing essential content", prompt["system"])
+        self.assertIn("core reporting content is required before acceptance", prompt["system"])
+        self.assertIn("Do not invent information or require new analyses", prompt["system"])
         self.assertIn("Conclusions inconsistent with results", prompt["system"])
         self.assertIn("Unsupported causal claims", prompt["system"])
         self.assertIn("Do not request revisions for style", prompt["system"])

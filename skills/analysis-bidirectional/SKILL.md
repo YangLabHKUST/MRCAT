@@ -56,6 +56,13 @@ Use actual inner `result_record_path` files from producers. Keep input_scale con
 
 ## Interpretation checks
 
+Each direction requires its own exposure-based instrument selection and
+applicable estimator assumptions. Interpret directional estimates with their
+own uncertainty and diagnostics; a significant forward result and non-significant
+reverse result alone do not establish one-way causation. Direction testing does
+not replace valid instruments or exclude shared pleiotropy.
+
+
 Align exact method names and retain all completed requested endpoints. Consensus
 uses methods with finite p-values in both directions; never use the minimum
 p-value or count methods as independent studies. BH correction is separate for
@@ -69,3 +76,4 @@ truth. Use replication analysis for repeated study combinations of one direction
 On success, `result["outputs"]["mr_bidirectional_result"]` holds the data described below.
 
 Contains `summary_table_path`, `mirrored_forest_plot_paths`, `quadrant_plot_path`, pair summaries, diagnostics, `plot_manifest` and `result_record_path`.
+

@@ -75,11 +75,31 @@ The payload contains `methods`, `diagnostics`, `interpretation`, `plot_manifest`
 `selected_mrdat_path` and `input_scale` are required for sensitivity reuse. Primary plots are scatter and estimates forest; invoke analysis-sensitivity only when those diagnostics are needed.
 
 ## Method Interpretation
-Explain findings in the user's language. Describe the fitted input representation and supported units once in the final report; missing source units alone do not require extra analysis. Present these four estimates as complementary sensitivity analyses rather than four independent confirmations of causality.
 
-- **IVW:** the efficient primary estimate when all IVs are valid, or pleiotropic effects are balanced. Prefer it when heterogeneity and directional-pleiotropy diagnostics are reassuring; otherwise do not rely on it alone.
-- **MR-Egger:** allows directional pleiotropy under the InSIDE assumption, but is less precise. A materially different Egger slope or non-null intercept weakens an IVW-only claim.
-- **Weighted median:** is consistent when at least half of the total IV weight comes from valid instruments. Treat agreement with IVW as assumption-robust support, not as an independent replication.
-- **Weighted mode:** targets the largest cluster of similar SNP ratio estimates under the zero-modal-pleiotropy assumption. A discrepant mode estimate indicates cluster sensitivity that must be reported.
-- **Recommendation:** use IVW as a reference, then emphasize a directionally consistent result that survives a method with a different failure mode. Significant disagreement, heterogeneity, a non-null Egger intercept, or influential SNPs means describe the result as inconclusive rather than causal.
+Confidence intervals use the same reference distribution as each method's
+P value: normal for IVW and weighted median, t with K-2 degrees of freedom for
+MR-Egger, and t with K-1 degrees of freedom for weighted mode, where K is the
+number of fitted instruments. Plots preserve these saved intervals.
+
+Explain findings in the user's language. Describe the fitted input representation and supported units once in the final report; missing source units alone do not require extra analysis.
+
+### Key assumptions
+
+- **IVW:** valid instruments, or balanced pleiotropy uncorrelated with instrument strength; exposure-association measurement error must be sufficiently small for the fitted model.
+- **MR-Egger:** InSIDE (instrument strength independent of direct effects) allows directional pleiotropy. Unadjusted regression also relies on sufficiently small exposure-association measurement error (NOME); ordinary per-SNP F statistics do not establish NOME or InSIDE.
+- **Weighted median:** a majority of the total instrument weight must come from valid IVs, not merely a majority of SNPs.
+- **Weighted mode:** under zero-modal pleiotropy, the largest weighted ratio cluster represents valid IVs; the valid group need not be an absolute majority.
+
+### Relevant evidence
+
+Use the actual selected instruments, strength information, method-specific estimates and intervals, IVW/Egger Q, Egger intercept and influence diagnostics when supplied. These do not directly verify InSIDE, the valid-weight majority or the valid modal cluster. Missing assessments remain unknown.
+
+### Interpretation
+
+Use IVW as a reference and compare magnitude, uncertainty and diagnostic sensitivity across these complementary estimators. A nonzero Egger intercept challenges an IVW-only interpretation but does not itself invalidate the Egger slope: that slope remains conditional on InSIDE and measurement-error assumptions. A null intercept does not prove absence of pleiotropy. Compare slopes and intervals before treating differences as disagreement; a wide interval containing the null is not evidence against a more precise compatible estimate. Median/mode agreement provides conditional robustness, not proof of their validity conditions.
+
+### Limits
+
+Do not turn heterogeneity, an intercept signal or an influential SNP alone into an automatic overall causal or inconclusive verdict. Explain which estimator and part of the claim are affected, then weigh the remaining estimates and uncertainty. The four fits share data and are not independent confirmations. Preserve unresolved assumptions in the final causal interpretation.
+
 - **Original papers:** [IVW, Burgess et al. 2013](https://doi.org/10.1002/gepi.21758); [MR-Egger, Bowden et al. 2015](https://doi.org/10.1093/ije/dyv080); [weighted median, Bowden et al. 2016](https://doi.org/10.1002/gepi.21965); [weighted mode, Hartwig et al. 2017](https://doi.org/10.1093/ije/dyx102).

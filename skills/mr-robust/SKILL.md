@@ -68,10 +68,23 @@ On success, `result["outputs"]["mr_robust_result"]` holds the data described bel
 The payload contains `methods`, `diagnostics`, `interpretation`, `plot_manifest` and `result_record_path`. Reuse the inner result record for downstream comparison; inspect effective threshold, selected SNP count, scale and warnings. Plot paths are listed in the manifest; do not guess filenames.
 
 ## Method Interpretation
+
 Explain findings in the user's language. Describe the fitted input representation and supported units once in the final report; missing source units alone do not require extra analysis.
 
-- **What this implementation is:** a robust IVW regression fitted with `robustbase::lmrob`. It downweights SNPs with large residuals instead of estimating every SNP as a separate pleiotropic effect.
-- **Use when:** a few influential or outlying IVs are plausible and a fast robustness check against IVW is needed. It does not specifically correct weak-IV bias, sample overlap, or correlated directional pleiotropy.
-- **Interpret:** a large difference from IVW means the estimate is sensitive to influential variants; confirm with MR-PRESSO or MR-Lasso. Do not describe robust downweighting as proof that a SNP is invalid.
-- **Interpretation guardrail:** if robust downweighting materially changes the estimate, report sensitivity to influential variants without presuming which direction or null result is correct.
+### Key assumptions
+
+This implementation is robust IVW regression using robustbase::lmrob. It assumes the relation retained after residual downweighting supports a valid-IV or centered-pleiotropy interpretation and that a minority of influential residuals can be limited. It is not a separately validated general causal model.
+
+### Relevant evidence
+
+Use instrument provenance, fitted estimates and uncertainty, residual/weight information, warnings and available influence diagnostics. Do not infer the validity of retained SNPs from numerical convergence or small residuals.
+
+### Interpretation
+
+Compare with IVW on comparable data. A material change shows sensitivity to residual weighting; interpret it with actual leave-one-out or outlier evidence when supplied, without claiming that the cause is known.
+
+### Limits
+
+Downweighting is not proof of invalid SNPs and does not specifically correct weak-IV bias, overlap or correlated/directional pleiotropy. Preserve uncertainty and do not prefer the more significant result.
+
 - **Original method reference:** [Rees et al. 2019](https://doi.org/10.1371/journal.pone.0222362). The local `lmrob` implementation is a robust-IVW realization of this principle, not a separately validated causal model.

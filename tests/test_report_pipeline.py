@@ -128,6 +128,48 @@ def test_failed_judge_resumes_only_judge_without_rewriting_analysis_or_draft(tmp
     assert result['task_history'] == before
 
 
+def test_report_shares_selected_task_memory_without_replacing_results(tmp_path):
+    store, sid = seed(tmp_path)
+    state = store.load(sid)
+    memory = 'The strict threshold retained three instruments; Review relaxed it before the successful fit.'
+    state['task_history'][0]['memory'] = memory
+    unrelated = deepcopy(state['task_history'][0])
+    unrelated.update(task_id='task2', memory='Unrelated investigation context.')
+    for name in ['fit', 'qc']:
+        source = store.directory(sid) / f'results/task1/{name}.json'
+        write_json(store.directory(sid) / f'results/task2/{name}.json', json.loads(source.read_text()))
+    state['task_history'].append(unrelated)
+    store.save(state)
+    before = deepcopy(state['task_history'])
+    model = ReportModel()
+    result = Agent(ROOT, store, model=model).run(sid, 'Write a scientific report')
+    assert result['status'] == 'completed'
+    for role in ['report_writer', 'report_judge']:
+        context = json.loads(next(c['user'] for c in model.calls if c['role'] == role))
+        assert context['Task Memory'] == [dict(task_id='task1', memory=memory)]
+        assert 'task_memories' not in context['Original Analysis Evidence']
+        estimates = context['Original Analysis Evidence']['mr_evidence']['task_results']
+        assert estimates[0]['structured_outputs']['mr_primary_result']['methods'][0]['beta.hat'] == 0.2
+    assert result['task_history'] == before
+
+
+def test_changed_task_memory_restarts_report_instead_of_resuming_stale_judge(tmp_path):
+    model = ReportModel(fail_judge=True)
+    store, sid, _, result = report_run(tmp_path, model)
+    assert result['status'] == 'paused'
+    previous_run = checkpoint(store, sid)['run_id']
+    state = store.load(sid)
+    state['task_history'][0]['memory'] = 'Review adjusted the instrument threshold after insufficient instruments.'
+    store.save(state)
+    model.fail_judge = False
+    result = Agent(ROOT, store, model=model).run(sid, 'Continue report')
+    assert result['status'] == 'completed'
+    assert checkpoint(store, sid)['run_id'] != previous_run
+    assert Counter(c['role'] for c in model.calls)['report_writer'] == 2
+    judge = json.loads([c['user'] for c in model.calls if c['role'] == 'report_judge'][-1])
+    assert judge['Task Memory'][0]['memory'] == state['task_history'][0]['memory']
+
+
 @pytest.mark.parametrize('judgements,status,rewrites', [([2,0],'accepted_after_revision',1),
     ([2,2],'last_valid_draft_retained',1),([4,3,2,1],'needs_review',3)])
 def test_revision_policy_matches_old_report(tmp_path,judgements,status,rewrites):

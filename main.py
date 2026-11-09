@@ -1,4 +1,4 @@
-"""Run the MRCAT CLI from a source checkout."""
+"""Run the installed MRCAT command-line entry point."""
 from mrcat.cli import main
 
 if __name__ == "__main__":

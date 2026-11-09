@@ -32,11 +32,7 @@ function replicationForestInterval(row) {
     replicationForestNumber(item?.lower) !== null && replicationForestNumber(item?.upper) !== null
   ));
   if (interval) return { lower: Number(interval.lower), upper: Number(interval.upper) };
-  const beta = replicationForestNumber(row?.["beta.hat"] ?? row?.beta);
-  const se = replicationForestNumber(row?.se);
-  return beta !== null && se !== null && se >= 0
-    ? { lower: beta - 1.96 * se, upper: beta + 1.96 * se }
-    : null;
+  return null;
 }
 
 function replicationForestDomain(rows) {

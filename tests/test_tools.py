@@ -92,7 +92,7 @@ def test_repeated_calls_preserve_outputs_and_restore_environment(tmp_path, monke
 
 @pytest.mark.r
 def test_instrument_selection_never_relaxes_requested_threshold(tmp_path):
-    script = ROOT / "mrcat/tool/mr/mr_instrument_selection.R"
+    script = ROOT / "mrcat/tool/MRTool/mr_instrument_selection.R"
     code = f'''source({str(script)!r})
 d <- data.frame(SNP=paste0("rs",1:6), pval.exp=c(1e-9,1e-9,rep(1e-6,4)),
                 b.exp=0.1,b.out=0.03,se.exp=0.01,se.out=0.01)

@@ -70,10 +70,23 @@ On success, `result["outputs"]["mr_cml_ma_result"]` holds the data described bel
 The payload contains `methods`, `diagnostics`, `interpretation`, `plot_manifest` and `result_record_path`. Reuse the inner result record for downstream comparison; inspect effective threshold, selected SNP count, scale and warnings. Plot paths are listed in the manifest; do not guess filenames.
 
 ## Method Interpretation
+
 Explain findings in the user's language. Describe the fitted input representation and supported units once in the final report; missing source units alone do not require extra analysis.
 
-- **Use when:** several selected IVs may be invalid. cML-MA uses constrained maximum likelihood and BIC model averaging to estimate an effect while allowing invalid-IV configurations.
-- **Interpret:** the BIC-invalid-IV display is a model-based diagnostic, not proof that a highlighted SNP is biologically pleiotropic. Report the estimate with its uncertainty and whether the conclusion agrees with methods based on different assumptions; do not choose it solely because it finds more significant pairs.
-- **Interpretation guardrail:** significance under an invalid-IV configuration is not sufficient by itself. Compare with methods that use different invalid-IV or pleiotropy assumptions before making a causal claim.
-- **Recommendation:** use it when invalid IVs are credible and there are enough independent instruments; pair it with CAUSE when correlated pleiotropy is plausible.
+### Key assumptions
+
+cML-MA allows invalid-IV configurations, including correlated and uncorrelated pleiotropy, under an identifying plurality of valid instruments and its summary-data likelihood conditions. The valid group must identify the true relation rather than a larger invalid group sharing another ratio. BIC model averaging does not remove that identifying requirement.
+
+### Relevant evidence
+
+Inspect instrument count/strength, fitted estimate and uncertainty, candidate invalid-IV configurations, model weights and numerical warnings when available. BIC-selected invalid-IV labels are model-based, not biological confirmation; do not infer missing model-selection diagnostics.
+
+### Interpretation
+
+Explain whether estimates remain compatible with other completed methods having different validity conditions. Differences can reflect invalid-IV modeling or selection uncertainty, not known biological mechanisms.
+
+### Limits
+
+A significant cML-MA fit does not demonstrate the valid plurality or rule out all correlated pleiotropy. Preserve model/numerical uncertainty and do not choose it solely for stronger significance.
+
 - **Original paper:** [Xue et al. 2021](https://doi.org/10.1016/j.ajhg.2021.05.014).

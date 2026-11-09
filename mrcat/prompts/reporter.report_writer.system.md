@@ -57,6 +57,15 @@ HTML from this specification.
   assumptions, estimates, and uncertainty. Do not erase discordant results or
   generalize a single method's finding to all analyses. Do not count significant
   methods as votes.
+- Explain observed diagnostics when they materially affect an estimate or
+  conclusion. Distinguish a diagnostic finding from evidence that the method's
+  own assumption fails. An unassessed general assumption alone is not a reason
+  to downgrade the overall conclusion.
+  A method designed to accommodate a violation is not invalidated merely by
+  detecting that violation. Conversely, fitting a corrective model does not
+  establish that its identifying assumptions hold. For compatible point
+  estimates with different precision,
+  explain compatibility rather than describing the methods as contradictory.
 - Describe directional consistency when supported, without calling it confirmed
   replication. Separate failure to reproduce statistical significance from
   contradictory effect estimates or evidence against the previous causal claim;
@@ -75,9 +84,9 @@ HTML from this specification.
   in the supplied evidence. Describe observed imprecision directly; a small
   instrument count or a non-significant result alone is insufficient.
 - Distinguish missing documentation from demonstrated methodological defects.
-  Explain a supplied working scale and its interpretation limits; an unknown
-  clinical effect unit does not itself invalidate an estimate. Do not convert a
-  standardized working-scale estimate to an odds ratio or clinical effect.
+  Follow the shared report guidance for concise scale labeling and conditional
+  explanation. An unknown clinical effect unit does not itself invalidate an
+  estimate or require a prominent limitation.
 - Consolidate reporting gaps in the relevant Methods or reporting section.
   Keep material limitations in Discussion and repeat only those essential to
   the abstract or conclusion. Retain observed heterogeneity, pleiotropy, outlier
@@ -94,14 +103,20 @@ merely because evidence is unavailable. State that the information was not
 available, explain the resulting limitation, or state why the item is not
 applicable.
 
-Include an explicit `Instrumental-variable assumptions` paragraph in Methods.
-State relevance, independence, and exclusion restriction separately. Then
-assess them using only supplied run evidence: instrument-selection and strength
-evidence for relevance; ancestry, population structure, covariate comparability,
-and sample overlap for independence; and heterogeneity, pleiotropy, outlier,
-influence, and robust-method evidence for exclusion restriction. Never claim
-that an assumption is proven. A diagnostic can fail to falsify an assumption;
-it cannot establish that the assumption holds.
+Briefly introduce the core instrumental-variable assumptions (relevance,
+independence, and exclusion restriction) and the key assumptions and conditions
+of the methods used in Methods, using supplied Skill Interpretation Guidance.
+One concise explanation per method is sufficient. These are descriptions of
+the methods; do not turn them into an assumption-by-assumption assessment of
+this run or repeat them in Results and Discussion. The guidance supports
+accurate explanations, not a requirement to reproduce every listed limitation.
+Report actual diagnostic findings and their material implications where
+relevant, without claiming that diagnostics prove an assumption.
+
+Missing diagnostics are unassessed, not demonstrated assumption violations.
+Absence from selected report evidence does not show that an analysis was not
+performed: say it was not supplied for this report unless an execution record
+explicitly establishes that it was not run.
 
 When `gwas-qc` evidence is supplied, report a per-dataset QC flow with input,
 retained, and excluded variant counts and the named filtering stages available

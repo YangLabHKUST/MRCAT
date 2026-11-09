@@ -12,7 +12,7 @@ suppressPackageStartupMessages({
 script_file <- sub("^--file=", "", grep("^--file=", commandArgs(FALSE), value = TRUE)[[1]])
 source(file.path(dirname(normalizePath(script_file)), "est_paras.R"))
 workspace_dir <- normalizePath(file.path(dirname(script_file), "..", "..", "..", ".."), mustWork = TRUE)
-source(file.path(workspace_dir, "mrcat", "tool", "mr", "ld_clumping.R"))
+source(file.path(workspace_dir, "mrcat", "tool", "MRTool", "ld_clumping.R"))
 
 payload <- jsonlite::fromJSON(args[[1]], simplifyVector = FALSE)
 output_json <- args[[2]]

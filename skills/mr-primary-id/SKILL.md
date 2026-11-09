@@ -88,11 +88,29 @@ The payload contains `methods`, `diagnostics`, `interpretation`, `plot_manifest`
 `selected_mrdat_path` and `input_scale` are required for sensitivity reuse. Primary plots are scatter and estimates forest; invoke analysis-sensitivity only when those diagnostics are needed.
 
 ## Method Interpretation
-Use the user's language. Describe the fitted input representation and supported units once in the final report; missing source units alone do not require extra analysis. This route fits the same four primary estimators as `mr-primary`; do not present four p-values as four independent causal confirmations.
 
-- **IVW** is the efficient reference under valid IVs or balanced pleiotropy. **MR-Egger** is a low-power directional-pleiotropy sensitivity analysis under InSIDE. **Weighted median** remains consistent if at least half of IV weight is valid. **Weighted mode** relies on the largest ratio-estimate cluster being valid.
-- Agreement across the four estimators supports robustness to different invalid-IV assumptions, but it does not provide a trait-specific expected direction. Material disagreement should be reported as sensitivity-dependent evidence.
-- Recommend a causal interpretation only when estimates with different assumptions agree and harmonization, heterogeneity, Egger-intercept, and leave-one-out diagnostics are reassuring. Otherwise report a sensitivity-dependent association.
+Confidence intervals match the method's P-value distribution: normal for IVW
+and weighted median, t(K-2) for MR-Egger, and t(K-1) for weighted mode, where K
+is the number of fitted instruments. Forest plots use the saved intervals.
+
+Explain findings in the user's language. Describe the fitted input representation and supported units once in the final report; missing source units alone do not require extra analysis.
+
+### Key assumptions
+
+This route fits the same four estimators as mr-primary. IVW requires valid IVs or balanced pleiotropy uncorrelated with instrument strength and sufficiently small exposure measurement error. MR-Egger permits directional pleiotropy under InSIDE and sufficiently small measurement error (NOME). Weighted median requires a majority of total IV weight to be valid; weighted mode requires a valid largest weighted ratio cluster under zero-modal pleiotropy.
+
+### Relevant evidence
+
+Read selected IVs, strength, estimates, intervals and available Q, intercept and influence diagnostics. These do not establish InSIDE, NOME, the valid-weight majority or the modal-cluster condition. Do not invent absent diagnostics or infer them from study IDs.
+
+### Interpretation
+
+A nonzero Egger intercept can challenge IVW without invalidating the Egger slope under its own assumptions. A null intercept does not establish validity. Compare effect magnitudes and intervals, not significance alone; imprecise compatible estimates are not contradictory. Explain which observed diagnostic affects which estimate.
+
+### Limits
+
+These are complementary estimates from shared data, not four independent confirmations. Neither agreement nor any single diagnostic determines the causal verdict. State remaining assumptions and the resulting degree of support without prescribing the expected direction.
+
 - **Original papers:** [IVW, Burgess et al. 2013](https://doi.org/10.1002/gepi.21758); [MR-Egger, Bowden et al. 2015](https://doi.org/10.1093/ije/dyv080); [weighted median, Bowden et al. 2016](https://doi.org/10.1002/gepi.21965); [weighted mode, Hartwig et al. 2017](https://doi.org/10.1093/ije/dyx102).
 
 ## Scale failure recovery
