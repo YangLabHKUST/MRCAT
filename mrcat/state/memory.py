@@ -2,7 +2,7 @@
 import json
 import re
 from uuid import uuid4
-from .actions import parse_action
+from mrcat.runtime.actions import parse_action
 
 MEMORY_LIMIT = 6000
 # Spend context on evidence rather than replayed code and shared guide prose.
@@ -110,7 +110,7 @@ def completed_memory(text, role=None, *, token_limit=None):
     if token_limit is None:
         oversized = len(note) > MEMORY_LIMIT
     else:
-        from .context import tokens
+        from mrcat.model.context import tokens
         oversized = tokens(note) > token_limit
     if not note or oversized:
         raise ValueError("Memory output is empty or exceeds its budget; previous memory retained.")

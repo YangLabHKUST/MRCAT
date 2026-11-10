@@ -2,7 +2,7 @@
 from pathlib import Path
 from time import perf_counter
 
-from ..store import write_json, now
+from mrcat.state.store import write_json, now
 
 
 class ReportFiles:

@@ -12,15 +12,11 @@ For the included read-only browser example, see the
 
 ## Interactive hosted demo
 
-[Open the interactive BMI → T2D demo](https://wiki-northern-diploma-cumulative.trycloudflare.com/)
-without signing in or entering an API key. **This is a temporary preview URL**
-and can change or stop working when its tunnel restarts. The public host supplies
-the credentials, dependencies and inputs; self-hosting requires the setup below.
-
 The guided demo uses the current frontend and real agent workers in one session:
 literature search and online GWAS analysis, supplied local GWAS analysis, then an
-MR-APSS follow-up. Visitors preview each request before sending it and confirm
-the agent's proposed plans. Result tables, code and plots appear as execution
+MR-APSS follow-up. Example questions fill the chat input and can be edited before
+sending. Visitors can also type their own questions, skip suggestions, and reply
+to the agent's proposed plans in their own words. Result tables, code and plots appear as execution
 progresses. The previous recording is not played back as a new computation.
 
 To host it from this source checkout, configure the server's model/search
@@ -34,14 +30,16 @@ python -m mrcat.web.server --auth demo --host 127.0.0.1 --port 7892 \
 ```
 
 The data directory must contain the two files identified in `local_inputs.json`;
-their full SHA-256 checksums are verified at startup. Task 2 copies them into the
-visitor's session and populates the existing Study setup fields. No upload or
-visitor API key is required. All requests use the existing session/reply API.
+their full SHA-256 checksums are verified at startup. Selecting the local suggestion
+adds a removable dataset selection beside the chat input. Sending copies the files
+into the visitor's session and populates the existing Study setup fields. No upload
+or visitor API key is required. Text and selected data use the existing session/reply
+and Study setup APIs, respectively; the user's edited message is preserved.
 
 Optionally set `MRCAT_DEMO_ONLINE_CACHE` to the `cache/gwas-download` directory of
 the previous online BMI/T2D run. The server checks its completion markers and
 copies the pre-QC downloads for `ieu-b-40` and `ebi-a-GCST006867` when Task 1's
-online analysis starts. It supplies an inventory with checksums and study IDs,
+online suggestion is sent with its dataset selection. It supplies an inventory with checksums and study IDs,
 without temporary signed download URLs. The request still requires online
 metadata verification and fresh QC, pair preparation, MR fitting and plotting.
 Cached downloads do not imply that the online and local branches use the same
@@ -49,8 +47,9 @@ studies or should produce identical estimates.
 
 Publish only this dedicated service through the desired tunnel. Signed,
 HTTP-only visitor cookies keep session stores separate and allow continuation
-in the same browser for seven days. The public service accepts only the supplied
-example prompts, confirmation, resume and stop; arbitrary questions, uploads,
+in the same browser for seven days. Suggestions are optional; ordinary typed
+questions and follow-ups are accepted without matching template text or a fixed
+sequence. Dataset selections are limited to the supplied examples; uploads,
 forks and provider changes are unavailable. It admits one running agent turn at
 a time, up to 40 turns per UTC day (`MRCAT_DEMO_DAILY_TURNS`) and 16 user messages
 per visitor session. `MRCAT_DEMO_PROVIDER` defaults to `deepseek`. The server pays
@@ -77,9 +76,7 @@ before comparing numerical results.
 
 Ask:
 
-> Does body mass index causally affect type 2 diabetes? Find and briefly summarize
-> the relevant Mendelian randomization literature, with verifiable references and
-> limitations. Do not run an MR analysis yet.
+> Does BMI causally affect type 2 diabetes? What does the MR literature say?
 
 Read the cited evidence. Literature findings describe previous studies; they are
 not results computed in this session.
@@ -88,12 +85,11 @@ not results computed in this session.
 
 Ask:
 
-> Run a two-sample MR analysis of BMI on type 2 diabetes using suitable online
-> GWAS summary statistics. Identify the studies, ancestry, sample sizes and
-> potential sample overlap. Download the selected studies, perform QC,
-> harmonization and LD clumping, then run IVW, MR-Egger, weighted median and
-> weighted mode. Show the plan before execution and report the effect scale,
-> instrument counts, estimates and uncertainty.
+> Run MR for BMI and type 2 diabetes using online GWAS data. Show the results and plots.
+
+The hosted demo supplies its selected studies and any cached input files through
+Study setup. The planner receives these alongside the short request, verifies the
+studies online and can reuse the downloaded inputs before QC.
 
 Inspect the proposed datasets and plan, then confirm. Keep the selected study IDs,
 source links, selection thresholds and LD reference with your results.
@@ -104,13 +100,11 @@ This is an alternative input route. It is not a compulsory repeat of Task 1.
 Use **Study setup** to attach the exposure and outcome files and identify their
 traits. If entering paths, use paths accessible to the server running MRCAT.
 
-> I have two local GWAS summary-statistic files: EXPOSURE_FILE for BMI and
-> OUTCOME_FILE for type 2 diabetes. Run IVW, MR-Egger, weighted median and weighted
-> mode after QC, harmonization and LD clumping. Show the plan before execution.
-> Preserve the documented study metadata and explain the effect scale.
+> Use these two local GWAS files to run MR for BMI and type 2 diabetes.
 
-Replace `EXPOSURE_FILE` and `OUTCOME_FILE` with the actual inputs and supply their
-verified metadata. The accompanying data inventory records the files used in the
+The hosted demo supplies the two local files automatically. In your own installation,
+attach the files through **Study setup** before sending this request.
+The accompanying data inventory records the files used in the
 saved demonstration. Online and local branches can use different studies;
 estimates from different input pairs should not be treated as duplicate fits.
 
@@ -130,10 +124,7 @@ different set of instruments even with the same nominal clumping settings.
 
 ### Task 3: add MR-APSS in the same conversation
 
-> Now use MR-APSS to analyze the same local BMI and T2D studies. Reuse the suitable
-> QC outputs from Task 2. Prepare the pair for MR-APSS using an exposure P-value
-> threshold of 5e-5, retaining the matching C and Omega estimates and documenting
-> the LD reference and clumping settings. Explain the result and its limitations.
+> Now use MR-APSS on the same local data and compare the results.
 
 Confirm the additional plan. The useful continuity is reuse of study-level QC.
 The prepared instrument set and background parameters must still satisfy

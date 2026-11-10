@@ -1,5 +1,5 @@
 """Report policies and rendering ported from MRCAT; no legacy runtime dependency."""
-from ..diagnostics import redact
+from mrcat.runtime.diagnostics import redact
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path

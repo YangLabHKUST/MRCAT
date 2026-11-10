@@ -10,7 +10,7 @@ import pytest
 
 from mrcat import tools
 from mrcat.agent import Agent
-from mrcat.store import Store
+from mrcat.state.store import Store
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -110,7 +110,7 @@ def test_active_guide_reaches_model_without_middle_truncation(tmp_path):
     store=Store(tmp_path)
     state=store.create("Use CAUSE", "openai")
     state["active_agent"]="mr"
-    from mrcat import memory
+    from mrcat.state import memory
     memory.work_state(state,"mr")["guide"]="mr-cause"
     agent=Agent(ROOT,store)
     assert agent.executor_context(state,"mr")["active_guide"]["content"] == (ROOT/"skills/mr-cause/SKILL.md").read_text()

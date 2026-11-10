@@ -2,15 +2,16 @@
 import json
 from langgraph.graph import START, END, StateGraph
 from uuid import uuid4
-from .flow import Flow
-from .store import write_json
-from .review import evidence_context
-from .finalization import result_sources, render_summary
-from .diagnostics import exception_details
-from . import memory, tasks
-from .codeact import CodeActNodes
-from .coding_protocol import review_context
-from .plan_items import current_item, complete_item
+from mrcat.workflow.flow import Flow
+from mrcat.state.store import write_json
+from mrcat.workflow.review import evidence_context
+from mrcat.workflow.finalization import result_sources, render_summary
+from mrcat.runtime.diagnostics import exception_details
+from mrcat.state import memory
+from mrcat.workflow import tasks
+from mrcat.runtime.codeact import CodeActNodes
+from mrcat.runtime.coding_protocol import review_context
+from mrcat.workflow.plan_items import current_item, complete_item
 
 
 def parse_final_summary(raw):
@@ -29,7 +30,7 @@ def parse_final_summary(raw):
 class MRNodes(CodeActNodes):
     def __init__(self, agent):
         super().__init__(agent)
-        from .coding_agent import CodingAgentNodes
+        from mrcat.runtime.coding_agent import CodingAgentNodes
         self.custom = CodingAgentNodes(agent)
 
     def prepare_executor(self, flow, state):
@@ -237,7 +238,7 @@ class MRNodes(CodeActNodes):
                         or not isinstance(review.get('reason'), str) or not review['reason'].strip()):
                     raise ValueError('Review requires route=execute|replan|finalize and reason; execute also requires accept_item=true|false.')
                 if review['route'] == 'replan':
-                    from .plan_items import validate_invalidation
+                    from mrcat.workflow.plan_items import validate_invalidation
                     validate_invalidation(task, review.get('invalidate_steps', []))
                 if 'accept_item' in review:
                     if not isinstance(review['accept_item'], bool):
@@ -280,7 +281,7 @@ class MRNodes(CodeActNodes):
 
     def node_failed(self, state, node, exc, stage, response=None):
         """Technical failures preserve the pending node, never imply scientific rejection."""
-        from .diagnostics import redact
+        from mrcat.runtime.diagnostics import redact
         directory = self.agent.store.directory(state['session_id'])
         details = exception_details(exc)
         details.update(stage=stage, node=node, model_diagnostic=getattr(exc, 'mrcat_diagnostic', None))
@@ -380,7 +381,7 @@ class MRNodes(CodeActNodes):
         if self.agent._stopped(state):
             return dict(next_node=END)
         if recovery:
-            from .plan_items import apply_invalidation
+            from mrcat.workflow.plan_items import apply_invalidation
             apply_invalidation(state['active_task'], recovery.get('invalidate_steps', []), reason,
                                self.agent.store.directory(state['session_id']))
             tasks.revise_task(memory.work_state(state, 'mr'), plan, reason)

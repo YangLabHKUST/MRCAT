@@ -12,7 +12,7 @@ import shutil
 import stat
 import tempfile
 
-from .store import Store, now
+from mrcat.state.store import Store, now
 
 
 TEXT_SUFFIXES = {'.json', '.jsonl', '.md', '.txt', '.log', '.py', '.r', '.sh',

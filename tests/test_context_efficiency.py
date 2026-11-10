@@ -2,9 +2,9 @@
 import json
 from copy import deepcopy
 import pytest
-from mrcat.context import ContextBudgetExceeded
+from mrcat.model.context import ContextBudgetExceeded
 
-from mrcat import memory
+from mrcat.state import memory
 from mrcat.agent import Agent
 from test_agent import ROOT, Model, action, create, decision
 from test_custom_codeact import execution_evidence

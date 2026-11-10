@@ -15,15 +15,14 @@ import threading
 from pathlib import Path
 from uuid import uuid4
 
-from . import memory
-from .codeact import CodeActNodes
-from .coding_protocol import (CODING_TOOLS, coding_call, coding_calls, coding_history, coding_turns, failed, redirected_logs,
-                              loop_feedback, render_executor_summary)
-from .diagnostics import redact
-from .execution import runtime_context
-from .plan_items import current_item, executor_view
-from .results import _publish, result_catalog, work_scope
-from .store import write_json
+from mrcat.state import memory
+from mrcat.runtime.codeact import CodeActNodes
+from mrcat.runtime.coding_protocol import CODING_TOOLS, coding_call, coding_calls, coding_history, coding_turns, failed, redirected_logs, loop_feedback, render_executor_summary
+from mrcat.runtime.diagnostics import redact
+from mrcat.runtime.execution import runtime_context
+from mrcat.workflow.plan_items import current_item, executor_view
+from mrcat.state.results import _publish, result_catalog, work_scope
+from mrcat.state.store import write_json
 
 PROVIDER_ENV = "MRCAT_CODING_AGENT_PROVIDER"
 DEFAULT_PROVIDER = "deepseek"
@@ -449,7 +448,7 @@ class CodingAgentNodes(CodeActNodes):
         journal['entries'].append(entry)
 
     def _context(self, state, task, item, workdir, journal, budget):
-        from .resource_docs import resource_docs
+        from mrcat.resource_docs import resource_docs
         directory = self.agent.store.directory(state['session_id'])
         # One representation of each fact: current item, compact plan directory,
         # selected upstream references, working summary, then continuous tool turns.
@@ -504,7 +503,7 @@ class CodingAgentNodes(CodeActNodes):
         return budget.measure(SYSTEM, self._context(state, task, item, workdir, journal, self.agent.max_rounds), CODING_TOOLS) > budget.summary_trigger
 
     def compact(self, state):
-        from .context import tokens
+        from mrcat.model.context import tokens
         task = state['active_task']
         item = current_item(task)
         directory, workdir = self._workdir(state, task, item)

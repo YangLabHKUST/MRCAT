@@ -28,105 +28,99 @@ function connectLiveDemoPolling() {
   poll();
 }
 
+let liveDemoSelection = null;
+
 async function initLiveDemo() {
   if (!LIVE_DEMO) return;
   liveDemoCatalog = await requestJson("/static/bmi-demo.json");
   const panel = document.getElementById("live-demo-guide");
   panel.hidden = false;
-  const intro = document.createElement("p");
-  intro.textContent = "Run the BMI → T2D example in one session. Start with literature and online GWAS, try the supplied local files, then follow up with MR-APSS. Each step runs on the server and can take several minutes. No API key needed.";
+  const suggestions = document.createElement("details");
+  suggestions.id = "live-demo-suggestions";
+  suggestions.open = !window.location.hash.startsWith("#session_");
+  const summary = document.createElement("summary");
+  summary.textContent = "Example questions · click to edit";
   const steps = document.createElement("div");
   steps.className = "live-demo-steps";
   for (const step of liveDemoCatalog.steps) {
     const button = document.createElement("button");
     button.type = "button";
     button.dataset.demoStep = step.id;
-    button.textContent = step.label;
+    button.textContent = step.prompt;
     button.title = step.description;
-    button.addEventListener("click", () => previewDemoPrompt(step.prompt));
+    button.addEventListener("click", () => {
+      liveDemoSelection = step.setup ? step : null;
+      els.replyInput.value = step.prompt;
+      els.replyInput.dispatchEvent(new Event("input", {bubbles: true}));
+      suggestions.open = false;
+      updateLiveDemo();
+      els.replyInput.focus();
+    });
     steps.appendChild(button);
   }
-  const preview = document.createElement("details");
-  preview.id = "live-demo-preview";
-  const summary = document.createElement("summary");
-  summary.textContent = "Request to send";
-  const prompt = document.createElement("p");
-  prompt.id = "live-demo-prompt";
-  const send = document.createElement("button");
-  send.type = "button";
-  send.id = "live-demo-send";
-  send.className = "primary-button";
-  send.textContent = "Send request";
-  send.addEventListener("click", () => sendReply({preventDefault() {}}, prompt.textContent));
-  preview.append(summary, prompt, send);
-  const progress = document.createElement("p");
-  progress.id = "live-demo-progress";
-  progress.setAttribute("role", "status");
-  const controls = document.createElement("div");
-  controls.className = "live-demo-controls";
-  for (const [id, label] of [["confirm", "Confirm plan & run"], ["resume", "Resume current task"], ["stop", "Stop execution"]]) {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.id = `live-demo-${id}`;
-    button.textContent = label;
-    button.hidden = true;
-    button.addEventListener("click", () => id === "stop" ? stopActiveJob()
-      : sendReply({preventDefault() {}}, liveDemoCatalog[id]));
-    controls.appendChild(button);
-  }
+  suggestions.append(summary, steps);
   const recording = document.createElement("a");
   recording.href = "https://result4.mrcat.science/#example-result4";
   recording.target = "_blank";
   recording.rel = "noopener";
   recording.textContent = "View a completed Result 4 session ↗";
-  panel.append(intro, steps, progress, preview, controls, recording);
+  suggestions.appendChild(recording);
+  const attachment = document.createElement("div");
+  attachment.id = "live-demo-attachment";
+  attachment.hidden = true;
+  const label = document.createElement("span");
+  label.id = "live-demo-attachment-label";
+  const remove = document.createElement("button");
+  remove.type = "button";
+  remove.textContent = "Remove";
+  remove.addEventListener("click", clearLiveDemoSetup);
+  attachment.append(label, remove);
+  panel.append(suggestions, attachment);
   updateLiveDemo();
 }
 
-function previewDemoPrompt(prompt) {
-  document.getElementById("live-demo-prompt").textContent = prompt;
-  document.getElementById("live-demo-preview").open = true;
+function clearLiveDemoSetup() {
+  liveDemoSelection = null;
   updateLiveDemo();
 }
 
 function updateLiveDemo() {
   if (!LIVE_DEMO || !liveDemoCatalog) return;
-  const snapshot = state.snapshot;
-  const events = snapshot?.mr?.events || [];
-  const messages = events.filter(event => event.type === "user_message").map(event => event.content);
-  const running = Boolean(snapshot?.active_job);
-  const loading = Boolean(state.currentSessionId && !snapshot);
-  const pending = Boolean(snapshot?.pending_question);
-  const failed = ["failed", "paused", "stopped"].includes(snapshot?.state?.status);
-  const activeTask = activeMrTask(snapshot);
-  const unfinished = Boolean(activeTask && activeTask.status !== "completed");
-  const next = liveDemoCatalog.steps.findIndex(step => !messages.includes(step.prompt));
-  const locked = state.busy || running || loading || pending || failed || unfinished;
-  document.querySelectorAll("[data-demo-step]").forEach((button, index) => {
-    button.disabled = locked || index !== next || (index === 0 && Boolean(state.currentSessionId));
-    // A submitted request is not proof that the computation succeeded.
-    button.dataset.submitted = String(messages.includes(liveDemoCatalog.steps[index].prompt));
-  });
-  const selected = document.getElementById("live-demo-prompt").textContent;
-  document.getElementById("live-demo-send").disabled = locked || next < 0 || selected !== liveDemoCatalog.steps[next]?.prompt;
-  document.getElementById("live-demo-preview").hidden = !selected || messages.includes(selected);
-  const confirm = document.getElementById("live-demo-confirm");
-  confirm.hidden = !pending || running;
-  confirm.disabled = state.busy;
-  const resume = document.getElementById("live-demo-resume");
-  resume.hidden = !failed || running;
-  resume.disabled = state.busy;
-  const stop = document.getElementById("live-demo-stop");
-  stop.hidden = !running;
-  stop.disabled = state.busy;
-  document.getElementById("live-demo-progress").textContent = loading ? "Loading your session…"
-    : state.busy ? "Submitting your request…"
-    : running ? "Running · follow the conversation and execution notebook below."
-    : pending ? "Review the plan or question in the conversation before confirming."
-    : failed ? "Execution paused or failed. Inspect the message below before resuming."
-    : unfinished ? "The current analysis is not complete. Inspect the conversation for details."
-    : next < 0 ? "The guided requests have finished. Inspect the result tables and plots below."
-    : state.currentSessionId ? "Ready for the next request in this session."
-    : "Start with 1a · Search the literature.";
+  const locked = state.busy || Boolean(state.snapshot?.active_job);
+  document.querySelectorAll("[data-demo-step]").forEach(button => { button.disabled = locked; });
+  const attachment = document.getElementById("live-demo-attachment");
+  attachment.hidden = !liveDemoSelection;
+  document.getElementById("live-demo-attachment-label").textContent = liveDemoSelection
+    ? `Example data to send: BMI → T2D · ${liveDemoSelection.label}` : "";
+  attachment.querySelector("button").disabled = locked;
   document.querySelectorAll("#study-setup-content input, #study-setup-content select, #study-setup-content textarea, #study-setup-content button").forEach(element => { element.disabled = true; });
+}
+
+async function sendLiveDemoSetup(reply) {
+  const selected = liveDemoSelection.setup;
+  const form = new FormData();
+  form.append("exposure_manifest", JSON.stringify(selected.exposures));
+  form.append("outcome_manifest", JSON.stringify(selected.outcomes));
+  form.append("analysis_request", reply);
+  form.append("methods", JSON.stringify(selected.methods));
+  form.append("sources", JSON.stringify(selected.sources));
+  const endpoint = state.currentSessionId
+    ? `/api/sessions/${encodeURIComponent(state.currentSessionId)}/study-setup` : "/api/manual-sessions";
+  state.pendingUserMessage = {text: reply, sessionId: state.currentSessionId};
+  els.replyInput.value = "";
+  renderConversation(state.snapshot);
+  setBusy(true);
+  try {
+    const response = await requestJson(endpoint, {method: "POST", body: form});
+    clearLiveDemoSetup();
+    await refreshSessions();
+    await selectSession(response.session.session_id);
+  } catch (error) {
+    state.pendingUserMessage = null;
+    els.replyInput.value = reply;
+    renderConversation(state.snapshot);
+    alert(`Send failed: ${error.message}`);
+  } finally {
+    setBusy(false);
+  }
 }

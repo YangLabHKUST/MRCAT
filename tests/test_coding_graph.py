@@ -4,9 +4,9 @@ import json
 import pytest
 
 from mrcat.agent import Agent
-from mrcat.coding_agent import CodingAgentNodes
-from mrcat.graph import build_graph
-from mrcat.store import Store
+from mrcat.runtime.coding_agent import CodingAgentNodes
+from mrcat.workflow.graph import build_graph
+from mrcat.state.store import Store
 from test_agent import ROOT, Model, create, decision, native_reply
 
 
@@ -77,7 +77,7 @@ def test_tool_receipt_blocks_repeated_edit_and_restores_publication(tmp_path):
     assert first['ok']
     assert nodes._host_tool_once(state, task, store.directory(sid), workdir, call, 'edit1') == first
     assert script.read_text() == 'new'
-    from mrcat.execution import CodeExecutor
+    from mrcat.runtime.execution import CodeExecutor
     result = CodeExecutor(ROOT, store.directory(sid), strict_bash=True).execute(
         'from pathlib import Path; Path("result.json").write_text(\'{"value":42}\')',
         'python', 'run1', working_directory=workdir)
@@ -156,7 +156,7 @@ def test_300_action_budget_and_restart_keep_all_edits_and_publish(tmp_path, monk
 
 
 def test_rejected_handoff_returns_to_tools_before_review_acceptance(tmp_path):
-    from mrcat.coding_protocol import action_messages
+    from mrcat.runtime.coding_protocol import action_messages
 
     store, sid = create(tmp_path)
     reason = 'Verify the saved value against the independent calculation before resubmitting.'

@@ -3,7 +3,7 @@ import importlib.util
 import json
 from pathlib import Path
 
-from mrcat.store import Store
+from mrcat.state.store import Store
 
 
 def test_recording_export_redacts_private_paths_and_preserves_source(tmp_path):

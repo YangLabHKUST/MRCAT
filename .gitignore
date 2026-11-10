@@ -18,7 +18,7 @@ AGENTS.md
 *[Aa][Uu][Dd][Ii][Tt]*
 /environments/
 # Sessions, external inputs and generated records
-runtime*/
+/runtime*/
 data/
 database
 outputs/

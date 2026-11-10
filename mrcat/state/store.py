@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from uuid import uuid4
 import json, os, re, sqlite3
 from langgraph.checkpoint.sqlite import SqliteSaver
-from .checkpoints import checkpoint_path
+from mrcat.checkpoints import checkpoint_path
 
 _active_state = ContextVar("mrcat_session_state", default=None)
 
@@ -42,7 +42,7 @@ class Store:
                      plan="", messages=[], loaded_skills=[], events=[], study_setup={}, job=None,
                      active_task=None, task_history=[], next_task_no=1, pending=None, role_memory={})
         self.save(state)
-        from .trace import initialize
+        from mrcat.trace import initialize
         initialize(directory, state)
         return state
     def load(self, sid):
@@ -102,12 +102,12 @@ class Store:
         if active is None or active[0] is not self or active[1] is not state:
             # Creation and idle worker/UI updates use the same graph schema.
             # They start a fresh control path; pending business input is retained.
-            from .agent import Agent
-            from .graph import build_graph
+            from mrcat.agent import Agent
+            from mrcat.workflow.graph import build_graph
             directory = self.directory(state['session_id'])
             directory.mkdir(parents=True, exist_ok=True)
             with SqliteSaver.from_conn_string(str(self.checkpoint_path(state['session_id'], create=True))) as saver:
-                graph = build_graph(Agent(Path(__file__).resolve().parents[1], self), saver)
+                graph = build_graph(Agent(Path(__file__).resolve().parents[2], self), saver)
                 graph.update_state({'configurable': {'thread_id': state['session_id']}},
                                    {'sid': state['session_id'], 'session': state}, as_node='persist')
             self.clear_live_events(state['session_id'])
@@ -117,7 +117,7 @@ class Store:
         directory = self.directory(state["session_id"])
         write_json(directory / "conversation.json", state['messages'])
         if state.get("version") == 2:
-            from .memory import render_memory
+            from mrcat.state.memory import render_memory
             temporary = directory / ("memory." + uuid4().hex + ".tmp")
             temporary.write_text(render_memory(state), encoding="utf-8")
             os.replace(temporary, directory / "memory.md")
@@ -174,7 +174,7 @@ class Store:
         self.publish_live_event(state, event)
         self.save(state)
         if kind != 'code_execution':
-            from .trace import emit
+            from mrcat.trace import emit
             emit(self.directory(state['session_id']), kind, event, event_id='event:' + event['id'])
         return event
     def list(self):

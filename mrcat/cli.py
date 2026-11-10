@@ -5,7 +5,7 @@ from pathlib import Path
 
 from .agent import Agent
 from .config.env import load_repo_dotenv, disable_proxy_from_env_if_requested
-from .store import Store
+from mrcat.state.store import Store
 
 
 def main():

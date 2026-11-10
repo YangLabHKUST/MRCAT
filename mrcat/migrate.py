@@ -1,8 +1,8 @@
 """One-time import of early MRCAT sessions; original transcripts remain intact."""
 import argparse
 from pathlib import Path
-from .store import Store, write_json, now
-from .memory import initial_memory
+from mrcat.state.store import Store, write_json, now
+from mrcat.state.memory import initial_memory
 
 
 def upgrade(store, sid):

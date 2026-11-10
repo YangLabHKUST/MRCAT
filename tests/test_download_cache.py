@@ -8,8 +8,8 @@ from threading import Event, Thread
 
 import pytest
 
-from mrcat.execution import CodeExecutor
-from mrcat.results import read_reference
+from mrcat.runtime.execution import CodeExecutor
+from mrcat.state.results import read_reference
 
 ROOT = Path(__file__).resolve().parents[1]
 

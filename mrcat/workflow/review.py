@@ -2,8 +2,8 @@
 import json
 import re
 from pathlib import Path
-from . import memory
-from .results import invalidated_executions
+from mrcat.state import memory
+from mrcat.state.results import invalidated_executions
 
 
 def compact(value, depth=0):

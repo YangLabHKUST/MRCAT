@@ -140,7 +140,7 @@ def test_summary_projection_and_download_are_task_specific(tmp_path):
 
 
 def test_review_can_execute_replan_or_finalize(tmp_path):
-    from mrcat.mr import mr_graph
+    from mrcat.workflow.mr import mr_graph
     store, sid = create(tmp_path)
     graph = mr_graph(Agent(ROOT, store)).get_graph()
     targets = {e.target for e in graph.edges if e.source == 'evaluate'}

@@ -4,7 +4,7 @@ import json
 import pytest
 
 from mrcat.agent import Agent
-from mrcat.plan_items import parse_plan, validate_reuse
+from mrcat.workflow.plan_items import parse_plan, validate_reuse
 from test_agent import ROOT, Model, action, create, decision
 
 
@@ -45,7 +45,7 @@ def test_custom_items_advance_after_review_with_full_plan_and_actual_results(tmp
     assert contexts[3]['result_refs'][-1]['ref'] == '$ref:answer'
     assert sum(c['role'] == 'evaluate' for c in model.calls) == 2
     assert sum(e['type'] == 'code_execution' for e in done['events']) == 2
-    from mrcat.results import read_reference
+    from mrcat.state.results import read_reference
     binding = task['completed_items']['calculate']['outputs']['answer']['ref']
     assert read_reference(store.directory(sid), 'task1', binding)['mean'] == 4.0
     assert '4.0' in task['final_summary']

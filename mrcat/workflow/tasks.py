@@ -1,7 +1,7 @@
 """Task identity, ordered planning guidance and preserved completed results."""
 from copy import deepcopy
-from .memory import initial_memory, apply_delivery
-from .store import now
+from mrcat.state.memory import initial_memory, apply_delivery
+from mrcat.state.store import now
 
 TERMINAL = {"completed", "failed", "cancelled"}
 

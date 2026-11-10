@@ -14,8 +14,7 @@ from mrcat.web.service import Service
 def reply(self, sid, request):
     saved = self.store.load(sid)
     self.store.event(saved, "user_message", request)
-    catalog = self.visitors.catalog
-    if request == catalog["confirm"]:
+    if request == "Yes, go ahead.":
         saved.update(status="completed", pending=None, active_task=None)
         workspace = self.store.directory(sid) / "workspace"
         (workspace / "synthetic.csv").write_text("method,beta\nSynthetic test,0.2\n")
@@ -26,7 +25,7 @@ def reply(self, sid, request):
                          stdout="Synthetic UI fixture", stderr="", status="exited", returncode=0,
                          agent="mr", generated_files=["workspace/synthetic.csv", "workspace/synthetic.png"])
         self.store.event(saved, "final_answer", "Synthetic fixture complete. [Plot](workspace/synthetic.png)")
-    elif request == catalog["steps"][0]["prompt"]:
+    elif not any(word in request.lower() for word in ("run", "analy", "mr-apss")):
         saved.update(status="completed", pending=None)
         self.store.event(saved, "final_answer", "Synthetic literature response for the UI test.")
     else:

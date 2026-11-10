@@ -12,9 +12,9 @@ from test_agent import ROOT, Model, create
 
 
 def test_shell_options_are_custom_only_and_do_not_rewrite_source(tmp_path):
-    from mrcat.execution import CodeExecutor
-    from mrcat.codeact import CodeActNodes
-    from mrcat.coding_agent import CodingAgentNodes
+    from mrcat.runtime.execution import CodeExecutor
+    from mrcat.runtime.codeact import CodeActNodes
+    from mrcat.runtime.coding_agent import CodingAgentNodes
     source = 'false | cat\necho reached'
     for nodes, expected in [(CodeActNodes, 0), (CodingAgentNodes, 1)]:
         directory = tmp_path / nodes.__name__
@@ -69,7 +69,7 @@ def test_agent_default_model_does_not_enable_structured_action_for_other_calls(t
     agent._model(role='mr', system='skill', user='{}')
     agent._model(role='evaluate', system='review', user='{}', structured_action=True)
     assert 'action_tool' not in calls[0] and 'thinking' not in calls[0]
-    from mrcat.coding_protocol import REVIEW_TOOL
+    from mrcat.runtime.coding_protocol import REVIEW_TOOL
     assert calls[1]['action_tool'] == REVIEW_TOOL and calls[1]['thinking'] is False
 
 
@@ -89,7 +89,7 @@ def test_native_http_arguments_preserve_code_without_reading_content():
 
 
 def test_action_messages_replays_saved_snapshot_without_rereading_files():
-    from mrcat.coding_protocol import action_messages
+    from mrcat.runtime.coding_protocol import action_messages
     history = [{'role':'assistant','content':None,'tool_calls':[{'id':'run1','type':'function',
         'function':{'name':'submit_action','arguments':json.dumps(dict(type='execute',
         language='python',body='print(8)',message='Check the result'))}}]},
@@ -161,7 +161,7 @@ def test_anthropic_rejects_text_multiple_or_wrong_tool_responses(blocks):
 
 def test_custom_review_uses_native_schema_without_changing_skill_review(tmp_path,monkeypatch):
     from mrcat.config import loader
-    from mrcat.coding_protocol import REVIEW_TOOL
+    from mrcat.runtime.coding_protocol import REVIEW_TOOL
     calls=[]
     monkeypatch.setattr(loader,'load_repo_config',lambda **_:SimpleNamespace(config=object()))
     monkeypatch.setattr(gateway,'current_provider',lambda _:'anthropic')
@@ -176,7 +176,7 @@ def test_custom_review_uses_native_schema_without_changing_skill_review(tmp_path
 
 def test_custom_summary_uses_native_schema_without_changing_other_memory(tmp_path,monkeypatch):
     from mrcat.config import loader
-    from mrcat.coding_protocol import SUMMARY_TOOL
+    from mrcat.runtime.coding_protocol import SUMMARY_TOOL
     calls=[]
     monkeypatch.setattr(loader,'load_repo_config',lambda **_:SimpleNamespace(config=object()))
     monkeypatch.setattr(gateway,'current_provider',lambda _:'anthropic')

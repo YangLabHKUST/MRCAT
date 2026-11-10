@@ -1,8 +1,8 @@
 """Run arbitrary Python, R or Bash. Return observations, never scientific verdicts."""
 from pathlib import Path
 import hashlib, json, os, platform, shutil, signal, subprocess, sys, time
-from .store import write_json
-from .results import result_catalog
+from mrcat.state.store import write_json
+from mrcat.state.results import result_catalog
 
 def execution_environment():
     """Use the server's interpreter environment, including for shell children."""
@@ -67,7 +67,7 @@ class CodeExecutor:
         # Claim the ID before launching any external process.
         directory.mkdir(parents=True)
         source.write_text(code, encoding="utf-8")
-        from .trace import emit, execution_finished
+        from mrcat.trace import emit, execution_finished
         emit(self.session_dir, 'execution_start', dict(execution_id=execution_id, language=language,
             code=code, working_directory=str(cwd), result_scope=result_scope),
             event_id='execution:' + execution_id,

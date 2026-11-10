@@ -7,7 +7,7 @@ from unittest.mock import patch
 from fastapi.testclient import TestClient
 import pytest
 
-from mrcat.finalization import format_saved_summary, render_summary
+from mrcat.workflow.finalization import format_saved_summary, render_summary
 from mrcat.web.server import create_app
 
 

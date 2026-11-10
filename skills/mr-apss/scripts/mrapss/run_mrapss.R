@@ -198,7 +198,8 @@ log_step("MR-APSS fitted parameters: pi0=", fit$pi0, "; nvalid=", nrow(fit$MRdat
 plot_path <- file.path(execution_dir, "plots", "mrapss_mrplot.png")
 log_step("Rendering MR-APSS plot: ", plot_path)
 mrplot <- MRAPSS::MRplot(fit, exposure = exposure_label, outcome = outcome_label)
-ggplot2::ggsave(filename = plot_path, plot = mrplot, width = 7, height = 5, dpi = 300)
+source(file.path(script_dir, "export_mrapss_plot.R"))
+plot_data_path <- export_mrapss_plot(mrplot, fit, plot_path)
 plot_path_norm <- normalizePath(plot_path, winslash = "/", mustWork = FALSE)
 
 row <- method_row(
@@ -292,7 +293,8 @@ rendered <- list(
   details = list(result_status = "ok", failure_class = NULL),
   artifacts = list(
     list(path = result$result_record_path, kind = "json", summary = "MR-APSS result record"),
-    list(path = plot_path_norm, kind = "png", summary = "MR-APSS result plot")
+    list(path = plot_path_norm, kind = "png", summary = "MR-APSS result plot"),
+    list(path = normalizePath(plot_data_path, winslash = "/"), kind = "json", summary = "MR-APSS SNP interaction data")
   )
 )
 jsonlite::write_json(rendered, output_json, auto_unbox = TRUE, pretty = TRUE, null = "null", na = "null", digits = NA)

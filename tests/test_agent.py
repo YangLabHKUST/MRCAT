@@ -4,9 +4,9 @@ import subprocess
 import sys
 import pytest
 from mrcat.agent import Agent, parse_action
-from mrcat.store import Store
-from mrcat.execution import CodeExecutor
-from mrcat.memory import initial_memory, render_memory
+from mrcat.state.store import Store
+from mrcat.runtime.execution import CodeExecutor
+from mrcat.state.memory import initial_memory, render_memory
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -400,7 +400,7 @@ def test_role_context_uses_summaries_not_other_agents_code(tmp_path):
 
 def test_migrate_preserves_prior_files_and_has_no_invented_scientific_facts(tmp_path):
     from mrcat.migrate import upgrade
-    from mrcat.store import write_json
+    from mrcat.state.store import write_json
     store,sid = create(tmp_path)
     directory = store.directory(sid)
     (directory/'workspace/partial.txt').write_text('partial result')

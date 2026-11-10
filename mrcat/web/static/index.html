@@ -1,33 +1,23 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>MRCAT</title>
-    <link rel="stylesheet" href="/static/styles.css?v=bmi-demo-20261110" />
+    <link rel="stylesheet" href="/static/styles.css?v=study-setup-english-20261110" />
   </head>
   <body>
     <main class="app-shell">
       <aside id="sessions-sidebar" class="sidebar">
         <header class="brand">
           <h1>MRCAT</h1>
-          <p>Manager · Search · MR · Report</p>
+          <p>Your research workspace</p>
         </header>
 
         <section class="sidebar-tools">
           <button id="new-chat-button" class="primary-button" type="button">New Chat</button>
-          <button id="result4-example-button" class="example-entry" type="button">
-            <strong>Result 4 · Hexadecanedioate → CAD</strong>
-            <span>View a completed session · No API key needed</span>
-          </button>
-          <button id="fork-session-button" type="button" disabled
-            title="Copy this session and its files. Continue independently while preserving the original.">Continue in a copy</button>
-          <label for="provider-select">Model provider</label>
-          <select id="provider-select" aria-label="Model provider">
-            <option value="deepseek">deepseek</option>
-            <option value="openai">openai</option>
-            <option value="qwen">qwen</option>
-          </select>
+          <button id="result4-example-button" class="example-entry" type="button"
+            title="Explore a completed analysis · No API key needed">Examples <span aria-hidden="true">↗</span></button>
         </section>
 
         <section class="session-section">
@@ -35,13 +25,24 @@
             <h2>Sessions</h2>
             <button id="refresh-button" type="button">Refresh</button>
           </div>
-          <label class="session-status-control" for="session-status-toggle">
-            <span>Show session status</span>
-            <input id="session-status-toggle" type="checkbox" role="switch" checked
-              aria-controls="session-list status-chip" />
-          </label>
           <div id="session-list" class="session-list"></div>
         </section>
+        <details class="sidebar-settings">
+          <summary>Settings</summary>
+          <div class="sidebar-settings-content">
+            <label for="provider-select">Model provider</label>
+            <select id="provider-select" aria-label="Model provider">
+              <option value="deepseek">deepseek</option>
+              <option value="openai">openai</option>
+              <option value="qwen">qwen</option>
+            </select>
+            <label class="session-status-control" for="session-status-toggle">
+              <span>Show session status</span>
+              <input id="session-status-toggle" type="checkbox" role="switch" checked
+                aria-controls="session-list status-chip" />
+            </label>
+          </div>
+        </details>
       </aside>
 
       <div class="sidebar-resizer" data-sidebar-resizer role="separator" aria-orientation="vertical" aria-label="Resize sessions sidebar">
@@ -62,11 +63,19 @@
             <h2 id="session-title">No session selected</h2>
             <p id="session-subtitle">Start a question or select an MRCAT session.</p>
           </div>
-          <div id="status-chip" class="status-chip">idle</div>
+          <div class="workspace-actions">
+            <div id="status-chip" class="status-chip">idle</div>
+            <details class="session-actions">
+              <summary aria-label="Session actions" title="Session actions">•••</summary>
+              <div class="session-actions-menu">
+                <button id="fork-session-button" type="button" disabled
+                  title="Copy this session and its files. Continue independently while preserving the original.">Continue in a copy</button>
+              </div>
+            </details>
+          </div>
         </header>
 
         <nav id="example-navigation" class="example-navigation" aria-label="Example stages" hidden></nav>
-        <section id="live-demo-guide" class="live-demo-guide" aria-label="BMI to T2D live example" hidden></section>
 
         <article id="study-setup-panel" class="panel study-setup-panel is-collapsed">
           <div class="panel-head">
@@ -118,6 +127,7 @@
               <p id="activity-freshness" class="activity-freshness"></p>
               <button id="activity-execution" type="button" hidden>View latest execution</button>
             </section>
+            <section id="live-demo-guide" class="live-demo-guide" aria-label="Example questions" hidden></section>
             <form id="reply-form" class="reply-form">
               <textarea id="reply-input" rows="1" placeholder="Enter a research question to start a new conversation"></textarea>
               <div class="reply-actions">
@@ -153,9 +163,10 @@
     <script src="/static/primary-scatter.js?v=mrcat-readable-20261029"></script>
     <script src="/static/replication-forest.js?v=mrcat-readable-20261029"></script>
     <script src="/static/qc-explorer.js?v=mrcat-readable-20261029"></script>
-    <script src="/static/notebook.js?v=mrcat-png-only-20261109"></script>
+    <script src="/static/mrapss-explorer.js?v=workflow-ui-20261110"></script>
+    <script src="/static/notebook.js?v=workflow-ui-20261110"></script>
     <script src="/static/examples.js?v=result4-20261109"></script>
-    <script src="/static/live-demo.js?v=bmi-demo-20261110"></script>
-    <script src="/static/app.js?v=bmi-demo-20261110"></script>
+    <script src="/static/live-demo.js?v=editable-examples-20261110"></script>
+    <script src="/static/app.js?v=study-setup-english-20261110"></script>
   </body>
 </html>

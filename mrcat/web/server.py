@@ -51,8 +51,8 @@ def create_app(*,repo_root=None,artifact_dir=None,auth_mode="local",access_team_
                         raise HTTPException(403, "Cross-origin changes are not allowed")
                 if demo:
                     if request.method not in {"GET", "HEAD", "OPTIONS"} and not (
-                            request.method == "POST" and re.fullmatch(r"/api/sessions(?:/[^/]+/(?:mr/reply|stop))?", request.url.path)):
-                        raise HTTPException(403, "Use the guided example buttons for this public demo.")
+                            request.method == "POST" and re.fullmatch(r"/api/(?:manual-sessions|sessions(?:/[^/]+/(?:mr/reply|stop|study-setup))?)", request.url.path)):
+                        raise HTTPException(403, "This action is not available in the public demo.")
                     if int(request.headers.get("content-length", "0")) > 16384:
                         raise HTTPException(413, "Demo requests must be small text messages.")
                     service, visitor_token = await asyncio.to_thread(users.visitor, request)
@@ -124,7 +124,7 @@ def create_app(*,repo_root=None,artifact_dir=None,auth_mode="local",access_team_
     async def setup(request,sid=None):
         service=current_service(request)
         form=await request.form()
-        if sid is None:
+        if sid is None and not demo:
             state=await asyncio.to_thread(service.store.create,str(form.get("analysis_request","")),str(form.get("provider","anthropic")));sid=state["session_id"]
         return await asyncio.to_thread(service.study_setup,sid,exposure_manifest=str(form.get("exposure_manifest","[]")),outcome_manifest=str(form.get("outcome_manifest","[]")),analysis_request=str(form.get("analysis_request","")),methods=str(form.get("methods","[]")),sources=str(form.get("sources","[]")),exposure_files=form.getlist("exposure_files"),outcome_files=form.getlist("outcome_files"))
     @app.post("/api/manual-sessions")

@@ -8,7 +8,7 @@ import json
 import pytest
 
 from mrcat.agent import Agent
-from mrcat.mr import MRNodes
+from mrcat.workflow.mr import MRNodes
 from test_agent import ROOT, Model, action, create, decision, verified_value
 from test_plan_items import item
 

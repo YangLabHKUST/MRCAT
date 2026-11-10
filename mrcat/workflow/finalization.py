@@ -5,8 +5,8 @@ import math
 import re
 from pathlib import Path
 
-from . import memory
-from .results import invalidated_executions
+from mrcat.state import memory
+from mrcat.state.results import invalidated_executions
 
 
 _SLOT = re.compile(r'\{\{value:([^{}\r\n]+)\}\}')

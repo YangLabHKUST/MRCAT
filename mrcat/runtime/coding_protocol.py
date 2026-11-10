@@ -1,7 +1,7 @@
 """Coding evidence views and structured scientific review contracts."""
 import json
-from . import memory
-from .diagnostics import redact
+from mrcat.state import memory
+from mrcat.runtime.diagnostics import redact
 
 def _tool(name, description, properties, required):
     return dict(type='function', function=dict(name=name, description=description,
@@ -114,7 +114,7 @@ def loop_feedback(entries):
 
 def render_executor_summary(raw, token_limit):
     """Validate only the summary contract; tool evidence remains authoritative."""
-    from .context import tokens
+    from mrcat.model.context import tokens
     value = json.loads(raw)
     if not isinstance(value, dict) or set(value) != set(SUMMARY_FIELDS) or not all(
             isinstance(text, str) for text in value.values()):
@@ -242,8 +242,8 @@ def observation_view(directory, result, *, output_limit=4000):
 
 def review_context(agent, state, flow):
     """Scientific review uses original instructions and saved evidence, not summaries."""
-    from .review import evidence_context
-    from .plan_items import current_item, item_results
+    from mrcat.workflow.review import evidence_context
+    from mrcat.workflow.plan_items import current_item, item_results
     task = state['active_task']
     return dict(
         current_item=current_item(task), current_plan=task['plan'],

@@ -7,7 +7,7 @@ import re
 
 from uuid import uuid4
 
-from .store import now
+from mrcat.state.store import now
 
 _NAME = re.compile(r"[A-Za-z0-9_-]+")
 
@@ -62,7 +62,7 @@ def _publish(name, outputs, *, automatic=False, producer=None, status="unverifie
             raise ValueError(f"Result {result_id!r} already exists; publish a new ID instead of overwriting it.") from None
     finally:
         temporary.unlink(missing_ok=True)
-    from .trace import capture_result
+    from mrcat.trace import capture_result
     capture_result(directory, folder / f"{result_id}.json")
     return f"$ref:{result_id}"
 

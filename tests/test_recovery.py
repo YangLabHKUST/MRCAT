@@ -2,7 +2,7 @@
 import json
 import pytest
 from mrcat.agent import Agent, parse_action
-from mrcat.graph import build_graph
+from mrcat.workflow.graph import build_graph
 from test_agent import ROOT, Model, create, decision, action
 
 
@@ -113,7 +113,7 @@ def test_planner_failure_during_recovery_preserves_old_plan_and_pauses(tmp_path)
     assert not any(e['type'] == 'plan_updated' for e in done['events'][failed:])
     # Pausing below the context threshold preserves the journal without another summary.
     assert not roles(base, 'memory')
-    from mrcat.memory import control_facts
+    from mrcat.state.memory import control_facts
     assert any(e['type'] == 'recovery_failed' for e in control_facts(done, 'mr'))
 
 

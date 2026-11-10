@@ -3,8 +3,8 @@ from pathlib import Path
 from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.graph.state import CompiledStateGraph
 from mrcat.agent import Agent
-from mrcat.graph import build_graph
-from mrcat import memory
+from mrcat.workflow.graph import build_graph
+from mrcat.state import memory
 from test_agent import ROOT, Model, create, decision, action, verified_value
 
 

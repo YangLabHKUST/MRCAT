@@ -9,7 +9,7 @@ from fastapi.testclient import TestClient
 from PIL import Image
 
 from mrcat.agent import Agent
-from mrcat.store import Store, write_json
+from mrcat.state.store import Store, write_json
 from mrcat.report.scientific import report_spec_example
 from mrcat.web.server import create_app
 

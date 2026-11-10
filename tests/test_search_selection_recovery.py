@@ -107,7 +107,7 @@ def test_partial_diagnostics_survive_candidate_conversion_and_probe(monkeypatch)
 
 def test_review_receives_scale_and_instrument_recovery_guidance(tmp_path):
     from pathlib import Path
-    from mrcat.review import evidence_context
+    from mrcat.workflow.review import evidence_context
     root = Path(__file__).resolve().parents[1]
     skill_dir = root/'skills/mr-primary-id'
     skill = SimpleNamespace(skill_dir=skill_dir, instruction_body=(skill_dir/'SKILL.md').read_text())
@@ -123,7 +123,7 @@ def test_review_receives_scale_and_instrument_recovery_guidance(tmp_path):
 
 
 def test_review_preserves_middle_requirements_in_long_skill_guidance(tmp_path):
-    from mrcat.review import evidence_context
+    from mrcat.workflow.review import evidence_context
     scale_rule = 'Missing sample size must be resolved from the same study; never invent N.'
     instrument_rule = 'Preserve the user-fixed threshold and minimum instrument count.'
     skill = SimpleNamespace(skill_dir=tmp_path/'long-method', instruction_body=(

@@ -110,12 +110,12 @@ def _selection_context(raw):
     context = {key: str(raw.get(key) or "") for key in ("request", "current_plan_item", "memory_md")}
     directory = os.environ.get("MRCAT_SESSION_DIR")
     if directory:
-        from mrcat.store import Store
+        from mrcat.state.store import Store
         session = Path(directory).resolve()
         state = Store(session.parent).load(session.name)
         task = state.get("active_task") or {}
         if task.get("task_id") == os.environ.get("MRCAT_RESULT_SCOPE"):
-            from mrcat.plan_items import current_item
+            from mrcat.workflow.plan_items import current_item
             context.update(request=task["request"], current_plan_item=json.dumps(current_item(task), ensure_ascii=False),
                            memory_md=task.get("memory", ""))
     if raw.get("ancestry"):

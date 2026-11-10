@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 import re
 
-from .results import read_reference
+from mrcat.state.results import read_reference
 
 _ID = re.compile(r'[a-z][a-z0-9_]*')
 FIELDS = ('step_id', 'title', 'skill_id', 'reuse_from')
@@ -39,8 +39,8 @@ def apply_invalidation(task, steps, reason, directory):
     """Retain files and publications, but revoke their active bindings and reuse."""
     if not steps:
         return
-    from .results import invalidated_executions
-    from .store import write_json
+    from mrcat.state.results import invalidated_executions
+    from mrcat.state.store import write_json
     revised = recovery_view(task, steps, reason, directory)
     executions = invalidated_executions(directory, task['task_id'])
     for step in steps:
@@ -137,7 +137,7 @@ def validate_reuse(items, tasks):
 
 def completed_results(task, directory, history=(), *, selected=()):
     """Resolve saved completed outputs for planning and execution alike."""
-    from .review import compact
+    from mrcat.workflow.review import compact
     rows = []
     for source in [task, *history]:
         for row in reusable_results(source):
@@ -165,6 +165,6 @@ def executor_view(task, directory, history):
 
 
 def item_results(task, directory):
-    from .review import compact
+    from mrcat.workflow.review import compact
     return [dict(ref='$ref:' + result_id, status=entry['status'], outputs=compact(entry['outputs']))
             for result_id, entry in item_publications(task, directory)][-8:]

@@ -1,8 +1,8 @@
 """Behavioral boundaries between independent role subgraphs and durable memory."""
 import json
 from mrcat.agent import Agent
-from mrcat.execution import CodeExecutor
-from mrcat import memory
+from mrcat.runtime.execution import CodeExecutor
+from mrcat.state import memory
 from test_agent import ROOT, Model, create, decision, action, verified_value
 
 

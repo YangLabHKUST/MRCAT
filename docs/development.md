@@ -5,18 +5,60 @@
 ## Repository layout
 
 ```text
-mrcat/       Agent, model gateway, state, results, reporting and web console
-skills/      Skill guides, Python/R analysis wrappers and plot explanations
-scripts/     R dependency installation and reference-data download/verification
-examples/    Tutorials, recording exporters and an offline installation check
-tests/       Product behavior, method output and browser regressions
-docs/        User guides, architecture and the README interface image
+mrcat/                 Python application and public entry points
+  workflow/            Routing, planning, review and task transitions
+  runtime/             Code execution, action transport and diagnostics
+  state/               Session storage, memory and published results
+  model/               Model clients and context budgets
+  config/              Configuration loading
+  search/              GWAS and literature search
+  report/              Evidence selection, report writing and export
+  web/                 HTTP API and browser interface
+  tool/                Shared Python and R method implementations
+  prompts/             Agent instructions
+skills/                Method guides and executable method wrappers
+scripts/               Dependency and reference-data installation
+examples/              Tutorials, exporters and offline installation checks
+tests/                 Product, method and browser regressions
+docs/                  User and architecture documentation
 ```
 
 Full paper experiment inputs, runners and results are maintained separately.
 The selected read-only recording is included for inspection. Development audit
 scripts and records, private settings, session stores, caches and reference
 databases must not be committed or bundled with the source distribution.
+
+## Source of truth and publication
+
+Use this development checkout for code changes, tests and service launches.
+Do not maintain a second editable upload checkout. Runtime sessions and reference
+resources remain outside the tracked source tree; restarting a service must keep
+its existing artifact and database paths.
+
+The GitHub `main` branch has a separate public release history. Publish a reviewed
+source tree as a child of the current GitHub `main`; do not force-push the private
+development history or merge it into the public repository. The `github` remote
+points to `https://github.com/77JULIE/MRCAT.git`.
+
+After committing the intended changes and passing the checks below, publish from
+this checkout with a clean working tree:
+
+```bash
+set -e
+test -z "$(git status --porcelain)"
+git fetch github main
+mrcat_source_commit=$(git rev-parse HEAD)
+mrcat_release_commit=$(git commit-tree "${mrcat_source_commit}^{tree}" \
+  -p refs/remotes/github/main -m "Publish MRCAT source ${mrcat_source_commit}")
+git update-ref refs/mrcat/published "$mrcat_release_commit"
+git push github "${mrcat_release_commit}:refs/heads/main"
+```
+
+This sends the committed source files while retaining the existing public
+history. It needs no second working directory and does not publish ignored
+settings, sessions or reference data. A concurrent remote update causes the
+normal push to fail; fetch and review that update before preparing another
+release.
 
 ## Install and test
 

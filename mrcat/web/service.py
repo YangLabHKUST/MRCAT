@@ -4,8 +4,8 @@ from contextlib import contextmanager
 from uuid import uuid4
 import fcntl, json, os, signal, subprocess, sys, threading
 from urllib.parse import quote
-from mrcat.store import Store, now, write_json
-from mrcat.finalization import format_saved_summary
+from mrcat.state.store import Store, now, write_json
+from mrcat.workflow.finalization import format_saved_summary
 from .rendering import render_markdown
 from .cache import ViewCache
 

@@ -4,8 +4,8 @@ import json
 import pytest
 
 from mrcat.agent import Agent
-from mrcat.memory import render_memory
-from mrcat.manager import parse_decision
+from mrcat.state.memory import render_memory
+from mrcat.workflow.manager import parse_decision
 from test_agent import ROOT, Model, create, decision, verified_value
 
 
@@ -123,7 +123,7 @@ def test_invalid_initial_route_pauses_without_starting_work(tmp_path):
 
 
 def paused_task(store, sid):
-    from mrcat.tasks import create_task
+    from mrcat.workflow.tasks import create_task
     state = store.load(sid)
     task = create_task(state, dict(description='Analyze supplied data', request=state['request'],
         plan='Compute the requested value.', plan_items=[dict(step_id='compute',
@@ -159,7 +159,7 @@ def test_repeated_state_mismatch_preserves_paused_task(tmp_path):
 
 def test_continuing_archived_task_corrects_to_planner(tmp_path):
     from copy import deepcopy
-    from mrcat.tasks import archive_task
+    from mrcat.workflow.tasks import archive_task
     store, sid = create(tmp_path)
     state = paused_task(store, sid)
     archive_task(state, 'failed')

@@ -5,10 +5,10 @@ from copy import deepcopy
 import pytest
 
 from mrcat.agent import Agent
-from mrcat.coding_agent import CodingAgentNodes
-from mrcat.coding_protocol import action_messages, coding_history, loop_feedback
-from mrcat.memory import update_mr_task_memory
-from mrcat.store import Store
+from mrcat.runtime.coding_agent import CodingAgentNodes
+from mrcat.runtime.coding_protocol import action_messages, coding_history, loop_feedback
+from mrcat.state.memory import update_mr_task_memory
+from mrcat.state.store import Store
 from test_agent import ROOT, create, decision, native_reply
 from test_coding_graph import CodingModel
 from test_context_budget import coding_history as seeded_history

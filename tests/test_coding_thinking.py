@@ -6,8 +6,8 @@ from types import SimpleNamespace
 import pytest
 
 from mrcat.agent import Agent
-from mrcat.coding_agent import CodingAgentNodes
-from mrcat.coding_protocol import CODING_TOOLS, coding_history, action_messages
+from mrcat.runtime.coding_agent import CodingAgentNodes
+from mrcat.runtime.coding_protocol import CODING_TOOLS, coding_history, action_messages
 from mrcat.model import llm_gateway as gateway
 from test_agent import ROOT, create, native_reply
 from test_context_budget import coding_history as seeded_history

@@ -16,7 +16,7 @@ from urllib.parse import quote, unquote
 from dotenv import dotenv_values
 from openpyxl import load_workbook
 
-from mrcat.store import Store
+from mrcat.state.store import Store
 from mrcat.web.service import Service
 
 EXAMPLE_ID = "example-result4"

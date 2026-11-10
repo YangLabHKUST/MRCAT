@@ -2,7 +2,7 @@
 import json
 import pytest
 from mrcat.agent import Agent
-from mrcat.graph import build_graph
+from mrcat.workflow.graph import build_graph
 from test_agent import ROOT, Model, action, create, decision, verified_value
 
 

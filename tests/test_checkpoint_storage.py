@@ -16,7 +16,7 @@ import pytest
 from mrcat import checkpoints
 from mrcat.agent import Agent
 from mrcat.fork import fork_session
-from mrcat.store import Store
+from mrcat.state.store import Store
 from mrcat.web.server import create_app
 from test_agent import ROOT, Model
 

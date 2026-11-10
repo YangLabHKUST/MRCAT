@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from mrcat.store import Store
+from mrcat.state.store import Store
 
 
 def exporter():

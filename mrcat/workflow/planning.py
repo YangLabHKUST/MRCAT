@@ -5,8 +5,8 @@ Custom code artifacts remain visible even without a standard tool response.
 """
 import json
 from pathlib import Path
-from . import memory
-from .plan_items import reusable_results
+from mrcat.state import memory
+from mrcat.workflow.plan_items import reusable_results
 
 
 def result_index(work, directory, skills):

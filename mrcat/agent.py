@@ -4,13 +4,14 @@ from uuid import uuid4
 import json
 import os
 
-from .store import write_json
-from .execution import runtime_context
-from .results import result_catalog, work_scope
+from mrcat.state.store import write_json
+from mrcat.runtime.execution import runtime_context
+from mrcat.state.results import result_catalog, work_scope
 from .skills import SkillRegistry
-from . import manager, memory, tasks
+from mrcat.workflow import manager, tasks
+from mrcat.state import memory
 
-from .actions import parse_action
+from mrcat.runtime.actions import parse_action
 
 
 class Agent:
@@ -29,7 +30,7 @@ class Agent:
     def context_budget(self, role):
         from .config.loader import load_repo_config
         from .model.llm_gateway import current_model
-        from .context import ContextBudget
+        from mrcat.model.context import ContextBudget
         config = load_repo_config(repo_root=self.root).config
         model = (config.llm.models.for_role('reporter') if role in {
             'report_selection', 'literature_claims', 'literature_verify', 'report_writer', 'report_judge'
@@ -48,13 +49,13 @@ class Agent:
         if structured_action:
             from mrcat.model.llm_gateway import current_provider
             if current_provider(config) in {"deepseek", "openai", "anthropic"}:
-                from .coding_protocol import REVIEW_TOOL, SUMMARY_TOOL, action_messages
+                from mrcat.runtime.coding_protocol import REVIEW_TOOL, SUMMARY_TOOL, action_messages
                 tool = {'evaluate': REVIEW_TOOL, 'memory': SUMMARY_TOOL}[role]
                 options.update(action_tool=tool, thinking=False)
                 system = f"Submit exactly one {role} decision through {tool['function']['name']}.\n" + system
                 options["request_messages"] = action_messages(system, user)
         if tools:
-            from .coding_protocol import action_messages
+            from mrcat.runtime.coding_protocol import action_messages
             from .model.llm_gateway import current_provider
             options.update(tools=tools, request_messages=action_messages(system, user),
                            thinking=current_provider(config) == 'deepseek')
@@ -77,10 +78,10 @@ class Agent:
         return (self.root / "mrcat/prompts" / (name + ".md")).read_text()
 
     def executor_prompt(self, state, role):
-        from .plan_items import current_item
+        from mrcat.workflow.plan_items import current_item
         item = current_item(state['active_task']) if role == 'mr' else None
         if item and item['skill_id'] is None:
-            from .coding_agent import SYSTEM
+            from mrcat.runtime.coding_agent import SYSTEM
             return SYSTEM
         text = self.prompt('executor') + '\n' + self.prompt(role)
         if role == 'mr':
@@ -94,7 +95,7 @@ class Agent:
         directory = session / "llm" / uuid4().hex
         item = None
         if role == 'mr' and state.get('active_task'):
-            from .plan_items import current_item
+            from mrcat.workflow.plan_items import current_item
             item = current_item(state['active_task'])
         write_json(directory / "prompt.json", dict(role=role, system=system, user=user, **({"tools": tools} if tools else {})))
         from .trace import llm_started, llm_finished
@@ -102,7 +103,7 @@ class Agent:
         budget = self.context_budget(role)
         tool = tools
         if structured_action:
-            from .coding_protocol import REVIEW_TOOL, SUMMARY_TOOL
+            from mrcat.runtime.coding_protocol import REVIEW_TOOL, SUMMARY_TOOL
             tool = {'evaluate': REVIEW_TOOL, 'memory': SUMMARY_TOOL}[role]
         before = read_llm_total_tokens(session), read_llm_call_count(session), read_llm_unreported_calls(session)
         try:
@@ -114,7 +115,7 @@ class Agent:
             (directory / "response.txt").write_text(result)
             return result
         except Exception as exc:
-            from .diagnostics import exception_details, redact_data
+            from mrcat.runtime.diagnostics import exception_details, redact_data
             details = exception_details(exc)
             if getattr(exc, "provider_response", None) is not None:
                 response_path = directory / "provider_response.json"
@@ -124,7 +125,7 @@ class Agent:
             exc.mrcat_diagnostic = str((directory / "error.json").relative_to(session))
             raise
         finally:
-            from .context import tokens
+            from mrcat.model.context import tokens
             try:
                 sections = json.loads(user)
             except (TypeError, ValueError):
@@ -157,8 +158,8 @@ class Agent:
         role = state["active_agent"]
         if role != "mr":
             raise ValueError("Only the MR subgraph can generate a Plan.")
-        from .planning import planning_history
-        from .plan_items import parse_plan, validate_reuse, recovery_view, completed_results
+        from mrcat.workflow.planning import planning_history
+        from mrcat.workflow.plan_items import parse_plan, validate_reuse, recovery_view, completed_results
         work = None if new_task else state.get("active_task")
         if recovery and work:
             work = recovery_view(work, recovery.get('invalidate_steps', []), recovery['reason'],
@@ -214,7 +215,7 @@ class Agent:
         return self.context_budget(role).measure(self.executor_prompt(state, role), context) > self.context_budget(role).summary_trigger
 
     def compact_memory(self, state, role, *, force=False):
-        from .context import tokens
+        from mrcat.model.context import tokens
         work = memory.work_state(state, role)
         if work.get('memory_attempt_upto') == len(state['messages']):
             return
@@ -269,7 +270,7 @@ class Agent:
                 return
 
     def executor_context(self, state, role):
-        from .plan_items import executor_view, current_item
+        from mrcat.workflow.plan_items import executor_view, current_item
         work = memory.work_state(state, role)
         directory = self.store.directory(state["session_id"])
         guide_id = work.get("guide")
@@ -315,7 +316,7 @@ class Agent:
                     history_access='mrcat.tools.session_history(start=0, limit=50)')
         if role == 'mr' and current_item(work):
             context.update(executor_view(work, directory, state['task_history']))
-            from .plan_items import item_results
+            from mrcat.workflow.plan_items import item_results
             context['item_results'] = item_results(work, directory)
             context['execution_mode'] = 'tool' if current_item(work)['skill_id'] else 'codeact'
             if current_item(work)['skill_id']:
@@ -329,7 +330,7 @@ class Agent:
     def run(self, sid, request):
         from mrcat.model.llm_usage import llm_usage_scope
         from mrcat.model.llm_gateway import OutputTruncatedError
-        from .context import ContextBudgetExceeded
+        from mrcat.model.context import ContextBudgetExceeded
         from .trace import session_trace
         with session_trace(self.store, sid), llm_usage_scope(self.store.directory(sid) / "llm_usage.json"):
             try:
@@ -352,7 +353,7 @@ class Agent:
                 raise
 
     def _run(self, sid, request):
-        from .graph import run_graph
+        from mrcat.workflow.graph import run_graph
         return run_graph(self, sid, request)
 
     def _route_mr(self, state, decision, plan=None):

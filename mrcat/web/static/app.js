@@ -694,13 +694,15 @@ function renderSessions() {
     button.addEventListener("click", () => selectSession(item.session_id));
 
     const title = document.createElement("strong");
-    title.textContent = `MRCAT · ${displaySessionId(item.session_id)}`;
+    title.textContent = text(item.question) || `Session ${displaySessionId(item.session_id)}`;
+    button.title = text(item.question) || title.textContent;
+    button.setAttribute("aria-current", item.session_id === state.currentSessionId ? "true" : "false");
     const status = document.createElement("span");
     status.className = `mini-status ${text(item.status).replaceAll("_", "-")}`;
     status.textContent = statusLabel(item.status);
     status.title = sessionStatusDescription(item.status);
     const question = document.createElement("p");
-    question.textContent = text(item.question) || "-";
+    question.textContent = displaySessionId(item.session_id);
 
     button.appendChild(title);
     button.appendChild(status);
@@ -710,6 +712,7 @@ function renderSessions() {
 }
 
 async function selectSession(sessionId) {
+  if (LIVE_DEMO) clearLiveDemoSetup();
   if (!sessionId) return;
   leaveExample();
   const preservePendingNewSession = Boolean(
@@ -943,7 +946,7 @@ function applySnapshot(snapshot) {
 function renderHeader(snapshot) {
   const session = snapshot?.state || {};
   els.sessionTitle.textContent = session.session_id ? `MRCAT Session · ${displaySessionId(session.session_id)}` : LIVE_DEMO ? "BMI → T2D · Interactive example" : "New Chat";
-  els.sessionSubtitle.textContent = session.question || (LIVE_DEMO ? "Three connected tasks · Real analysis and figures" : "Ask a research question or describe a coding task.");
+  els.sessionSubtitle.textContent = session.question || (LIVE_DEMO ? "Suggested questions · Real analysis and figures" : "Ask a research question or describe a coding task.");
   els.statusChip.textContent = sessionActivity(snapshot)?.title || session.status || "Ready";
   els.statusChip.className = "status-chip";
   els.pendingText.hidden = !text(snapshot?.pending_question);
@@ -1047,7 +1050,14 @@ function decoratePlanSkills(content) {
   }
 }
 
-function buildReadablePlan(event, current, open, detailOpen) {
+function planTaskForEvent(event, snapshot) {
+  if (event.details?.draft) return null;
+  const tasks = [snapshot?.mr?.state?.active_task, ...(snapshot?.mr?.state?.task_history || [])].filter(Boolean);
+  // Only the recorded task and exact plan revision may supply live progress.
+  return tasks.find(task => task.task_id === event.details?.task_id && task.plan === event.content) || null;
+}
+
+function buildReadablePlan(event, current, open, detailOpen, snapshot) {
   const card = document.createElement("details");
   card.className = "plan-workflow-card readable-plan";
   card.dataset.planId = event.id;
@@ -1059,53 +1069,96 @@ function buildReadablePlan(event, current, open, detailOpen) {
   const title = document.createElement("strong");
   title.textContent = current ? (event.details?.draft ? "Proposed plan" : "Analysis plan") : "Previous plan";
   identity.appendChild(title);
-  if (event.details?.task_id) {
-    const task = document.createElement("span");
-    task.className = "readable-plan-meta";
-    task.textContent = event.details.task_id;
-    identity.appendChild(task);
+  const task = planTaskForEvent(event, snapshot);
+  const progress = document.createElement("span");
+  progress.className = "readable-plan-meta";
+  if (task?.plan_items?.length) {
+    const completed = task.plan_items.filter(item => task.completed_items?.[item.step_id]).length;
+    progress.textContent = `${completed} / ${task.plan_items.length} completed`;
+  } else {
+    progress.textContent = event.details?.draft ? "Awaiting confirmation" : "Step-by-step workflow";
   }
+  identity.appendChild(progress);
   heading.append(identity);
   const content = document.createElement("div");
   content.className = "codeact-plan";
   content.innerHTML = renderMarkdown(event.content);
   decoratePlanSkills(content);
-  // Format the recorded list in place; numbering never implies execution progress.
   let number = 0;
   for (const list of content.querySelectorAll(":scope > ol, :scope > ul")) {
     list.classList.add("readable-plan-steps");
     for (const item of list.children) {
-      const marker = document.createElement("span");
-      marker.className = "readable-plan-number";
-      marker.setAttribute("aria-hidden", "true");
-      marker.textContent = String(++number).padStart(2, "0");
+      number++;
       const copy = document.createElement("div");
       copy.className = "readable-plan-copy";
       copy.append(...item.childNodes);
-      const firstText = copy.firstChild;
-      const stepId = firstText?.nodeType === Node.TEXT_NODE && firstText.textContent.match(/^\[([a-z][a-z0-9_]*)\]\s*/);
-      if (stepId) firstText.textContent = firstText.textContent.slice(stepId[0].length);
+      const firstText = copy.firstChild?.nodeType === Node.TEXT_NODE ? copy.firstChild : copy.querySelector("p")?.firstChild;
+      const match = firstText?.nodeType === Node.TEXT_NODE && firstText.textContent.match(/^\[([a-z][a-z0-9_]*)\]\s*/);
+      const stepId = match ? match[1] : "";
+      if (match) firstText.textContent = firstText.textContent.slice(match[0].length);
+      const planned = task?.plan_items?.find(step => step.step_id === stepId);
+      const completed = planned && task.completed_items?.[stepId];
+      const active = planned && task.current_item_id === stepId;
+      const executions = completed?.execution_ids || (active ? task.item_execution_ids || [] : []);
+      const savedEvents = codeExecutionEvents(snapshot).filter(e => executions.includes(e.details.execution_id));
+      const lastExecution = savedEvents.at(-1);
+      let tone = completed ? "completed" : "pending";
+      let label = completed ? "Completed" : planned ? "Pending" : event.details?.draft ? "Proposed" : "Planned";
+      if (active && !completed) {
+        if (snapshot.active_job && task === snapshot.mr.state.active_task && task.status === "running") {
+          tone = "running"; label = "Running";
+        } else { tone = "paused"; label = "Paused"; }
+        if (lastExecution && codeExecutionTone(lastExecution.details) === "failed" && !snapshot.active_job) {
+          tone = "failed"; label = "Needs attention";
+        }
+      }
+      item.className = `readable-plan-step is-${tone}`;
+      const marker = document.createElement("span");
+      marker.className = "readable-plan-number";
+      marker.setAttribute("aria-hidden", "true");
+      marker.textContent = completed ? "✓" : String(number).padStart(2, "0");
       const body = document.createElement("div");
       body.className = "readable-plan-step-body";
-      if (copy.textContent.length > 320) {
-        const detail = document.createElement("details");
-        detail.className = "readable-plan-description";
-        detail.dataset.planDetail = `${event.id}:${number}`;
-        detail.open = detailOpen.get(detail.dataset.planDetail) || false;
-        const label = document.createElement("summary");
-        const first = copy.querySelector("strong")?.textContent || copy.textContent.split(/(?<=[.!?])\s/)[0];
-        label.textContent = first.length > 160 ? first.slice(0, 160) + "…" : first;
-        detail.append(label, copy);
+      const detail = document.createElement("details");
+      detail.className = "readable-plan-description";
+      detail.dataset.planDetail = `${event.id}:${number}`;
+      detail.open = detailOpen.has(detail.dataset.planDetail) ? detailOpen.get(detail.dataset.planDetail) : tone === "running";
+      const summary = document.createElement("summary");
+      const title = document.createElement("strong");
+      const rawTitle = planned?.title || copy.querySelector("strong")?.textContent || copy.textContent.replace(/^\d+[.)]\s+/, "").split(/(?<=[.!?])\s/)[0];
+      title.className = "readable-plan-step-title";
+      title.textContent = rawTitle;
+      title.title = rawTitle;
+      const status = document.createElement("span");
+      status.className = `readable-plan-status is-${tone}`;
+      status.textContent = label;
+      summary.append(title, status);
+      if (copy.textContent.trim() !== rawTitle.trim() || rawTitle.length > 120) {
+        detail.append(summary, copy);
         body.appendChild(detail);
       } else {
-        body.appendChild(copy);
+        // A short title is already complete; do not repeat it in a disclosure.
+        const row = document.createElement("div");
+        row.className = "readable-plan-summary";
+        row.append(title, status);
+        body.appendChild(row);
       }
-      if (stepId) {
-        const reference = document.createElement("span");
-        reference.className = "readable-plan-step-id";
-        reference.textContent = stepId[1];
-        body.appendChild(reference);
+      const actions = document.createElement("div");
+      actions.className = "readable-plan-step-actions";
+      if (planned?.skill_id) actions.appendChild(createSkillLabel(planned.skill_id));
+      if (savedEvents.length) {
+        const output = document.createElement("button");
+        output.type = "button";
+        output.className = "readable-plan-output";
+        output.textContent = "View outputs →";
+        output.setAttribute("aria-label", `View outputs for ${rawTitle}`);
+        output.addEventListener("click", () => {
+          // A step can have retries and multiple executions; open its first cell.
+          focusCodeExecution(savedEvents[0].details.execution_id);
+        });
+        actions.appendChild(output);
       }
+      if (actions.childElementCount) body.appendChild(actions);
       item.append(marker, body);
     }
   }
@@ -1134,7 +1187,7 @@ function renderConversation(snapshot) {
       const row = appendMessage("assistant", "Plan", "", {kind: "plan"});
       const card = buildReadablePlan(event, event === latestPlan,
         event !== latestPlan && event.id === previousCurrent ? false
-          : planOpen.has(event.id) ? planOpen.get(event.id) : event === latestPlan, planDetailOpen);
+          : planOpen.has(event.id) ? planOpen.get(event.id) : event === latestPlan, planDetailOpen, snapshot);
       row.querySelector(".message-body").appendChild(card);
     } else if (event.type === "manager_route" && event.details?.route !== "respond") {
       const role = {search: "Search Agent", mr: "MR Agent", report: "Report Agent"}[event.details?.route] || "MRCAT";
@@ -1194,7 +1247,7 @@ function renderConversation(snapshot) {
     }
   }
   if (state.pendingUserMessage && !events.some(e => e.type === "user_message" && e.content === state.pendingUserMessage.text)) appendMessage("user", "You", state.pendingUserMessage.text);
-  if (!els.conversationFeed.children.length) appendEmptyConversation(LIVE_DEMO ? "Choose the literature request above to begin. Your conversation and analysis results will appear here." : "Ask a research question or describe a coding task.");
+  if (!els.conversationFeed.children.length) appendEmptyConversation(LIVE_DEMO ? "Write a question, or choose an example below and edit it before sending." : "Ask a research question or describe a coding task.");
   restoreConversationScroll(scroll);
 }
 
@@ -2898,13 +2951,20 @@ function buildStudySetupSide(side, labelText, datasets, status, snapshot) {
   heading.textContent = labelText;
   group.appendChild(heading);
 
-  const fileLabel = document.createElement("label");
+  const fileLabel = document.createElement("div");
   fileLabel.className = "study-dataset-upload";
   fileLabel.textContent = "Upload local GWAS files";
   const fileInput = document.createElement("input");
   fileInput.type = "file";
   fileInput.multiple = true;
+  fileInput.hidden = true;
   fileInput.disabled = Boolean(state.busy || status.locked);
+  const chooseFiles = document.createElement("button");
+  chooseFiles.type = "button";
+  chooseFiles.textContent = "Choose files";
+  chooseFiles.setAttribute("aria-label", `Choose ${side} GWAS files`);
+  chooseFiles.disabled = fileInput.disabled;
+  chooseFiles.addEventListener("click", () => fileInput.click());
   fileInput.addEventListener("change", () => {
     const selectedFiles = Array.from(fileInput.files || []);
     if (selectedFiles.length === 0) return;
@@ -2927,7 +2987,7 @@ function buildStudySetupSide(side, labelText, datasets, status, snapshot) {
     state.studySetupDraft.dirty = true;
     renderStudySetup(snapshot);
   });
-  fileLabel.appendChild(fileInput);
+  fileLabel.append(chooseFiles, fileInput);
   group.appendChild(fileLabel);
 
   const datasetList = document.createElement("div");
@@ -3413,6 +3473,10 @@ async function sendReply(event, request = null) {
   if (state.busy) return;
   const reply = request || text(els.replyInput.value);
   if (!reply) return;
+  if (LIVE_DEMO && liveDemoSelection) {
+    await sendLiveDemoSetup(reply);
+    return;
+  }
   if (!state.currentSessionId) {
     await startSessionWithQuestion(reply);
     return;

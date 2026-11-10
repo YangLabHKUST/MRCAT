@@ -6,10 +6,11 @@ import sys
 
 import pytest
 
-from mrcat import results, tools
+from mrcat.state import results
+from mrcat import tools
 from mrcat.agent import Agent
-from mrcat.execution import CodeExecutor
-from mrcat.store import Store
+from mrcat.runtime.execution import CodeExecutor
+from mrcat.state.store import Store
 from test_agent import Model, action, create, decision
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -107,7 +108,7 @@ def test_cross_cell_restart_and_late_failure(tmp_path):
 
 
 def test_concurrent_processes_do_not_drop_or_overwrite_results(runtime):
-    code = ('from mrcat.results import register_tool_result\n'
+    code = ('from mrcat.state.results import register_tool_result\n'
             'register_tool_result("tool", {"outputs":{"status":"ok","value":42}}, {}, "response.json")')
     processes = [subprocess.Popen([sys.executable, '-c', code], cwd=ROOT,
                                   stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -139,7 +140,7 @@ def test_result_refs_remain_in_focused_repair_and_after_memory_loss(tmp_path):
     assert contexts[1]['result_refs'][0]['ref'] == '$ref:partial'
     assert done['status'] == 'completed'
     # Discard conversational context and reopen the store/agent.
-    from mrcat import memory
+    from mrcat.state import memory
     state = store.load(sid)
     task = state.get('active_task') or state['task_history'][-1]
     state['active_task'] = task
@@ -154,7 +155,7 @@ def test_result_refs_remain_in_focused_repair_and_after_memory_loss(tmp_path):
 
 
 def test_new_search_scope_isolated_and_continuation_preserves_it(tmp_path):
-    from mrcat import memory
+    from mrcat.state import memory
     state = Store(tmp_path).create('Search', 'openai')
     memory.begin_role_work(state, 'search', 'run', 'first search')
     first = memory.work_state(state, 'search')['result_scope']

@@ -39,14 +39,14 @@ const assert = require('node:assert/strict');
     await report.getByRole('button', {name: 'View Cell 2 in Execution Notebook'}).click();
     assert.equal(await page.locator('.codeact-cell.is-selected').getAttribute('data-execution-id'), original[1].id);
 
-    await page.route('**/artifacts/raw?**summary=workspace%2Ffigure.svg*', route => route.fulfill({
-      contentType: 'image/svg+xml', body: '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="80"><rect width="100" height="80" fill="teal"/></svg>',
+    await page.route('**/artifacts/raw?**summary=workspace%2Ffigure.png*', route => route.fulfill({
+      contentType: 'image/png', body: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAGQAAABQCAIAAABga0e4AAAAv0lEQVR4nO3QQQkAIADAQDW50a3gXiLcJRibY+/BnfU64CdmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgUH18UBoLnIQwkAAAAASUVORK5CYII=', 'base64'),
     }));
     await page.evaluate(() => {
       state.eventSource?.close();
       const snapshot = structuredClone(state.snapshot);
       const cells = snapshot.mr.events.filter(e => e.type === 'code_execution');
-      cells[0].details.generated_files.push('workspace/figure.svg', 'workspace/deleted.txt', 'workspace/inputs/private.csv');
+      cells[0].details.generated_files.push('workspace/figure.png', 'workspace/deleted.txt', 'workspace/inputs/private.csv');
       const retry = structuredClone(cells[0]);
       retry.id = 'retry';
       Object.assign(retry.details, {execution_id: 'retry', status: 'exited', returncode: 1,
@@ -54,12 +54,12 @@ const assert = require('node:assert/strict');
       snapshot.mr.events.push(retry);
       const files = Object.values(snapshot.mr.manifest.artifacts)[0].files;
       files.splice(0, files.length, ...files.filter(file => !file.path.endsWith('/final_summary.md')));
-      files.push({path: 'workspace/figure.svg', kind: 'image'}, {path: 'workspace/unattributed.txt', kind: 'file'},
+      files.push({path: 'workspace/figure.png', kind: 'image'}, {path: 'workspace/unattributed.txt', kind: 'file'},
         {path: 'workspace/inputs/private.csv', kind: 'file'});
       applySnapshot(snapshot);
     });
     const mapped = await correspondence();
-    assert.deepEqual(mapped.map(cell => cell.files), [['workspace/figure.svg'], ['workspace/report.md'], ['workspace/summary.csv']]);
+    assert.deepEqual(mapped.map(cell => cell.files), [['workspace/figure.png'], ['workspace/report.md'], ['workspace/summary.csv']]);
     const firstCell = page.locator('.codeact-cell').first();
     assert.match(await firstCell.innerText(), /summary.csv · Updated by Cell 3/);
     assert.match(await firstCell.innerText(), /deleted.txt · File no longer available/);

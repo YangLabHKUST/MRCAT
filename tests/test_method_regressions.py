@@ -9,7 +9,7 @@ from urllib.parse import parse_qs, urlparse
 
 import pytest
 from requests import HTTPError, Response
-from mrcat.execution import CodeExecutor
+from mrcat.runtime.execution import CodeExecutor
 from mrcat.agent import Agent
 from test_agent import ROOT, Model, action, create, decision
 

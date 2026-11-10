@@ -37,15 +37,23 @@ an automated Judge before exporting an accepted report.
 | Module | Responsibility |
 | --- | --- |
 | `mrcat/agent.py` | Shared model, context and task helpers |
-| `mrcat/graph.py`, `manager.py` | Conversation routing and persistent user pauses |
-| `mrcat/mr.py`, `plan_items.py` | MR steps, Review, replanning and Finalize |
-| `mrcat/codeact.py`, `coding_agent.py` | Skill and custom-code execution loops |
-| `mrcat/execution.py` | Child processes, logs, cancellation and execution receipts |
-| `mrcat/store.py`, `checkpoints.py` | Authoritative checkpoint storage |
-| `mrcat/results.py` | Saved result publications and explicit references |
-| `mrcat/tools.py`, `tool/MRTool/` | Public tool functions and shared MR helpers |
+| `mrcat/workflow/` | Manager routing, graph state, MR planning, Review, Finalize and task transitions |
+| `mrcat/runtime/` | Skill and custom-code loops, action transport, child processes and diagnostics |
+| `mrcat/state/` | Checkpoint-backed storage, working memory and saved results |
+| `mrcat/model/` | Model gateways, provider protocols, usage and context budgets |
+| `mrcat/config/` | Environment and configuration loading |
+| `mrcat/search/` | Search contracts, providers, inspection and saved documents |
+| `mrcat/tools.py`, `mrcat/tool/MRTool/` | Public tool functions and shared MR helpers |
 | `mrcat/report/` | Evidence selection, literature, writing, review and export |
 | `mrcat/web/` | HTTP API, session projections and static frontend |
+| `mrcat/prompts/`, `skills/` | Agent instructions, method guides and executable wrappers |
+| `mrcat/checkpoints.py`, `mrcat/fork.py`, `mrcat/migrate.py`, `mrcat/trace.py` | Checkpoint maintenance, session copies, legacy imports and trace command-line utilities |
+
+The package root retains application entry points and research APIs. Internal
+workflow, execution and state modules live in their owning packages; imports
+should use those paths directly. Package initializers do not dispatch work or
+register aliases. CLI commands, HTTP routes, checkpoint schemas, prompt resources
+and method resource paths are independent of this source organization.
 
 ## Session files
 

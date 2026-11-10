@@ -2,7 +2,7 @@
 import json
 import re
 from time import perf_counter
-from ..store import now
+from mrcat.state.store import now
 from typing import Any
 from .scientific import report_spec_example, validate_report_spec
 from .review import report_judgement_example, validate_report_judgement

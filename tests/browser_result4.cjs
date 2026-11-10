@@ -7,12 +7,17 @@ const assert = require('node:assert/strict');
   const browser = await chromium.launch({headless: true, args: ['--no-sandbox']});
   try {
     const page = await browser.newPage({viewport: {width: 1600, height: 1000}});
-    const errors = [], failures = [], apiCalls = [], writes = [];
+    const errors = [], failures = [], apiCalls = [], writes = [], analytics = [];
     page.on('pageerror', e => errors.push(e.message));
     page.on('response', r => { if (r.status() >= 400) failures.push(`${r.status()} ${r.url()}`); });
     page.on('request', r => {
       if (new URL(r.url()).pathname.startsWith('/api/')) apiCalls.push(r.url());
-      if (!['GET', 'HEAD'].includes(r.method())) writes.push(r.url());
+      if (!['GET', 'HEAD'].includes(r.method())) {
+        // Cloudflare injects its own page-performance beacon on the public host.
+        const url = new URL(r.url());
+        if (url.origin === new URL(base).origin && url.pathname === '/cdn-cgi/rum') analytics.push(r.url());
+        else writes.push(r.url());
+      }
     });
     await page.goto(base);
     await page.waitForSelector('.viewing-example');
@@ -73,7 +78,8 @@ const assert = require('node:assert/strict');
     assert.deepEqual(apiCalls, []);
     assert.deepEqual(writes, []);
     console.log(JSON.stringify({status: 'passed', executions: expected, stages: counts,
-      assets: assets.length, apiCalls: apiCalls.length, writes: writes.length, errors}));
+      assets: assets.length, apiCalls: apiCalls.length, writes: writes.length,
+      cloudflareAnalytics: analytics.length, errors}));
   } finally {
     await browser.close();
   }

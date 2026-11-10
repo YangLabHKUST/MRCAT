@@ -4,10 +4,10 @@ import json
 import pytest
 
 from mrcat.agent import Agent
-from mrcat.plan_items import apply_invalidation, validate_invalidation
-from mrcat.finalization import result_sources
-from mrcat.store import write_json
-from mrcat.results import read_reference, result_catalog
+from mrcat.workflow.plan_items import apply_invalidation, validate_invalidation
+from mrcat.workflow.finalization import result_sources
+from mrcat.state.store import write_json
+from mrcat.state.results import read_reference, result_catalog
 from test_agent import ROOT, Model, action, create, decision
 from test_plan_items import item
 

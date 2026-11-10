@@ -5,9 +5,9 @@ from copy import deepcopy
 import pytest
 
 from mrcat.agent import Agent
-from mrcat.coding_agent import CodingAgentNodes, SYSTEM
-from mrcat.context import ContextBudget, ContextBudgetExceeded
-from mrcat.tasks import create_task
+from mrcat.runtime.coding_agent import CodingAgentNodes, SYSTEM
+from mrcat.model.context import ContextBudget, ContextBudgetExceeded
+from mrcat.workflow.tasks import create_task
 from test_agent import ROOT, create
 
 
@@ -154,7 +154,7 @@ def test_nonreducing_summary_does_not_replace_memory_or_advance_history(tmp_path
 
 
 def test_token_limited_summary_still_rejects_oversized_output():
-    from mrcat.memory import completed_memory, initial_memory
+    from mrcat.state.memory import completed_memory, initial_memory
     note = initial_memory('Evidence ' * 3000) + '\n[END_MEMORY]'
     with pytest.raises(ValueError, match='exceeds its budget'):
         completed_memory(note, token_limit=1000)

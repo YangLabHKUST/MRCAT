@@ -1,6 +1,6 @@
 """One intake decision per user turn; no per-code-action manager calls."""
 import json
-from .memory import excerpt, recent_messages, task_brief, task_catalog
+from mrcat.state.memory import excerpt, recent_messages, task_brief, task_catalog
 
 ACTIONS_BY_ROUTE = {
     "respond": ("respond",),
@@ -14,7 +14,7 @@ def validate_state(decision, state):
     """Reject unavailable MR actions before entering a workflow node."""
     if decision['route'] != 'mr':
         return
-    from .tasks import TERMINAL
+    from mrcat.workflow.tasks import TERMINAL
     task = state.get('active_task')
     pending = state.get('pending') or {}
     proposal = pending.get('kind') == 'plan_confirmation'

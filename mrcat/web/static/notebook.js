@@ -566,7 +566,10 @@ function appendCodeExecutionOutputs(cell, files, snapshot, events, version) {
     for (const file of images) {
       displayed.add(file.path);
       const sidecar = file.path.replace(/\.png$/i, ".plot.json");
-      if (qcPlotKind(file.path) && files.some(candidate => candidate.path === sidecar)) {
+      if (artifactBasename(file.path) === "mrapss_mrplot.png" && files.some(candidate => candidate.path === sidecar)) {
+        displayed.add(sidecar);
+        figures.appendChild(buildMrapssExplorer(file, snapshot, sidecar, version));
+      } else if (qcPlotKind(file.path) && files.some(candidate => candidate.path === sidecar)) {
         const folder = file.path.slice(0, file.path.lastIndexOf("/"));
         if (!qcGroups.has(folder)) qcGroups.set(folder, []);
         qcGroups.get(folder).push(file);

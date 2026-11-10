@@ -12,7 +12,7 @@ from fastapi.testclient import TestClient
 import mrcat
 from mrcat.agent import Agent
 from mrcat.skills import SkillRegistry
-from mrcat.store import Store
+from mrcat.state.store import Store
 from mrcat.web.server import create_app
 
 

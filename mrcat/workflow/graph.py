@@ -8,9 +8,9 @@ import json
 from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.types import Command, interrupt
-from . import manager
-from .flow import Flow
-from .codeact import CodeActNodes, role_graph
+from mrcat.workflow import manager
+from mrcat.workflow.flow import Flow
+from mrcat.runtime.codeact import CodeActNodes, role_graph
 
 
 class ManagerNodes(CodeActNodes):
@@ -107,13 +107,13 @@ def run_graph(agent, sid, request):
         raise ValueError('Import this legacy session into a new store before continuing.')
     session.pop('coding_agent', None)
     if session.get('pending_coding_tool'):
-        from .coding_agent import CodingAgentNodes
+        from mrcat.runtime.coding_agent import CodingAgentNodes
         with agent.store.node_state(session):
             CodingAgentNodes(agent).recover_tool(session)
         agent.store.save(session)
     with SqliteSaver.from_conn_string(str(path)) as saver:
         session = recover_execution(agent, sid, session)
-        from .coding_agent import CodingAgentNodes
+        from mrcat.runtime.coding_agent import CodingAgentNodes
         CodingAgentNodes(agent).cancel_pending(session,
             'Previous turn was interrupted. Queued calls were not executed; inspect saved evidence before retrying.')
         agent.store.save(session)
@@ -157,7 +157,7 @@ def recover_execution(agent, sid, session):
         return session
     result = json.loads(receipt.read_text())
     if role == 'mr':
-        from .mr import MRNodes
+        from mrcat.workflow.mr import MRNodes
         task = session.get('active_task') or {}
         if (task.get('task_id') != flow.get('task_id')
                 or task.get('current_item_id') != flow.get('step_id')):

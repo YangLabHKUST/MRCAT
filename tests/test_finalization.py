@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 
 from mrcat.agent import Agent
-from mrcat.finalization import render_summary, result_sources
+from mrcat.workflow.finalization import render_summary, result_sources
 from test_agent import ROOT, Model, action, create, decision, verified_value
 
 

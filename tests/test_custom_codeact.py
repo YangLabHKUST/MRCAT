@@ -3,9 +3,9 @@ import json
 from pathlib import Path
 
 from mrcat.agent import Agent
-from mrcat.codeact import CodeActNodes
-from mrcat.coding_agent import CodingAgentNodes, SYSTEM
-from mrcat.coding_protocol import redirected_logs
+from mrcat.runtime.codeact import CodeActNodes
+from mrcat.runtime.coding_agent import CodingAgentNodes, SYSTEM
+from mrcat.runtime.coding_protocol import redirected_logs
 from test_agent import ROOT, Model, action, create, decision, native_reply, journal_view
 from test_dual_executor import search_code, skill_item
 from test_plan_items import item
@@ -13,7 +13,7 @@ from test_plan_items import item
 
 def execution_evidence(context):
     directory = Path(context['session_directory'])
-    from mrcat.coding_protocol import observation_view
+    from mrcat.runtime.coding_protocol import observation_view
     return [dict(observation_view(directory, row['result'], output_limit=16000),
                  code=row['arguments'].get('content', ''))
             for row in journal_view(context) if row['tool'] == 'run' and 'returncode' in row.get('result', {})]
@@ -214,8 +214,8 @@ def test_scientific_boundary_still_reaches_review_without_code_prescription(tmp_
 
 def test_coding_transport_rejects_unknown_tool_and_preserves_shared_parser():
     import pytest
-    from mrcat.actions import parse_action
-    from mrcat.coding_protocol import coding_call
+    from mrcat.runtime.actions import parse_action
+    from mrcat.runtime.coding_protocol import coding_call
     with pytest.raises(ValueError):
         coding_call({'type':'execute','body':'print(1)'})
     assert parse_action('```python\nprint(1)\n```', role='mr')['body'] == 'print(1)'

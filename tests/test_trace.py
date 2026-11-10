@@ -8,8 +8,8 @@ import pytest
 
 from mrcat import trace
 from mrcat.agent import Agent
-from mrcat.execution import CodeExecutor
-from mrcat.store import Store
+from mrcat.runtime.execution import CodeExecutor
+from mrcat.state.store import Store
 from test_agent import ROOT, Model
 
 

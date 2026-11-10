@@ -7,8 +7,8 @@ from fastapi.testclient import TestClient
 
 from mrcat.agent import Agent
 from mrcat.fork import fork_session
-from mrcat.results import read_reference
-from mrcat.store import Store
+from mrcat.state.results import read_reference
+from mrcat.state.store import Store
 from mrcat.web.server import create_app
 from test_agent import ROOT, Model, action, decision, verified_value
 
@@ -27,7 +27,7 @@ def test_copy_reuses_results_and_writes_only_to_copy(tmp_path):
     sid = state['session_id']
     source = original.directory(sid)
     code = """from pathlib import Path
-from mrcat.results import publish_result
+from mrcat.state.results import publish_result
 path = Path('value.txt').resolve()
 path.write_text('original')
 publish_result('saved', {'path': str(path)})

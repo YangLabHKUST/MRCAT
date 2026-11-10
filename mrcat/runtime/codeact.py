@@ -4,10 +4,11 @@ from copy import deepcopy
 import json
 import hashlib
 from langgraph.graph import StateGraph, START, END
-from . import memory, tasks
-from .execution import CodeExecutor
-from .results import work_scope
-from .flow import Flow
+from mrcat.state import memory
+from mrcat.workflow import tasks
+from mrcat.runtime.execution import CodeExecutor
+from mrcat.state.results import work_scope
+from mrcat.workflow.flow import Flow
 
 
 class CodeActNodes:
@@ -21,11 +22,11 @@ class CodeActNodes:
             state = deepcopy(flow['session'])
             with self.agent.store.node_state(state):
                 if method.__name__ == 'tools' and flow.get('coding_call'):
-                    from .trace import tool_started
+                    from mrcat.trace import tool_started
                     tool_started(self.agent.store.directory(state['session_id']), state, flow)
                 result = method(flow, state)
                 if method.__name__ in {'tools', 'observe'}:
-                    from .trace import capture_coding
+                    from mrcat.trace import capture_coding
                     capture_coding(self.agent.store.directory(state['session_id']), state)
                 if (result.get('action') or {}).get('kind') == 'execute':
                     state['pending_execution'] = {key: value for key, value in (flow | result).items()
@@ -75,7 +76,7 @@ class CodeActNodes:
         return {}
 
     def role(self, flow, state):
-        from .agent import parse_action
+        from mrcat.agent import parse_action
         role = flow['role']
         context = self.agent.executor_context(state, role)
         if flow.get('failures', 0) and flow.get('action', {}).get('kind') == 'execute':
@@ -204,7 +205,7 @@ class CodeActNodes:
                                  status='running', stdout='', stderr='')
         def output(stdout, stderr):
             event['details'].update(stdout=stdout, stderr=stderr)
-            from .store import now
+            from mrcat.state.store import now
             event['timestamp'] = now()
             self.agent.store.publish_live_event(state, event)
         executor = CodeExecutor(self.agent.root, directory, timeout=action.get('timeout', self.agent.execution_timeout),
@@ -270,10 +271,10 @@ class CodeActNodes:
 
 def role_graph(agent, role):
     if role == 'report':
-        from .report.graph import report_graph
+        from mrcat.report.graph import report_graph
         return report_graph(agent)
     if role == 'mr':
-        from .mr import mr_graph
+        from mrcat.workflow.mr import mr_graph
         return mr_graph(agent)
     nodes = CodeActNodes(agent)
     graph = StateGraph(Flow)

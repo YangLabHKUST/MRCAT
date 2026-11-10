@@ -6,7 +6,7 @@ import json
 import os
 from unittest.mock import patch
 
-from mrcat.store import Store
+from mrcat.state.store import Store
 from mrcat.web.server import create_app
 from mrcat.web.service import Service
 from test_agent import ROOT

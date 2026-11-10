@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from mrcat.actions import parse_action
-from mrcat import memory
+from mrcat.runtime.actions import parse_action
+from mrcat.state import memory
 from mrcat.agent import Agent
 from test_agent import ROOT, Model, action, create, decision, coding_action, native_reply
 
@@ -190,7 +190,7 @@ def test_failed_format_repair_pauses_without_evaluate_and_retains_results(tmp_pa
 
 
 def test_single_block_still_supports_multiple_steps(tmp_path):
-    from mrcat.execution import CodeExecutor
+    from mrcat.runtime.execution import CodeExecutor
     raw = ('```python\nfrom pathlib import Path\nx = 40\n'
            'Path("answer.txt").write_text(str(x + 2))\nprint(x + 2)\n```')
     parsed = parse_action(raw, role='mr')

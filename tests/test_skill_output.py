@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from mrcat.execution import CodeExecutor
+from mrcat.runtime.execution import CodeExecutor
 
 ROOT = Path(__file__).resolve().parents[1]
 

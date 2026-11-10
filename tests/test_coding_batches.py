@@ -5,10 +5,10 @@ from copy import deepcopy
 import pytest
 
 from mrcat.agent import Agent
-from mrcat.coding_agent import CodingAgentNodes
-from mrcat.coding_protocol import CODING_TOOLS, coding_history, coding_turns, coding_calls
+from mrcat.runtime.coding_agent import CodingAgentNodes
+from mrcat.runtime.coding_protocol import CODING_TOOLS, coding_history, coding_turns, coding_calls
 from mrcat.model import llm_gateway as gateway
-from mrcat.store import Store
+from mrcat.state.store import Store
 from test_agent import ROOT, Model, create, decision, native_reply
 from test_context_budget import coding_history as seeded_history
 
@@ -110,7 +110,7 @@ def test_interrupted_batch_recovers_results_without_replaying_or_running_sibling
     store, sid = create(tmp_path)
     original_host = CodingAgentNodes._host_tool_once
     original_observe = CodingAgentNodes.observe
-    from mrcat.codeact import CodeActNodes
+    from mrcat.runtime.codeact import CodeActNodes
     original_execute = CodeActNodes.execute
     def host(self, state, task, directory, workdir, call, action_id):
         result = original_host(self, state, task, directory, workdir, call, action_id)

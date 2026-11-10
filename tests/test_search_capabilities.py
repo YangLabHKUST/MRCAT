@@ -10,7 +10,7 @@ from mrcat import tools
 from mrcat.search import web, documents, inspection, providers
 from mrcat.search.types import SearchResponse, SearchRequest
 from mrcat.search.contracts import BRIEF_REQUIRED_HEADINGS, validate_brief_payload
-from mrcat.results import result_catalog, read_reference
+from mrcat.state.results import result_catalog, read_reference
 from test_agent import ROOT, Model, action, create
 from mrcat.agent import Agent
 

@@ -5,7 +5,7 @@ from pathlib import Path
 import shlex
 import sys
 
-from mrcat.execution import CodeExecutor, execution_environment, runtime_context
+from mrcat.runtime.execution import CodeExecutor, execution_environment, runtime_context
 
 ROOT = Path(__file__).resolve().parents[1]
 

@@ -14,7 +14,7 @@ import time
 import jwt
 from fastapi import HTTPException
 
-from mrcat.store import Store, write_json
+from mrcat.state.store import Store, write_json
 from .service import BusyError, Service
 
 COOKIE = "mrcat_demo_visitor"
@@ -139,59 +139,66 @@ class DemoService(Service):
         self.visitors = visitors
 
     def start(self, question, provider):
-        catalog = self.visitors.catalog
-        if question != catalog["steps"][0]["prompt"]:
-            raise ValueError("Start with the literature example.")
-        with self.visitors.turn(self) as admission:
-            if any(self.store.base.glob("session_*")):
-                raise ValueError("Continue your existing example from the Sessions list.")
-            saved = self.store.create(question, os.getenv("MRCAT_DEMO_PROVIDER", "deepseek"))
-            sid = saved["session_id"]
-            result = super().reply(sid, question)
-            admission["sid"] = sid
-            return result
+        return self.submit(None, question)
 
     def reply(self, sid, request):
-        catalog = self.visitors.catalog
-        prompts = [step["prompt"] for step in catalog["steps"]]
+        return self.submit(sid, request)
+
+    def submit(self, sid, request, *, dataset=None):
+        if not isinstance(request, str) or not request.strip():
+            raise ValueError("A message is required")
         with self.visitors.turn(self, sid) as admission:
-            saved = self.reconcile(self.store.load(sid))
-            messages = [e["content"] for e in saved["events"] if e["type"] == "user_message"]
-            if request == catalog["confirm"]:
-                if not saved.get("pending"):
-                    raise ValueError("There is no plan or question awaiting confirmation.")
-            elif request == catalog["resume"]:
-                if saved["status"] not in {"failed", "paused", "stopped"}:
-                    raise ValueError("The task does not need to be resumed.")
-            elif request in prompts[1:]:
-                index = prompts.index(request)
-                if prompts[index - 1] not in messages or request in messages:
-                    raise ValueError("Follow the example steps in order.")
-                task = saved.get("active_task") or {}
-                if saved.get("pending") or saved["status"] in {"failed", "paused", "stopped"} or (task and task.get("status") != "completed"):
-                    raise ValueError("Finish the current task before starting the next one.")
-                if index == 2:
-                    self.attach_inputs(saved)
-                elif index == 1:
-                    self.attach_online_cache(sid)
+            if sid is None:
+                if any(self.store.base.glob("session_*")):
+                    raise ValueError("Continue your existing conversation from the Sessions list.")
+                saved = self.store.create(request, os.getenv("MRCAT_DEMO_PROVIDER", "deepseek"))
+                sid = saved["session_id"]
             else:
-                raise ValueError("Use the guided example buttons for this public demo.")
+                saved = self.reconcile(self.store.load(sid))
+                if (saved.get("job") or {}).get("status") == "running":
+                    raise BusyError("A task is running. Stop it before sending a new request.")
+            if dataset == "online":
+                self.attach_online_inputs(saved, request)
+            elif dataset == "local":
+                self.attach_inputs(saved, request)
             result = super().reply(sid, request)
             admission["sid"] = sid
             return result
 
-    def attach_online_cache(self, sid):
-        if not self.visitors.online_cache:
-            return
-        directory = self.store.directory(sid)
+    def attach_online_inputs(self, saved, request):
+        directory = self.store.directory(saved["session_id"])
+        datasets = {
+            "ieu-b-40": {"name": "BMI (OpenGWAS ieu-b-40)"},
+            "ebi-a-GCST006867": {"name": "Type 2 diabetes (OpenGWAS ebi-a-GCST006867)"},
+        }
         for source, item in self.visitors.online_cache:
             target = directory / item["file_ref"]
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(source, target)
-        write_json(directory / "workspace/inputs/online_gwas_sources.json",
-                   [item for _, item in self.visitors.online_cache])
+            datasets[item["study_id"]]["file_ref"] = item["file_ref"]
+        request = (
+            request
+            + " Use the two studies in this study setup. Verify their metadata and suitability online; "
+            "report any problem before changing datasets. "
+        )
+        if self.visitors.online_cache:
+            write_json(directory / "workspace/inputs/online_gwas_sources.json",
+                       [item for _, item in self.visitors.online_cache])
+            request += (
+                "The supplied file_ref paths are session-relative, previously downloaded GWAS inputs before QC. "
+                "Reuse these files; their provenance and checksums are in workspace/inputs/online_gwas_sources.json."
+            )
+        else:
+            request += "Download these studies after verification; no cached files are attached."
+        saved["study_setup"] = {
+            "exposures": [datasets["ieu-b-40"]],
+            "outcomes": [datasets["ebi-a-GCST006867"]],
+            "analysis_request": request,
+            "methods": [], "sources": ["opengwas"],
+        }
+        self.store.save(saved)
 
-    def attach_inputs(self, saved):
+    def attach_inputs(self, saved, request):
         directory = self.store.directory(saved["session_id"]) / "workspace/inputs"
         directory.mkdir(parents=True, exist_ok=True)
         for item in self.visitors.inventory:
@@ -200,13 +207,21 @@ class DemoService(Service):
         saved["study_setup"] = {
             "exposures": [{"name": "BMI", "file_ref": "workspace/inputs/bmi_mrapss.gz"}],
             "outcomes": [{"name": "Type 2 diabetes", "file_ref": "workspace/inputs/t2d_mrapss.gz"}],
-            "analysis_request": self.visitors.catalog["steps"][2]["prompt"],
-            "methods": ["mr-primary"], "sources": [],
+            "analysis_request": request,
+            "methods": [], "sources": [],
         }
         self.store.save(saved)
 
     def fork(self, sid):
         raise PermissionError("Copying sessions is not available in the public demo.")
 
-    def study_setup(self, *args, **kwargs):
-        raise PermissionError("Use the supplied local GWAS example in this public demo.")
+    def study_setup(self, sid, *, exposure_manifest, outcome_manifest, analysis_request,
+                    methods, sources="[]", exposure_files=None, outcome_files=None):
+        if exposure_files or outcome_files:
+            raise PermissionError("File uploads are not available in the public demo.")
+        selected = dict(exposures=json.loads(exposure_manifest), outcomes=json.loads(outcome_manifest),
+                        methods=json.loads(methods), sources=json.loads(sources))
+        for step in self.visitors.catalog["steps"]:
+            if step.get("setup") == selected:
+                return self.submit(sid, analysis_request, dataset=step["id"])
+        raise ValueError("Choose one of the supplied example datasets.")

@@ -4,7 +4,7 @@ from pathlib import Path
 import hashlib
 import json
 
-from ..results import read_reference, invalidated_executions
+from mrcat.state.results import read_reference, invalidated_executions
 from .guidance import skill_interpretation_guidance
 from .policy import (ReportNotApplicable, add_required_report_evidence,
                      _catalog_plot_metadata, _collect_session_report_figures)

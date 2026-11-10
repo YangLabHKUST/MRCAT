@@ -3,29 +3,59 @@
   "steps": [
     {
       "id": "literature",
-      "label": "1a · Search the literature",
+      "label": "Literature",
       "description": "Find published MR evidence before starting an analysis.",
-      "prompt": "Does body mass index causally affect type 2 diabetes? Search and briefly summarize the relevant Mendelian randomization literature, with verifiable references and limitations. Do not run an MR analysis yet."
+      "prompt": "Does BMI causally affect type 2 diabetes? What does the MR literature say?"
     },
     {
       "id": "online",
-      "label": "1b · Run with online GWAS",
+      "label": "Online GWAS",
       "description": "Select online studies, review the plan, then calculate MR results and plots.",
-      "prompt": "Run a two-sample MR analysis of BMI on type 2 diabetes using online GWAS summary statistics. Search for and assess the previously demonstrated studies ieu-b-40 for BMI and ebi-a-GCST006867 for T2D. Verify their metadata, ancestry, sample sizes and potential sample overlap. If either is unavailable or unsuitable, explain the problem rather than silently replacing it. If workspace/inputs/online_gwas_sources.json is present in this session, it inventories the previously downloaded, pre-QC GWAS summary statistics for these studies. Verify the studies online and inspect these cached files; reuse them and disclose this instead of downloading them again. Otherwise download the selected studies normally. Perform QC, harmonization and local European LD clumping, then run IVW, MR-Egger, weighted median and weighted mode with exposure P <= 5e-8. Show the plan and ask for confirmation before execution. Report instrument counts, effect scale, estimates, uncertainty, a scatter plot and a forest plot. Do not add extra MR methods or a full scientific report."
+      "prompt": "Run MR for BMI and type 2 diabetes using online GWAS data. Show the results and plots.",
+      "setup": {
+        "exposures": [
+          {
+            "name": "BMI (OpenGWAS ieu-b-40)"
+          }
+        ],
+        "outcomes": [
+          {
+            "name": "Type 2 diabetes (OpenGWAS ebi-a-GCST006867)"
+          }
+        ],
+        "methods": [],
+        "sources": [
+          "opengwas"
+        ]
+      }
     },
     {
       "id": "local",
-      "label": "2 · Load local GWAS and run",
+      "label": "Local GWAS",
       "description": "Use the two supplied native GWAS files as a separate analysis in this session.",
-      "prompt": "I have two local GWAS summary-statistic files: workspace/inputs/bmi_mrapss.gz for BMI (Watanabe et al., 2019, UK Biobank) and workspace/inputs/t2d_mrapss.gz for T2D (Mahajan et al., 2018, DIAGRAM), both European ancestry. Resolve these paths relative to this session directory. Use these original GWAS files independently of the online pair; perform QC, harmonization and LD clumping, then run IVW, MR-Egger, weighted median and weighted mode. Use exposure P <= 5e-8, LD r2 = 0.001 and a 1000 kb window with the installed local European GRCh37 reference. Preserve per-SNP sample sizes. Use Z/sqrt(N)-standardized effects and explain that these estimates are not log odds or odds ratios. Show the plan and ask for confirmation before execution. Produce the result table, scatter plot and forest plot. Do not add extra methods or a full scientific report."
+      "prompt": "Use these two local GWAS files to run MR for BMI and type 2 diabetes.",
+      "setup": {
+        "exposures": [
+          {
+            "name": "BMI",
+            "file_ref": "workspace/inputs/bmi_mrapss.gz"
+          }
+        ],
+        "outcomes": [
+          {
+            "name": "Type 2 diabetes",
+            "file_ref": "workspace/inputs/t2d_mrapss.gz"
+          }
+        ],
+        "methods": [],
+        "sources": []
+      }
     },
     {
       "id": "followup",
-      "label": "3 · Follow up with MR-APSS",
+      "label": "MR-APSS follow-up",
       "description": "Reuse the local analysis context and suitable QC outputs for another method.",
-      "prompt": "Now use MR-APSS to analyze the same local BMI and T2D files from the preceding task. Reuse their suitable study-level QC outputs, but prepare the pair for MR-APSS with exposure P <= 5e-5, LD r2 = 0.001 and a 1000 kb window, using the local European GRCh37 reference and matching European LD scores. Estimate and retain the required C and Omega background parameters; do not substitute the primary-MR instrument table. Preserve per-SNP sample sizes and use Z/sqrt(N)-standardized effects. Show the plan and ask for confirmation before execution. Run MR-APSS, show its result and plot, and briefly compare with the local primary analysis while explaining uncertainty and effect scale. Do not generate a full scientific report."
+      "prompt": "Now use MR-APSS on the same local data and compare the results."
     }
-  ],
-  "confirm": "Confirm the proposed plan and proceed with this example using the documented datasets and settings. Do not add other analyses.",
-  "resume": "Continue the current example task from its saved state. Keep the same datasets and analysis scope; report any unresolved prerequisite rather than inventing it."
+  ]
 }

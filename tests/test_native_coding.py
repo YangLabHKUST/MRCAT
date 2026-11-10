@@ -5,9 +5,9 @@ from types import SimpleNamespace
 import pytest
 
 from mrcat.agent import Agent
-from mrcat.coding_agent import CodingAgentNodes
-from mrcat.coding_protocol import CODING_TOOLS, coding_call
-from mrcat.execution import CodeExecutor
+from mrcat.runtime.coding_agent import CodingAgentNodes
+from mrcat.runtime.coding_protocol import CODING_TOOLS, coding_call
+from mrcat.runtime.execution import CodeExecutor
 from mrcat.model import llm_gateway as gateway
 from test_agent import ROOT, create, decision, native_reply, journal_view
 from test_coding_graph import CodingModel
@@ -212,7 +212,7 @@ def test_retired_history_call_is_rejected_by_native_transport():
     dict(route='replan', accept_item=False, reason='Change the plan.'),
 ])
 def test_non_rejected_review_does_not_instruct_same_item_repair(review):
-    from mrcat.coding_protocol import action_messages
+    from mrcat.runtime.coding_protocol import action_messages
 
     assistant = json.loads(native_reply(dict(tool='read', path='input.txt')))
     history = [assistant, dict(role='tool', tool_call_id=assistant['tool_calls'][0]['id'],

@@ -4,9 +4,10 @@ from copy import deepcopy
 
 import pytest
 
-from mrcat import manager, memory
+from mrcat.workflow import manager
+from mrcat.state import memory
 from mrcat.agent import Agent
-from mrcat.planning import planning_history
+from mrcat.workflow.planning import planning_history
 from mrcat.skills import SkillRegistry
 from test_agent import ROOT, Model, create, decision, action
 from test_planning import save_response

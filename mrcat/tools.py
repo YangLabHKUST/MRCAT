@@ -10,7 +10,7 @@ import os
 from pathlib import Path
 import tempfile
 from threading import RLock
-from .results import publish_result, resolve_ref, resolve_inputs, register_tool_result
+from mrcat.state.results import publish_result, resolve_ref, resolve_inputs, register_tool_result
 
 _ENV_LOCK = RLock()
 
@@ -44,7 +44,7 @@ def _output_directory(name, output_dir):
 
 def session_history(*, start: int = 0, limit: int = 50, task_id: str | None = None) -> dict:
     """Read a page of committed conversation from the current session checkpoint."""
-    from .store import Store
+    from mrcat.state.store import Store
     if not isinstance(start, int) or start < 0 or not isinstance(limit, int) or not 1 <= limit <= 100:
         raise ValueError("History requires start >= 0 and 1 <= limit <= 100.")
     configured = os.environ.get("MRCAT_SESSION_DIR")

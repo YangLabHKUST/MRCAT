@@ -2,7 +2,7 @@ from pathlib import Path
 import argparse, fcntl, json, os, signal, sys, traceback
 from mrcat.config.env import load_repo_dotenv, disable_proxy_from_env_if_requested
 from mrcat.agent import Agent
-from mrcat.store import Store
+from mrcat.state.store import Store
 
 class Stopped(BaseException): pass
 

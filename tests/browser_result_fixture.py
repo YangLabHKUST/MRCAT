@@ -5,7 +5,7 @@ import json
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from mrcat.store import Store
+from mrcat.state.store import Store
 
 ids = json.loads(Path('/tmp/mrcat-browser-roles.json').read_text())
 store = Store(ids['store'])

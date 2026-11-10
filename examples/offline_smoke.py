@@ -4,7 +4,7 @@ from tempfile import TemporaryDirectory
 import json
 import mrcat
 from mrcat.agent import Agent
-from mrcat.store import Store
+from mrcat.state.store import Store
 
 with TemporaryDirectory(prefix="mrcat-example-") as directory:
     store = Store(directory)

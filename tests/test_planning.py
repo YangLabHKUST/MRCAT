@@ -4,8 +4,8 @@ from pathlib import Path
 import pytest
 from mrcat.agent import Agent
 from mrcat.skills import SkillRegistry
-from mrcat.planning import planning_history, result_index
-from mrcat.plan_items import parse_plan
+from mrcat.workflow.planning import planning_history, result_index
+from mrcat.workflow.plan_items import parse_plan
 from test_agent import ROOT, Model, create, decision, action
 
 
