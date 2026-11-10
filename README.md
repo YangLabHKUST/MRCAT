@@ -153,6 +153,25 @@ See [data preparation](docs/data.md) for sources, storage locations and provenan
 The standard pair-preparation workflow uses European LDSC background files;
 AFR/EAS/SAS PLINK panels do not make that background population-specific.
 
+## Paper data and reproduction
+
+The paper evidence package is prepared in a **Zenodo draft that has not yet
+been published**. Its reserved DOI is `10.5281/zenodo.24056307`; public downloads
+will be linked here after publication.
+
+The package contains three archives:
+
+- `input.zip`: local GWAS inputs used in the benchmark and reference comparisons.
+- `agent-trace.zip`: recorded agent runs and saved analytical results.
+- `scores.zip`: benchmark scores, evaluation criteria and supporting evidence.
+
+After publication, download all three archives and extract them into the same
+directory outside this checkout, such as `mrcat-paper-data/`. These paper
+materials are separate from the runtime reference database described above.
+
+See [Paper data and reproduction](reproduce/README.md) for experiment queries,
+input mappings, checksums, result locations and the current limits of the package.
+
 ## Examples
 
 | Example | What it provides |
@@ -198,6 +217,7 @@ For an immediately viewable completed analysis, open the
 | --- | --- |
 | [Configuration](docs/configuration.md) | Provider settings, model limits, session locations, CLI use and troubleshooting. |
 | [Data preparation](docs/data.md) | Reference resources, local GWAS inputs and R dependencies. |
+| [Paper data and reproduction](reproduce/README.md) | Experiment queries, input mappings, archived results and release status. |
 | [Skills](docs/skills.md) | Supported workflows and their input/output contracts. |
 | [Architecture](docs/architecture.md) | Agent execution, state and result handling. |
 | [Shared deployment](docs/multi_user.md) | Cloudflare Access and separation of user sessions. |
@@ -209,5 +229,7 @@ Original code is licensed under [BSD-3-Clause](LICENSE). Third-party code and
 data retain their own terms; see [THIRD_PARTY.md](THIRD_PARTY.md).
 Use [CITATION.cff](CITATION.cff) for software metadata and record the exact commit
 used for an analysis. Author metadata currently lists MRCAT contributors and
-is provisional. Full paper experiment inputs, runners and results are maintained
-separately from this software repository.
+is provisional. See [Paper data and reproduction](reproduce/README.md) for the
+experiment inventory and the status of the separate Zenodo evidence package.
+The existing Zenodo deposit is still an unpublished draft; a complete portable
+reproduction workflow is not yet available.

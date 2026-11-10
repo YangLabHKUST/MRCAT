@@ -1,0 +1,26 @@
+experiment,case_id,role,dataset,study_id,resource,genome_build,source_url,source_table
+reference-analysis/mrapss,MRAPSS,exposure,"Body mass index (BMI); UK Biobank (UKB), f.21001.0.0.",,See original source,,https://atlas.ctglab.nl/ukb2_sumstats/f.21001.0.0_res.EUR.sumstats.MACfilt.txt.gz,reference_gwas_sources
+reference-analysis/mrapss,MRAPSS,outcome,Type 2 diabetes; Xue et al. (2018).,,See original source,,https://cnsgenomics.com/data/t2d/Xue_et_al_T2D_META_Nat_Commun_2018.gz,reference_gwas_sources
+reference-analysis/negative-control,Q01,exposure,"BMI; UKB, f.21001.0.0.",,See original source,,https://atlas.ctglab.nl/ukb2_sumstats/f.21001.0.0_res.EUR.sumstats.MACfilt.txt.gz,reference_gwas_sources
+reference-analysis/negative-control,Q01,outcome,"Dark brown hair; UKB, 1747_4.",,See original source,,https://atlas.ctglab.nl/ukb2_sumstats/1747_4_logistic.EUR.sumstats.MACfilt.txt.gz,reference_gwas_sources
+reference-analysis/negative-control,Q02,exposure,"Sleeplessness / insomnia; UKB, f.1200.0.0.",,See original source,,http://atlas.ctglab.nl/ukb2_sumstats/f.1200.0.0_res.EUR.sumstats.MACfilt.txt.gz,reference_gwas_sources
+reference-analysis/negative-control,Q02,outcome,"Black hair; UKB, 1747_5.",,See original source,,https://atlas.ctglab.nl/ukb2_sumstats/1747_5_logistic.EUR.sumstats.MACfilt.txt.gz,reference_gwas_sources
+reference-analysis/negative-control,Q03,exposure,"Automobile speeding propensity; N=404,291.",,See original source,,https://thessgac.com/papers/2,reference_gwas_sources
+reference-analysis/negative-control,Q03,outcome,Childhood aggression; EAGLE.,,See original source,,https://assets.vu.nl/fdcfbfb4-ea5f-0080-b339-861bb5cb584d/2c7e7d91-c95b-4617-8211-6e7fa1990bab/EAGLE_aggression_METAL_RESULTS.zip,reference_gwas_sources
+reference-analysis/negative-control,Q04,exposure,Parental survival; LifeGen phase 2.,,See original source,,https://datashare.ed.ac.uk/bitstreams/d3d9edc2-ade5-453c-82ab-0f7721b3dcc6/download,reference_gwas_sources
+reference-analysis/negative-control,Q04,outcome,Childhood BMI; GCST90002409.,,See original source,,http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/GCST90002001-GCST90003000/GCST90002409/GCST90002409_buildGRCh37.tsv.gz,reference_gwas_sources
+reference-analysis/negative-control,Q05,exposure,"Frailty index; Atkins et al. (2020), UKB participants of European ancestry aged 60--70 years, N=164,610.",,See original source,,https://ndownloader.figshare.com/files/23063870,reference_gwas_sources
+reference-analysis/negative-control,Q05,outcome,Fetal birth weight; European meta-analysis (2019).,,See original source,,https://egg-consortium.org/BW5/Fetal_BW_European_meta.NG2019.txt.gz,reference_gwas_sources
+reference-analysis/negative-control,Q06,exposure,"Worrier / anxious feelings; UKB field 1980, Neale Lab, both sexes.",,See original source,,https://broad-ukb-sumstats-us-east-1.s3.amazonaws.com/round2/additive-tsvs/1980.gwas.imputed_v3.both_sexes.tsv.bgz,reference_gwas_sources
+reference-analysis/negative-control,Q06,outcome,"Ease of skin tanning; UKB field 1727, Neale Lab, both sexes.",,See original source,,https://broad-ukb-sumstats-us-east-1.s3.amazonaws.com/round2/additive-tsvs/1727.gwas.imputed_v3.both_sexes.tsv.bgz,reference_gwas_sources
+risk-factor,,smoking,smoking initiation,ieu-b-4877,opengwas,grch37,,downstream_data_sources
+risk-factor,,hypothyroidism,Hypothyroidism,GCST90627749,gwas_catalog,grch38,,downstream_data_sources
+risk-factor,,graves_disease,Graves' disease,GCST90627744,gwas_catalog,grch38,,downstream_data_sources
+risk-factor,,educational_attainment,Educational attainment,GCST90566696,gwas_catalog,grch37,,downstream_data_sources
+risk-factor,,walking_pace,Usual walking pace,ukb-b-4711,opengwas,grch37,,downstream_data_sources
+risk-factor,,rheumatoid_arthritis,Rheumatoid arthritis,GCST90837201,gwas_catalog,grch37,,downstream_data_sources
+bidirectional,,exposure,Type 2 diabetes,ebi-a-GCST90018926,opengwas,grch37,,downstream_data_sources
+bidirectional,,outcome,Coronary artery disease,GCST90132314,gwas_catalog,grch37,,downstream_data_sources
+reporting-case,,exposure,Hexadecanedioate levels,GCST90243839,GWAS Catalog,NCBI36,,reporting_case_data
+reporting-case,,original outcome,Coronary artery disease,GCST90132314,GWAS Catalog,GRCh37,,reporting_case_data
+reporting-case,,replication outcome,Major coronary heart disease event,finngen_R12_I9_CHD,FinnGen R12,GRCh38,,reporting_case_data
