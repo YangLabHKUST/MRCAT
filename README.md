@@ -8,7 +8,7 @@ Find GWAS studies, run analyses and explore the evidence in one workspace.
 
 [![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB)](pyproject.toml) [![Demo: Live preview](https://img.shields.io/badge/Demo-Live%20preview-2EA44F)](https://wiki-northern-diploma-cumulative.trycloudflare.com/)
 
-[Quick start](#quick-start) · [Model configuration](docs/configuration.md) · [Examples](#examples) · [Reference data](#reference-data) · [Repository layout](#repository-layout) · [Documentation](#documentation) · [Checks](https://github.com/77JULIE/MRCAT/actions/workflows/ci.yml)
+[Quick start](#quick-start) · [Model configuration](docs/configuration.md) · [Examples](#examples) · [Reference data](#reference-data) · [Documentation](#documentation) · [Checks](https://github.com/77JULIE/MRCAT/actions/workflows/ci.yml)
 
 </div>
 
@@ -196,32 +196,6 @@ For an immediately viewable completed analysis, open the
 [public Result 4 recording](https://result4.mrcat.science/#example-result4).
 
 </details>
-
-## Repository layout
-
-```text
-mrcat/                 Python application and command-line entry points
-  workflow/            Planning, review and task transitions
-  runtime/             Code execution and diagnostics
-  state/               Session storage, memory and results
-  model/               Model clients and context budgets
-  config/              Configuration loading
-  search/              GWAS and literature search
-  report/              Scientific reports and export
-  web/                 HTTP API and browser interface
-  tool/                Shared Python and R methods
-  prompts/             Agent instructions
-skills/                Method guides and executable wrappers
-scripts/               Dependency and reference-data installation
-examples/              Tutorials and recorded examples
-tests/                 Product, method and browser tests
-docs/                  User and developer documentation
-```
-
-Run the installation and startup commands from the repository root.
-Local settings, session data and reference databases are excluded from Git.
-See [Architecture](docs/architecture.md) for how the modules work together and
-[Development](docs/development.md) for testing and packaging.
 
 ## Documentation
 
