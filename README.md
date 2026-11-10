@@ -6,7 +6,7 @@
 
 Find GWAS studies, run analyses and explore the evidence in one workspace.
 
-[![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB)](pyproject.toml) [![License](https://img.shields.io/badge/License-BSD--3--Clause-blue)](LICENSE)
+[![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB)](pyproject.toml) [![Demo: Live preview](https://img.shields.io/badge/Demo-Live%20preview-2EA44F)](https://wiki-northern-diploma-cumulative.trycloudflare.com/)
 
 [Quick start](#quick-start) · [Model configuration](docs/configuration.md) · [Examples](#examples) · [Reference data](#reference-data) · [Documentation](#documentation) · [Checks](https://github.com/77JULIE/MRCAT/actions/workflows/ci.yml)
 

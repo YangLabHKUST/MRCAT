@@ -113,8 +113,10 @@ def export(root, run_path, destination, env_files):
     guide = guide.replace("../../README.md#install", "#installation")
     guide = guide.replace("../../docs/data.md", "#reference-data-setup")
     guide = guide.replace("http://127.0.0.1:7869/#example-bmi-t2d", "/#example-bmi-t2d")
-    installation = (root / "README.md").read_text().split("## Install\n", 1)[1].split("## Start\n", 1)[0]
-    guide += "\n## Installation\n" + installation
+    quick_start = (root / "README.md").read_text().split("## Quick start\n", 1)[1].split("\n## ", 1)[0]
+    quick_start = quick_start.replace("(#reference-data)", "(#reference-data-setup)")
+    quick_start = quick_start.replace("(docs/", "(https://github.com/77JULIE/MRCAT/blob/main/docs/")
+    guide += "\n## Installation\n" + quick_start + "\n"
     guide += "\n## Reference-data setup\n" + (root / "docs/data.md").read_text().split("\n", 1)[1]
     for name in ("local_inputs.json", "expected_results.json"):
         source = root / "examples/bmi_t2d" / name
