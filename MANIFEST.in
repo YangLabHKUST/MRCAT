@@ -1,6 +1,5 @@
 include README.md LICENSE THIRD_PARTY.md CITATION.cff environment.yml config.yaml .env.example main.py
 recursive-include examples *.py *.md *.json *.tsv *.png
-recursive-include reproduce *.md *.csv
 recursive-include tests *.py *.cjs *.txt
 recursive-include mrcat *.py *.md *.R *.js *.css *.html *.svg *.txt *.ico *.png
 recursive-include mrcat/web/static/examples *
