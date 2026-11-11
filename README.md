@@ -2,7 +2,7 @@
 
 # MRCAT
 
-**An AI assistant for Mendelian randomization**
+**A reliable AI assistant for Mendelian randomization**
 
 [Quick start](#quick-start) · [Demo](#demo) · [Paper experiments](#paper-experiments)
 
@@ -64,10 +64,10 @@ for other providers, model limits and troubleshooting.
 ### 3. Start and try a question
 
 ```bash
-mrcat-web --port 7869
+mrcat-web --port 17869
 ```
 
-Open **http://127.0.0.1:7869** on the same machine. Select your provider under
+Open **http://127.0.0.1:17869** on the same machine. Select your provider under
 **Settings**, then choose **New Chat**. For remote or shared access, see the
 [deployment guide](docs/multi_user.md).
 

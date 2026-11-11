@@ -41,7 +41,7 @@ def test_recording_export_redacts_private_paths_and_preserves_source(tmp_path):
     tutorial = (target / "tutorial.md").read_text()
     for heading in ("### 1. Install", "### 2. Configure a model", "### 3. Start and try a question"):
         assert heading in tutorial
-    assert "mrcat-web --port 7869" in tutorial
+    assert "mrcat-web --port 17869" in tutorial
     assert "\n## Using the workspace\n" not in tutorial
     assert "[Reference data](#reference-data-setup)" in tutorial
     assert "https://github.com/77JULIE/MRCAT/blob/main/docs/configuration.md#choose-a-provider" in tutorial
