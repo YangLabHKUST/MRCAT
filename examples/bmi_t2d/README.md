@@ -72,6 +72,19 @@ model, the relevant R dependencies and access to the chosen data sources. Search
 results and model-generated wording may change. Record study IDs and settings
 before comparing numerical results.
 
+### Workspace controls
+
+| Area | How to use it |
+| --- | --- |
+| Sidebar | Start or reopen a session, select a provider in Settings, or open Examples. |
+| Study setup | Supply exposure/outcome files and study metadata for local data. |
+| Conversation | Ask a question, review the proposed plan and confirm before analysis. |
+| Execution Notebook | Inspect code, outputs, tables and plots; expand Files for saved artifacts. |
+| Reports and downloads | Open the report and download result files. |
+
+Completed execution does not establish causality. Interpret estimates with the
+study design, ancestry, assumptions and diagnostics.
+
 ### Literature inquiry
 
 Ask:

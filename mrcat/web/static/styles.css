@@ -194,14 +194,12 @@ select:focus {
 }
 
 .sidebar .brand h1 { font-size: 24px; letter-spacing: -.5px; }
-.sidebar .brand p { font-size: 12px; margin-top: 6px; }
 .sidebar button, .sidebar select { font-size: 14px; }
 .sidebar .section-head h2 { color: var(--muted); font-size: 12px; font-weight: 600; }
 .sidebar #refresh-button { border: 0; background: transparent; padding: 4px; font-size: 12px; color: var(--muted); }
 .sidebar .example-entry { display: flex; justify-content: space-between; align-items: center; background: transparent; border-color: transparent; color: var(--muted); }
 .sidebar .session-row strong { grid-column: 1 / -1; font-size: 13px; font-weight: 550; }
-.sidebar .session-row p { grid-column: 1; grid-row: 2; font-size: 11px; opacity: .8; }
-.sidebar .mini-status { grid-column: 2; grid-row: 2; font-size: 10px; padding: 1px 5px; align-self: center; }
+.sidebar .mini-status { grid-column: 1; grid-row: 2; justify-self: start; font-size: 10px; padding: 1px 5px; align-self: center; }
 .sidebar .session-row:hover { background: var(--surface-soft); }
 .sidebar .session-row.active { border-color: #c6deef; background: var(--accent-soft); }
 .sidebar-settings { border-top: 1px solid var(--line); padding-top: 12px; font-size: 13px; }
@@ -214,6 +212,10 @@ select:focus {
 .session-actions > summary::-webkit-details-marker { display: none; }
 .session-actions-menu { position: absolute; right: 0; top: 100%; z-index: 10; padding: 6px; width: max-content; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); box-shadow: 0 6px 20px #17212f12; }
 .session-actions-menu button { border: 0; font-size: 14px; }
+.session-identity { gap: 4px; padding: 8px; border-bottom: 1px solid var(--line); font-size: var(--font-small); }
+.session-identity:not([hidden]) { display: grid; }
+.session-identity span { color: var(--muted); }
+.session-identity code { user-select: all; overflow-wrap: anywhere; }
 
 .sidebar-resizer {
   position: relative;
@@ -294,14 +296,12 @@ select:focus {
   font-size: var(--font-result);
 }
 
-.brand p,
 .workspace-head p,
 .muted,
 .empty-note {
   color: var(--muted);
 }
 
-.brand p,
 .workspace-head p {
   margin: 0.2rem 0 0;
   font-size: var(--font-body);
@@ -442,16 +442,6 @@ select:focus {
   background: var(--accent-soft);
 }
 
-.session-row p {
-  grid-column: 1 / -1;
-  margin: 0;
-  color: var(--muted);
-  font-size: var(--font-small);
-  line-height: 1.42;
-  max-height: 1.42em;
-  overflow: hidden;
-}
-
 .mini-status,
 .status-chip {
   border: 1px solid var(--line-strong);
@@ -530,6 +520,10 @@ select:focus {
 
 .workspace-head h2 {
   font-size: var(--font-body);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .workspace-head > div:first-child {
@@ -3458,11 +3452,8 @@ a.source-badge:hover {
   font-size: var(--font-small);
 }
 
-.study-source-copy span {
-  color: var(--muted);
-  font-size: var(--font-caption);
-  line-height: 1.3;
-}
+.study-source-help { color: var(--muted); font-size: var(--font-small); }
+.study-source-help > summary { cursor: pointer; padding-block: 4px; }
 
 .study-source-check {
   display: inline-flex;
@@ -5264,7 +5255,6 @@ a.source-badge:hover {
     overflow: hidden;
   }
 
-  .sidebar .brand p { display: none; }
   .sidebar .brand h1 { font-size: 20px; }
   .sidebar-tools { display: flex; align-items: center; gap: .25rem; }
   .sidebar-tools button { padding: 6px 10px; }
@@ -5355,7 +5345,7 @@ a.source-badge:hover {
   .workspace-head { flex-wrap: wrap; gap: 8px; }
   .workspace-head > div:first-child { width: 100%; min-width: 0; }
   .workspace-head h2 { font-size: 17px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .workspace-head p { font-size: 14px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .workspace-head p:not([hidden]) { font-size: 14px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .workspace-actions { width: 100%; justify-content: space-between; }
   .workspace-actions .status-chip { font-size: 12px; padding: 4px 8px; }
   .workspace,
@@ -5552,22 +5542,51 @@ button.timeline-item { font: inherit; text-align: left; cursor: pointer; }
 button.timeline-item:disabled { cursor: default; }
 button.timeline-item:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
+/* Execution records stay secondary to the conversation text. */
+.conversation-executions, .message.message-execution {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+.conversation-execution-rest > summary {
+  padding: 2px 0;
+  color: var(--muted);
+  font-size: var(--font-caption);
+  line-height: 1.5;
+  cursor: pointer;
+}
+.conversation-execution-rest > summary:hover { color: var(--accent); }
+.conversation-execution-rest > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.conversation-execution-rest > .message { margin-top: 4px; }
+
 /* Conversation execution references use the notebook's existing execution IDs. */
 .codeact-execution-link {
-  display: block;
-  width: fit-content;
-  margin: 0 0 8px;
-  padding: 5px 10px;
-  border: 1px solid var(--accent);
-  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  min-height: 28px;
+  margin: 0;
+  padding: 2px 0;
+  border: 0;
+  border-radius: 3px;
   background: transparent;
-  color: var(--accent);
+  color: var(--muted);
   font: inherit;
-  font-weight: 600;
+  font-size: var(--font-caption);
+  font-weight: 400;
+  line-height: 1.5;
   text-align: left;
   cursor: pointer;
 }
-.codeact-execution-link:hover { background: var(--panel-muted, #f4f7fa); }
+.codeact-execution-icon { flex: 0 0 1em; text-align: center; }
+.codeact-execution-status { min-width: 0; overflow-wrap: anywhere; }
+.codeact-execution-view { margin-left: auto; white-space: nowrap; }
+.message-execution[data-tone="failed"] .codeact-execution-icon,
+.message-execution[data-tone="failed"] .codeact-execution-status { color: var(--bad); }
+.message-execution[data-tone="running"] .codeact-execution-icon,
+.message-execution[data-tone="running"] .codeact-execution-status { color: var(--accent); }
+.codeact-execution-link:hover { color: var(--accent); }
 .codeact-execution-link:focus-visible,
 .codeact-cell:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .codeact-cell.is-selected { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }

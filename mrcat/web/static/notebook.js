@@ -193,11 +193,18 @@ function notebookOutputFiles(snapshot) {
     .filter(file => file.path.startsWith("workspace/") && !file.path.startsWith("workspace/inputs/"));
 }
 
+// This reserved directory stores coding-agent working files, not analysis outputs.
+// Extensions cannot distinguish a deliverable script from an internal script.
+function notebookProcessFile(path) {
+  return path.split("/").includes(".coding_agent");
+}
+
 function focusNotebookArtifact(path) {
   setNotebookView("task");
   renderExecutionNotebook();
   const owner = notebook.fileOwners.get(path);
-  const scope = notebook.cells.get(owner?.executionId)?.node || els.notebookOutput;
+  const scope = notebookProcessFile(path) ? els.notebookOutput
+    : notebook.cells.get(owner?.executionId)?.node || els.notebookOutput;
   const escaped = CSS.escape(path);
   const directory = path.slice(0, path.lastIndexOf("/") + 1);
   const searchResult = [...scope.querySelectorAll(".notebook-search-results[data-path], .notebook-search-artifact[data-path]")]
@@ -337,7 +344,7 @@ function buildCodeExecutionResult(file, snapshot, files) {
         const figure = section.closest(".codeact-cell")?.querySelector(`figure[data-path="${CSS.escape(path)}"]`);
         if (figure && plot.title) figure.querySelector("figcaption strong").textContent = plot.title;
         const explanation = codeExecutionArtifactPath(plot.explanation_path, files);
-        if (figure && explanation) figure.appendChild(buildNotebookFile({path: explanation}, snapshot));
+        if (figure && explanation) figure.appendChild(buildNotebookDocument({path: explanation}, snapshot));
         const image = figure?.querySelector(".notebook-figure-link");
         if (!image) continue;
         if (plot.plot_id === "primary_scatter") {
@@ -357,9 +364,8 @@ function buildCodeExecutionResult(file, snapshot, files) {
       section.appendChild(notebookElement("p", "notebook-warning", typeof note === "string" ? note : JSON.stringify(note)));
     }
     if (!section.children.length) section.appendChild(notebookElement("p", "muted", "Open the saved record to inspect this result."));
-    section.appendChild(buildNotebookFile(file, snapshot));
   }).catch(error => {
-    section.replaceChildren(notebookElement("p", "muted", `Result preview unavailable: ${error.message}`), buildNotebookFile(file, snapshot));
+    section.replaceChildren(notebookElement("p", "muted", `Result preview unavailable: ${error.message}. Open Files to inspect the saved result.`));
   });
   return section;
 }
@@ -430,11 +436,14 @@ function buildNotebookWebSearch(file, snapshot, payload) {
   }
   // Artifact identity keeps expansion state independent across cells and sessions.
   const card = buildSearchReportCard(report, {run_id: `${snapshot.session_id}:${file.path}`}, body);
-  const meta = card.querySelector(".search-report-heading > span");
   const provider = text(payload.provider);
   const failed = (Array.isArray(payload.attempts) ? payload.attempts : [])
     .filter(attempt => attempt.status === "failed").map(attempt => text(attempt.provider)).filter(Boolean);
-  if (provider) meta.textContent += ` · ${provider}${failed.length ? ` (fallback from ${failed.join(", ")})` : ""}`;
+  if (provider) {
+    const details = notebookDisclosure("Search details", `search-details:${file.path}`);
+    details.appendChild(notebookElement("p", "muted", `Provider: ${provider}${failed.length ? ` (fallback from ${failed.join(", ")})` : ""}`));
+    card.appendChild(details);
+  }
   if (!references.length) card.appendChild(notebookElement("p", "muted", "No source links were saved with this search."));
   return card;
 }
@@ -527,27 +536,21 @@ function appendCodeExecutionOutputs(cell, files, snapshot, events, version) {
   const searches = files.filter(file => artifactBasename(file.path) === "gwas_search_shortlists.json");
   const reports = files.filter(file => /(?:^|\/)(?:final_summary|report|research_brief)\.md$/.test(file.path));
   const documents = files.filter(file => /(?:^|\/)research_brief\.json$/.test(file.path));
-  const displayed = new Set([...results, ...searches, ...reports, ...documents, ...searchArtifacts].map(file => file.path));
   if (results.length || searches.length || reports.length || documents.length || searchArtifacts.length) {
     const result = notebookSection("Result");
     result.classList.add("codeact-results", "notebook-result-section");
     for (const file of searches) {
       result.appendChild(buildNotebookSearchResults(file, snapshot, events));
-      result.appendChild(buildNotebookFile(file, snapshot));
     }
     for (const file of results) result.appendChild(buildCodeExecutionResult(file, snapshot, files));
     for (const file of reports) {
-      const preview = buildNotebookFile(file, snapshot);
-      preview.open = true;
-      result.appendChild(preview);
+      result.appendChild(buildNotebookDocument(file, snapshot));
     }
     for (const file of searchArtifacts) {
       result.appendChild(buildNotebookSearchArtifact(file, snapshot, version));
-      result.appendChild(buildNotebookFile(file, snapshot));
     }
     for (const file of documents) {
       result.appendChild(buildSearchQueryChoices(file, snapshot, version));
-      result.appendChild(buildNotebookFile(file, snapshot));
     }
     cell.appendChild(result);
   }
@@ -564,10 +567,8 @@ function appendCodeExecutionOutputs(cell, files, snapshot, events, version) {
     figures.classList.add("codeact-figures");
     const qcGroups = new Map();
     for (const file of images) {
-      displayed.add(file.path);
       const sidecar = file.path.replace(/\.png$/i, ".plot.json");
       if (artifactBasename(file.path) === "mrapss_mrplot.png" && files.some(candidate => candidate.path === sidecar)) {
-        displayed.add(sidecar);
         figures.appendChild(buildMrapssExplorer(file, snapshot, sidecar, version));
       } else if (qcPlotKind(file.path) && files.some(candidate => candidate.path === sidecar)) {
         const folder = file.path.slice(0, file.path.lastIndexOf("/"));
@@ -576,17 +577,9 @@ function appendCodeExecutionOutputs(cell, files, snapshot, events, version) {
       } else {
         figures.appendChild(buildNotebookFigure(file, snapshot));
       }
-      figures.appendChild(buildNotebookFile(file, snapshot));
     }
     for (const plots of qcGroups.values()) figures.appendChild(buildQcExplorer(plots, snapshot));
     cell.appendChild(figures);
-  }
-  const remaining = files.filter(file => !displayed.has(file.path));
-  if (remaining.length) {
-    const output = notebookDisclosure(`Files (${remaining.length})`, `files:${version}`);
-    output.classList.add("codeact-artifacts");
-    for (const file of remaining) output.appendChild(buildNotebookFile(file, snapshot));
-    cell.appendChild(output);
   }
 }
 
@@ -603,8 +596,7 @@ function buildCodeExecutionCell(event, index, files, owners, snapshot, events) {
   const title = notebookElement("h4", "codeact-cell-title", heading.title);
   title.title = heading.title;
   identity.appendChild(title);
-  const meta = [`Cell ${index + 1}`, d.language, d.duration_seconds == null ? "" : formatDuration(d.duration_seconds),
-    {search: "Search Agent", mr: "MR Agent", report: "Report Agent"}[d.agent], d.task_id].filter(Boolean);
+  const meta = [`Cell ${index + 1}`, d.duration_seconds == null ? "" : formatDuration(d.duration_seconds)].filter(Boolean);
   identity.appendChild(notebookElement("span", "codeact-cell-meta", meta.join(" · ")));
   const status = notebookElement("span", `codeact-cell-status is-${tone}`, codeExecutionStatus(d));
   head.append(identity, status);
@@ -623,7 +615,7 @@ function buildCodeExecutionCell(event, index, files, owners, snapshot, events) {
     error.appendChild(notebookElement("p", "muted", "Open execution details for the full code and logs."));
     cell.appendChild(error);
   }
-  const paths = [...new Set(d.generated_files || [])].filter(path => path.startsWith("workspace/") && !path.startsWith("workspace/inputs/"));
+  const paths = [...new Set(d.generated_files || [])].filter(path => path.startsWith("workspace/") && !path.startsWith("workspace/inputs/") && !notebookProcessFile(path));
   const available = files.filter(file => paths.includes(file.path) && owners.get(file.path)?.executionId === d.execution_id);
   appendCodeExecutionOutputs(cell, available, snapshot, events, `${d.execution_id}:${d.status}:${d.returncode}`);
   const history = notebookElement("div", "codeact-file-history");
@@ -635,9 +627,18 @@ function buildCodeExecutionCell(event, index, files, owners, snapshot, events) {
       note.title = path; note.appendChild(notebookFileCellLink(owner)); history.appendChild(note);
     }
   }
-  if (history.children.length) cell.appendChild(history);
+  if (available.length || history.children.length) {
+    const output = notebookDisclosure(`Files (${paths.length})`, `files:${d.execution_id}`);
+    output.classList.add("codeact-artifacts");
+    for (const file of available) output.appendChild(buildNotebookFile(file, snapshot));
+    if (history.children.length) output.appendChild(history);
+    cell.appendChild(output);
+  }
   const execution = notebookDisclosure("Execution details", `execution:${d.execution_id}`);
   execution.classList.add("codeact-execution-details");
+  const executionMeta = [d.language,
+    {search: "Search Agent", mr: "MR Agent", report: "Report Agent"}[d.agent], d.task_id].filter(Boolean);
+  if (executionMeta.length) execution.appendChild(notebookElement("p", "muted", executionMeta.join(" · ")));
   for (const [kind, label, output, empty] of [
     ["code", "Code", d.code, "No code recorded."],
     ["stdout", "Output", d.stdout, "No output."],
@@ -669,6 +670,8 @@ function renderExecutionNotebook() {
   notebook.cells = new Map();
   const events = codeExecutionEvents(snapshot);
   const visible = notebookOutputFiles(snapshot);
+  const processFiles = visible.filter(file => notebookProcessFile(file.path));
+  const outputFiles = visible.filter(file => !notebookProcessFile(file.path));
   const owners = notebookFileOwners(events);
   for (const [path, owner] of owners) {
     const event = events.find(event => event.details.execution_id === owner.executionId);
@@ -682,7 +685,7 @@ function renderExecutionNotebook() {
   notebook.fileOwners = owners;
   const taskView = notebook.view === "task";
   const completed = events.filter(event => event.details.status === "exited" && event.details.returncode === 0).length;
-  els.notebookStatus.textContent = taskView ? `${events.length} executions · ${completed} completed` : `${visible.length} files`;
+  els.notebookStatus.textContent = taskView ? `${completed}/${events.length} completed` : `${outputFiles.length} output files · ${processFiles.length} process files`;
   for (const [tab, selected] of [[els.notebookTaskTab, taskView], [els.notebookBuilderTab, !taskView]]) {
     tab.classList.toggle("active", selected); tab.setAttribute("aria-selected", String(selected)); tab.tabIndex = selected ? 0 : -1;
     tab.setAttribute("aria-controls", "notebook-output");
@@ -692,7 +695,7 @@ function renderExecutionNotebook() {
   const children = [];
   if (taskView) for (const [index, event] of events.entries()) {
     const paths = new Set(event.details.generated_files || []);
-    const cellFiles = visible.filter(file => paths.has(file.path));
+    const cellFiles = outputFiles.filter(file => paths.has(file.path));
     const cellSignature = JSON.stringify([snapshot.session_id, event, index, cellFiles, [...paths].map(path => [path, owners.get(path)])]);
     let entry = previous.get(event.details.execution_id);
     if (!entry || entry.signature !== cellSignature) {
@@ -706,16 +709,49 @@ function renderExecutionNotebook() {
     notebook.cells.set(event.details.execution_id, entry); children.push(entry.node);
   }
   for (const [id, entry] of previous) if (!notebook.cells.has(id)) disposeQcExplorers(entry.node);
-  const remaining = taskView ? visible.filter(file => !owners.has(file.path)) : visible;
+  const remaining = taskView ? outputFiles.filter(file => !owners.has(file.path)) : outputFiles;
   if (remaining.length) {
-    const section = notebookElement("section", "codeact-artifacts");
-    section.appendChild(notebookElement("h3", "", taskView ? "Other files" : "Files and figures"));
+    const section = taskView
+      ? notebookDisclosure(`Other output files (${remaining.length})`, "other-output-files")
+      : notebookElement("section");
+    section.classList.add("codeact-artifacts");
+    if (taskView) section.open = Boolean(host.querySelector(':scope > [data-detail="other-output-files"]')?.open);
+    else section.appendChild(notebookElement("h3", "", "Results and files"));
     for (const file of remaining) {
       const entry = notebookElement("div", "codeact-artifact-entry");
       const owner = owners.get(file.path);
-      const source = notebookElement("p", "codeact-file-history", owner ? "Last generated or updated by " : file.path.startsWith("workspace/reports/") ? "Generated by Report Agent" : "No generating cell recorded");
+      const source = notebookElement("p", "codeact-file-history", owner ? "Last generated or updated by " : file.path.startsWith("workspace/reports/") ? "Generated by Report Agent" : "Saved file · Cell link unavailable");
       if (owner) source.appendChild(notebookFileCellLink(owner));
       entry.appendChild(source); appendCodeExecutionFile(entry, file, snapshot, events); section.appendChild(entry);
+    }
+    children.push(section);
+  }
+  if (processFiles.length) {
+    const processSignature = JSON.stringify([snapshot.session_id, processFiles,
+      processFiles.map(file => owners.get(file.path))]);
+    let section = host.querySelector(":scope > .codeact-process-files");
+    if (!section || section.dataset.signature !== processSignature) {
+      const openDetails = new Set([section, ...(section?.querySelectorAll("details[data-detail]") || [])]
+        .filter(node => node?.open).map(node => node.dataset.detail));
+      section = notebookDisclosure(`Process files (${processFiles.length})`, "process-files");
+      section.classList.add("codeact-process-files");
+      section.dataset.signature = processSignature;
+      section.appendChild(notebookElement("p", "muted",
+        "Working scripts and supporting files saved during analysis. Open a file to preview or download it. Code and logs are also available in each cell’s Execution details."));
+      for (const file of processFiles) {
+        const entry = notebookElement("div", "codeact-artifact-entry");
+        const owner = owners.get(file.path);
+        if (owner) {
+          const source = notebookElement("p", "codeact-file-history", "Last generated or updated by ");
+          source.appendChild(notebookFileCellLink(owner));
+          entry.appendChild(source);
+        }
+        entry.appendChild(buildNotebookFile(file, snapshot));
+        section.appendChild(entry);
+      }
+      for (const detail of [section, ...section.querySelectorAll("details[data-detail]")]) {
+        detail.open = openDetails.has(detail.dataset.detail);
+      }
     }
     children.push(section);
   }
@@ -751,6 +787,22 @@ function notebookPreviewKind(artifact) {
   if (/\.json$/i.test(path)) return "json";
   if (/\.(txt|log|jsonl|yaml|yml|py|r|sh)$/i.test(path)) return "text";
   return "";
+}
+
+function buildNotebookDocument(artifact, snapshot) {
+  const section = notebookElement("section", "notebook-document-preview");
+  section.dataset.resultPath = artifact.path;
+  section.appendChild(notebookElement("p", "muted", "Loading document…"));
+  const resource = notebookResource(snapshot, artifact.path, "preview");
+  void resource.promise.then(preview => {
+    if (resource.status === "error") throw new Error(resource.error);
+    section.replaceChildren();
+    const body = notebookElement("div", "message-body notebook-explanation");
+    body.innerHTML = renderMarkdown(preview.text);
+    section.appendChild(body);
+    if (preview.truncated) section.appendChild(notebookElement("p", "muted", "Preview limited to 256 KB. Open Files to download the full document."));
+  }).catch(error => section.replaceChildren(notebookElement("p", "muted", `Document preview unavailable: ${error.message}. Open Files to read the saved document.`)));
+  return section;
 }
 
 function buildNotebookFile(artifact, snapshot) {
@@ -927,7 +979,7 @@ function buildNotebookFigure(plot, snapshot) {
   });
   link.appendChild(image);
   figure.appendChild(link);
-  if (plot.explanation_path) figure.appendChild(buildNotebookFile({ path: plot.explanation_path }, snapshot));
+  if (plot.explanation_path) figure.appendChild(buildNotebookDocument({ path: plot.explanation_path }, snapshot));
   return figure;
 }
 

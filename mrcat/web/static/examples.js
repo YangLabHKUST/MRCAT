@@ -64,7 +64,9 @@ function showExampleStage(index) {
   resetExecutionNotebook();
   applySnapshot(snapshot);
   els.sessionTitle.textContent = recording.title;
+  els.sessionTitle.title = recording.title;
   els.sessionSubtitle.textContent = stage.description;
+  els.sessionSubtitle.hidden = !stage.description;
   els.statusChip.textContent = "Read only";
   els.conversationFeed.scrollTop = 0;
   document.querySelectorAll("#example-navigation button").forEach((button, i) => {

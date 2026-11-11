@@ -94,6 +94,15 @@ installation without changing it:
 Rscript scripts/install_r_dependencies.R --check
 ```
 
+## Offline installation check
+
+```bash
+python examples/offline_smoke.py
+```
+
+This checks conversation persistence with a fixed local model fixture. It makes
+no API calls and performs no MR analysis.
+
 ## Calling a tool from Python
 
 Tools are documented in their owning Skills. For a prepared pair and the

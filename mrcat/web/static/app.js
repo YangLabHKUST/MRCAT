@@ -150,6 +150,8 @@ const els = {
   sessionStatusToggle: document.getElementById("session-status-toggle"),
   sessionTitle: document.getElementById("session-title"),
   sessionSubtitle: document.getElementById("session-subtitle"),
+  sessionIdentity: document.getElementById("session-identity"),
+  sessionId: document.getElementById("session-id"),
   statusChip: document.getElementById("status-chip"),
   timeline: document.getElementById("timeline"),
   workspace: document.querySelector(".workspace"),
@@ -701,12 +703,9 @@ function renderSessions() {
     status.className = `mini-status ${text(item.status).replaceAll("_", "-")}`;
     status.textContent = statusLabel(item.status);
     status.title = sessionStatusDescription(item.status);
-    const question = document.createElement("p");
-    question.textContent = displaySessionId(item.session_id);
 
     button.appendChild(title);
     button.appendChild(status);
-    button.appendChild(question);
     els.sessionList.appendChild(button);
   }
 }
@@ -945,8 +944,12 @@ function applySnapshot(snapshot) {
 
 function renderHeader(snapshot) {
   const session = snapshot?.state || {};
-  els.sessionTitle.textContent = session.session_id ? `MRCAT Session · ${displaySessionId(session.session_id)}` : LIVE_DEMO ? "BMI → T2D · Interactive example" : "New Chat";
-  els.sessionSubtitle.textContent = session.question || (LIVE_DEMO ? "Suggested questions · Real analysis and figures" : "Ask a research question or describe a coding task.");
+  els.sessionTitle.textContent = text(session.question) || (session.session_id ? "MRCAT Session" : LIVE_DEMO ? "BMI → T2D · Interactive example" : "New Chat");
+  els.sessionTitle.title = els.sessionTitle.textContent;
+  els.sessionSubtitle.textContent = "";
+  els.sessionSubtitle.hidden = true;
+  els.sessionId.textContent = session.session_id || "";
+  els.sessionIdentity.hidden = !session.session_id;
   els.statusChip.textContent = sessionActivity(snapshot)?.title || session.status || "Ready";
   els.statusChip.className = "status-chip";
   els.pendingText.hidden = !text(snapshot?.pending_question);
@@ -1076,9 +1079,9 @@ function buildReadablePlan(event, current, open, detailOpen, snapshot) {
     const completed = task.plan_items.filter(item => task.completed_items?.[item.step_id]).length;
     progress.textContent = `${completed} / ${task.plan_items.length} completed`;
   } else {
-    progress.textContent = event.details?.draft ? "Awaiting confirmation" : "Step-by-step workflow";
+    progress.textContent = event.details?.draft ? "Awaiting confirmation" : "";
   }
-  identity.appendChild(progress);
+  if (progress.textContent) identity.appendChild(progress);
   heading.append(identity);
   const content = document.createElement("div");
   content.className = "codeact-plan";
@@ -1166,11 +1169,42 @@ function buildReadablePlan(event, current, open, detailOpen, snapshot) {
   return card;
 }
 
+function groupConversationExecutions(openGroups) {
+  const rows = [...els.conversationFeed.children];
+  const isExecution = row => row?.matches(".message-execution.message-agent-mr");
+  for (let index = 0; index < rows.length; index += 1) {
+    const first = rows[index];
+    if (!isExecution(first)) continue;
+    const rest = [];
+    while (isExecution(rows[index + 1])
+        && rows[index + 1].dataset.taskId === first.dataset.taskId) {
+      rest.push(rows[++index]);
+    }
+    if (!rest.length) continue;
+    const panel = document.createElement("div");
+    panel.className = "conversation-executions";
+    const details = document.createElement("details");
+    details.className = "conversation-execution-rest";
+    details.dataset.executionGroup = first.dataset.executionId;
+    details.open = openGroups.get(first.dataset.executionId) || false;
+    const summary = document.createElement("summary");
+    const updateLabel = () => {
+      summary.textContent = `${details.open ? "Hide" : "Show"} ${rest.length} more ${rest.length === 1 ? "cell" : "cells"}`;
+    };
+    updateLabel();
+    details.addEventListener("toggle", updateLabel);
+    details.append(summary, ...rest);
+    first.replaceWith(panel);
+    panel.append(first, details);
+  }
+}
+
 function renderConversation(snapshot) {
   const scroll = captureConversationScroll();
   const previousCurrent = els.conversationFeed.querySelector('details[data-current-plan="true"]')?.dataset.planId;
   const planOpen = new Map([...els.conversationFeed.querySelectorAll("details[data-plan-id]")].map(node => [node.dataset.planId, node.open]));
   const planDetailOpen = new Map([...els.conversationFeed.querySelectorAll("details[data-plan-detail]")].map(node => [node.dataset.planDetail, node.open]));
+  const executionOpen = new Map([...els.conversationFeed.querySelectorAll("details[data-execution-group]")].map(node => [node.dataset.executionGroup, node.open]));
   els.conversationFeed.replaceChildren();
   const events = snapshot?.mr?.events || [];
   const latestPlan = [...events].reverse().find(event => event.type === "plan_updated");
@@ -1201,25 +1235,47 @@ function renderConversation(snapshot) {
     } else if (event.type === "report_failed") {
       appendMessage("assistant", "Report Agent · Paused", event.content || "Report interrupted.");
     } else if (event.type === "skill_loaded" && text(event.content)) {
-      const row = appendMessage("assistant", `${agentLabel(event)} · Skill guide loaded`, "", {kind: "skill-guide"});
+      const row = appendMessage("assistant", `${agentLabel(event)} · Execute`, "", {kind: "skill-guide"});
       row.querySelector(".message-body").appendChild(createSkillLabel(text(event.content)));
     } else if (event.type === "code_execution") {
       const d = event.details;
       const number = executionNumbers.get(d.execution_id);
-      const row = appendMessage("assistant", `${agentLabel(event)} · Code execution`, codeactArtifactLinks(event.content || "", snapshot), {markdown: true, kind: "execution"});
+      const row = document.createElement("section");
+      row.className = "message assistant message-execution";
+      if (d.agent === "mr") row.classList.add("message-agent-mr");
+      row.setAttribute("aria-label", `${agentLabel(event)} · Code execution`);
       row.dataset.executionId = d.execution_id;
+      row.dataset.taskId = d.task_id || "";
+      row.dataset.tone = codeExecutionTone(d);
       const button = document.createElement("button");
       button.type = "button";
       button.className = "codeact-execution-link";
-      button.textContent = `Cell ${number} · ${codeExecutionStatus(d)}`;
+      const icon = document.createElement("span");
+      icon.className = "codeact-execution-icon";
+      icon.setAttribute("aria-hidden", "true");
+      icon.textContent = {completed: "✓", failed: "×", running: "◌", neutral: "·"}[row.dataset.tone];
+      const status = document.createElement("span");
+      status.className = "codeact-execution-status";
+      status.textContent = `Cell ${number} · ${codeExecutionStatus(d)}`;
+      const view = document.createElement("span");
+      view.className = "codeact-execution-view";
+      view.textContent = "View ↗";
+      button.append(icon, status, view);
       button.title = `View Cell ${number} in Execution Notebook`;
       button.setAttribute("aria-label", button.title);
       button.setAttribute("aria-controls", `codeact-cell-${d.execution_id}`);
       button.addEventListener("click", () => focusCodeExecution(d.execution_id));
-      row.querySelector(".message-body").prepend(button);
+      row.appendChild(button);
+      els.conversationFeed.appendChild(row);
     } else if (["user_message", "assistant_message", "question", "final", "error", "evaluation_failed", "interrupted"].includes(event.type)) {
       const user = event.type === "user_message";
-      const kind = {assistant_message: "Analysis / update", question: "Question", final: "Answer", error: "Error", evaluation_failed: event.content?.startsWith("MR finalize ") ? "Summary unavailable" : "Review unavailable", interrupted: "Paused"}[event.type];
+      // MR Review repeats its routing reason after evaluation and optional item acceptance.
+      const review = events[index - 1]?.type === "plan_item_completed" ? events[index - 2] : events[index - 1];
+      const isReview = event.type === "assistant_message" && event.details?.agent === "mr"
+        && review?.type === "evaluation" && review.details?.agent === "mr"
+        && review.details?.route === "replan" && review.details?.task_id === event.details?.task_id
+        && review.content === event.content;
+      const kind = {assistant_message: isReview ? "Review" : "Analysis / update", question: "Question", final: "Answer", error: "Error", evaluation_failed: event.content?.startsWith("MR finalize ") ? "Summary unavailable" : "Review unavailable", interrupted: "Paused"}[event.type];
       const label = user ? "You" : `${agentLabel(event)} · ${kind}`;
       const row = appendMessage(user ? "user" : "assistant", label, codeactArtifactLinks(event.content || "", snapshot), {markdown: !user, kind: event.type === "final" ? "answer" : event.type === "question" ? "question" : undefined});
       if (event.type === "final") bindAnswerArtifactLinks(row, snapshot);
@@ -1248,6 +1304,7 @@ function renderConversation(snapshot) {
   }
   if (state.pendingUserMessage && !events.some(e => e.type === "user_message" && e.content === state.pendingUserMessage.text)) appendMessage("user", "You", state.pendingUserMessage.text);
   if (!els.conversationFeed.children.length) appendEmptyConversation(LIVE_DEMO ? "Write a question, or choose an example below and edit it before sending." : "Ask a research question or describe a coding task.");
+  groupConversationExecutions(executionOpen);
   restoreConversationScroll(scroll);
 }
 
@@ -1452,22 +1509,11 @@ function searchReportSectionKind(value) {
   return kinds[heading] || "supporting";
 }
 
-function searchReportSectionItemCount(section) {
-  if (Array.isArray(section?.references)) return section.references.length;
-  if (isSearchReferencesHeading(section?.heading)) {
-    return (text(section?.markdown).match(/^\s*(?:[-*]\s*)?\[\d+\]\s+/gm) || []).length;
-  }
-  return (text(section?.markdown).match(/^\s*[-*+]\s+/gm) || []).length;
-}
-
 function searchReportSectionCountLabel(section) {
-  const count = searchReportSectionItemCount(section);
-  if (count < 1) return "";
-  if (isSearchReferencesHeading(section?.heading)) return `${count} reference${count === 1 ? "" : "s"}`;
-  const kind = searchReportSectionKind(section?.heading);
-  if (kind === "database") return `${count} resource${count === 1 ? "" : "s"}`;
-  if (kind === "workflow") return `${count} step${count === 1 ? "" : "s"}`;
-  return `${count} finding${count === 1 ? "" : "s"}`;
+  if (!isSearchReferencesHeading(section?.heading)) return "";
+  const count = Array.isArray(section.references) ? section.references.length
+    : (text(section.markdown).match(/^\s*(?:[-*]\s*)?\[\d+\]\s+/gm) || []).length;
+  return count > 0 ? `${count} reference${count === 1 ? "" : "s"}` : "";
 }
 
 function searchReportKeyFinding(report) {
@@ -1685,15 +1731,11 @@ function buildSearchReportCard(report, event, body) {
   const title = document.createElement("strong");
   title.textContent = report.title;
   const meta = document.createElement("span");
-  const metaParts = [
-    `${report.mainSectionCount} section${report.mainSectionCount === 1 ? "" : "s"}`,
-  ];
   if (report.referenceCount > 0) {
-    metaParts.push(`${report.referenceCount} reference${report.referenceCount === 1 ? "" : "s"}`);
+    meta.textContent = `${report.referenceCount} reference${report.referenceCount === 1 ? "" : "s"}`;
   }
-  meta.textContent = metaParts.join(" · ");
   heading.appendChild(title);
-  heading.appendChild(meta);
+  if (meta.textContent) heading.appendChild(meta);
   identity.appendChild(heading);
   head.appendChild(identity);
 
@@ -2777,7 +2819,8 @@ function renderStudySetup(snapshot) {
   });
   const requestNote = document.createElement("p");
   requestNote.className = "study-setup-note";
-  requestNote.textContent = "State the requested pairs and analysis. Multiple datasets do not automatically mean all pairwise combinations or MVMR.";
+  requestNote.textContent = "Specify the pairs. Multiple datasets do not imply all pairs or MVMR.";
+  requestNote.hidden = draft.exposures.length <= 1 && draft.outcomes.length <= 1;
   requestGroup.appendChild(requestLabel);
   requestGroup.appendChild(requestInput);
   requestGroup.appendChild(requestNote);
@@ -2796,7 +2839,7 @@ function renderStudySetup(snapshot) {
     {
       id: "",
       label: "Automatic",
-      description: "Automatic — all supported sources",
+      description: "Search all supported sources.",
     },
     ...state.studySourceOptions.map((option) => ({
       ...option,
@@ -2811,6 +2854,7 @@ function renderStudySetup(snapshot) {
     button.disabled = Boolean(state.busy || status.locked);
     button.setAttribute("role", "radio");
     button.setAttribute("aria-checked", String(selected));
+    button.setAttribute("aria-description", option.description);
     button.addEventListener("click", () => {
       state.studySetupDraft.sources = option.id ? [option.id] : [];
       state.studySetupDraft.dirty = true;
@@ -2832,10 +2876,7 @@ function renderStudySetup(snapshot) {
     copy.className = "study-source-copy";
     const title = document.createElement("strong");
     title.textContent = option.label;
-    const description = document.createElement("span");
-    description.textContent = option.description;
     copy.appendChild(title);
-    copy.appendChild(description);
     const check = document.createElement("span");
     check.className = "study-source-check";
     check.textContent = selected ? "✓" : "";
@@ -2847,10 +2888,24 @@ function renderStudySetup(snapshot) {
   }
   const sourceNote = document.createElement("p");
   sourceNote.className = "study-setup-note";
-  sourceNote.textContent = "Applies only to exposure or outcome data that must be searched; uploaded datasets are used directly.";
+  sourceNote.textContent = "This source is used for searches. Uploaded datasets are used directly.";
   sourceGroup.appendChild(sourceLabel);
   sourceGroup.appendChild(sourcePicker);
   sourceGroup.appendChild(sourceNote);
+  const sourceHelp = document.createElement("details");
+  sourceHelp.className = "study-source-help";
+  const sourceHelpTitle = document.createElement("summary");
+  sourceHelpTitle.textContent = "About data sources";
+  sourceHelp.appendChild(sourceHelpTitle);
+  for (const option of sourceChoices) {
+    const description = document.createElement("p");
+    description.className = "study-setup-note";
+    const name = document.createElement("strong");
+    name.textContent = `${option.label}: `;
+    description.append(name, option.description);
+    sourceHelp.appendChild(description);
+  }
+  sourceGroup.appendChild(sourceHelp);
   els.studySetupContent.appendChild(sourceGroup);
 
   const methodGroup = document.createElement("section");
