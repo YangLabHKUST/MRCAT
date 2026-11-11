@@ -6,6 +6,7 @@ from pathlib import Path
 import fcntl
 import json
 import os
+import re
 import secrets
 import shutil
 import threading
@@ -18,6 +19,26 @@ from mrcat.state.store import Store, write_json
 from .service import BusyError, Service
 
 COOKIE = "mrcat_demo_visitor"
+
+
+class PublicExamples(Service):
+    """Live views of published sessions, without workflow writes on reads."""
+
+    def require_local(self, sid):
+        raise PermissionError("This public example is read only. Start a new chat to run an analysis.")
+
+    def reconcile(self, state):
+        return state
+
+    def artifact(self, sid, summary):
+        directory = self.store.directory(sid).resolve()
+        path = (directory / summary).resolve()
+        if path == directory / "memory.md":
+            # Serve an existing export without generating files on a public GET.
+            if not path.is_file():
+                raise FileNotFoundError(summary)
+            return path
+        return super().artifact(sid, summary)
 
 
 class DemoVisitors:
@@ -47,8 +68,14 @@ class DemoVisitors:
         except FileExistsError:
             pass
         self.key = key_path.read_text().strip()
+        self.public = PublicExamples(self.root, self.base / "public")
         self.services = {}
         self.lock = threading.RLock()
+
+    def public_ids(self):
+        return sorted(path.name for path in self.public.store.base.iterdir()
+                      if path.is_dir() and not path.is_symlink()
+                      and re.fullmatch(r"session_[A-Za-z0-9_-]+", path.name))
 
     def visitor(self, request):
         token = request.cookies.get(COOKIE)
@@ -106,6 +133,7 @@ class DemoVisitors:
 
     def close(self):
         with self.lock:
+            self.public.views.close()
             for service in self.services.values():
                 service.views.close()
 

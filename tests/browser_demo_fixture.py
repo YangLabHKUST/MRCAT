@@ -38,7 +38,12 @@ def reply(self, sid, request):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", type=int, default=18796)
+    parser.add_argument("--public-example", action="store_true")
     args = parser.parse_args()
     Service.reply = reply
     app = create_app(**demo_fixture(Path(tempfile.mkdtemp(prefix="mrcat-demo-ui-"))))
+    if args.public_example:
+        public = app.state.user_services.public
+        saved = public.store.create("Synthetic public example", "deepseek")
+        reply(public, saved["session_id"], "Yes, go ahead.")
     uvicorn.run(app, host="127.0.0.1", port=args.port, log_level="warning")

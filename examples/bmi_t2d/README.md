@@ -38,7 +38,14 @@ and Study setup APIs, respectively; the user's edited message is preserved.
 
 Publish only this dedicated service through the desired tunnel. Signed,
 HTTP-only visitor cookies keep session stores separate and allow continuation
-in the same browser for seven days. Suggestions are optional; ordinary typed
+in the same browser for seven days. To publish an existing session for every
+visitor, stop any work on that session and move its complete directory into
+`<artifact-dir>/public/`. Public sessions appear first in the session list and
+use the current frontend and session APIs. They are read only; New chat creates
+an independent visitor session. No snapshot export or per-visitor copy is needed.
+Reload the page after adding or removing a public example.
+
+Suggestions are optional; ordinary typed
 questions and follow-ups are accepted without matching template text or a fixed
 sequence. Dataset selections are limited to the supplied examples; uploads,
 forks and provider changes are unavailable. It admits one running agent turn at

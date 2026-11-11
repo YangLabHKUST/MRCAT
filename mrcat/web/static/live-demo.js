@@ -1,5 +1,6 @@
 /* Guided real execution. All progress comes from the existing session snapshot. */
 const LIVE_DEMO = document.body.dataset.liveDemo === "true";
+const PUBLIC_DEMO_SESSIONS = new Set((document.body.dataset.publicSessions || "").split(" ").filter(Boolean));
 let liveDemoCatalog = null;
 
 function connectLiveDemoPolling() {
@@ -86,7 +87,7 @@ function clearLiveDemoSetup() {
 
 function updateLiveDemo() {
   if (!LIVE_DEMO || !liveDemoCatalog) return;
-  const locked = state.busy || Boolean(state.snapshot?.active_job);
+  const locked = state.busy || Boolean(state.snapshot?.active_job) || isReadOnlySession();
   document.querySelectorAll("[data-demo-step]").forEach(button => { button.disabled = locked; });
   const attachment = document.getElementById("live-demo-attachment");
   attachment.hidden = !liveDemoSelection;

@@ -18,7 +18,7 @@ plan, inspect code and plots, and ask follow-up questions in one workspace.
 
 ## Demo
 
-- [BMI → T2D live demo](https://wiki-northern-diploma-cumulative.trycloudflare.com/) — try an analysis without your own API key (temporary preview).
+- [Live demo](https://demo.mrcat.science/) — explore a public example or start your own analysis without an API key.
 - [Completed analysis: hexadecanedioate → CAD](https://result4.mrcat.science/#example-result4) — explore a recorded session with code, plots and a report.
 
 See the [BMI → T2D tutorial](examples/bmi_t2d/README.md) for example questions and data requirements.

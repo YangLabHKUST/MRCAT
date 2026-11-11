@@ -63,6 +63,11 @@ def create_app(*,repo_root=None,artifact_dir=None,auth_mode="local",access_team_
                     request.state.access_expires_at=identity.expires_at
                 match=re.match(r"^/api/sessions/([^/]+)(?:/|$)", request.url.path)
                 if match:
+                    if demo and match[1] in users.public_ids():
+                        if request.method not in {"GET", "HEAD", "OPTIONS"}:
+                            raise HTTPException(403, "This public example is read only. Start a new chat to run an analysis.")
+                        service = users.public
+                        request.state.service = service
                     try:
                         path=service.store.directory(match[1])
                     except ValueError:
@@ -95,13 +100,19 @@ def create_app(*,repo_root=None,artifact_dir=None,auth_mode="local",access_team_
     @app.get("/index.html")
     def index():
         if demo:
-            return Response((static/"index.html").read_text().replace("<body>", '<body data-live-demo="true">'), media_type="text/html")
+            public_ids = " ".join(users.public_ids())
+            return Response((static/"index.html").read_text().replace("<body>", f'<body data-live-demo="true" data-public-sessions="{public_ids}">'), media_type="text/html")
         return FileResponse(static/"index.html")
     @app.get("/api/methods")
     def methods(): return {"methods":study_method_catalog(root/"skills"),"sources":study_source_catalog()}
     @app.get("/api/sessions")
     def sessions(request:Request):
-        return {"sessions":current_service(request).sessions(local_only=bool(users))}
+        rows = current_service(request).sessions(local_only=bool(users))
+        if demo:
+            public = users.public.sessions(local_only=True)
+            public_ids = {row["session_id"] for row in public}
+            rows = public + [row for row in rows if row["session_id"] not in public_ids]
+        return {"sessions":rows}
     @app.post("/api/sessions")
     async def start(request:Request):
         service=current_service(request)

@@ -198,8 +198,12 @@ const PANEL_RESIZE_LIMITS = {
   gridChrome: 56,
 };
 
+function isReadOnlySession() {
+  return Boolean(state.example) || PUBLIC_DEMO_SESSIONS.has(state.currentSessionId);
+}
+
 async function requestJson(url, options = {}) {
-  if (state.example && options.method && !["GET", "HEAD"].includes(options.method.toUpperCase())) {
+  if (isReadOnlySession() && options.method && !["GET", "HEAD"].includes(options.method.toUpperCase())) {
     throw new Error("This example is read only. Start a new chat to run your own analysis.");
   }
   const response = await fetch(url, options);
@@ -697,6 +701,7 @@ function renderSessions() {
 
     const title = document.createElement("strong");
     title.textContent = text(item.question) || `Session ${displaySessionId(item.session_id)}`;
+    if (PUBLIC_DEMO_SESSIONS.has(item.session_id)) title.textContent = `Public example · ${title.textContent}`;
     button.title = text(item.question) || title.textContent;
     button.setAttribute("aria-current", item.session_id === state.currentSessionId ? "true" : "false");
     const status = document.createElement("span");
@@ -896,7 +901,7 @@ function sessionActivity(snapshot, clock = Date.now()) {
 
 function renderActivity(snapshot) {
   const panel = document.getElementById("session-activity");
-  if (state.example) {
+  if (isReadOnlySession()) {
     panel.hidden = true;
     els.statusChip.textContent = "Read only";
     return;
@@ -3523,17 +3528,17 @@ function formatParameterValue(value) {
 
 function updateComposer() {
   const running = Boolean(state.snapshot?.active_job);
-  const locked = state.busy || running || Boolean(state.example);
+  const locked = state.busy || running || isReadOnlySession();
   els.newChatButton.disabled = state.busy;
   els.forkSessionButton.disabled = locked || !state.snapshot;
   els.replyInput.disabled = locked; els.replyButton.disabled = locked;
   document.querySelectorAll("[data-search-action]").forEach(button => {
     button.disabled = locked || button.dataset.emptySelection === "true";
   });
-  els.stopJobButton.hidden = !running; els.stopJobButton.disabled = state.busy || !running;
+  els.stopJobButton.hidden = !running || isReadOnlySession(); els.stopJobButton.disabled = state.busy || !running || isReadOnlySession();
   els.providerSelect.disabled = state.busy || Boolean(state.currentSessionId);
   els.replyButton.textContent = state.currentSessionId ? "Send" : "Start";
-  els.replyInput.placeholder = state.example ? "Recorded example · Start a new chat to run an analysis" : running ? `${sessionActivity(state.snapshot).title} · see progress above` : "Describe what you want to do";
+  els.replyInput.placeholder = isReadOnlySession() ? "Read-only example · Start a new chat to run an analysis" : running ? `${sessionActivity(state.snapshot).title} · see progress above` : "Describe what you want to do";
   document.querySelectorAll("[data-report-action]").forEach(button => { button.disabled = locked; });
   updateLiveDemo();
 }
@@ -3652,7 +3657,7 @@ async function sendReply(event, request = null) {
 }
 
 async function submitStudySetup() {
-  if (state.example) return;
+  if (isReadOnlySession()) return;
   const draft = state.studySetupDraft;
   if (!studySetupReady(draft)) return;
   const form = new FormData();

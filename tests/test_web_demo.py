@@ -173,6 +173,50 @@ def test_global_admission_and_daily_allowance(demo, monkeypatch):
     assert response.status_code == 429
 
 
+def test_public_example_is_live_read_only_and_visitors_stay_isolated(demo):
+    app, alice, args = demo
+    public = app.state.user_services.public
+    saved = public.store.create("Public analysis", "deepseek")
+    sid = saved["session_id"]
+    directory = public.store.directory(sid)
+    (directory / "workspace/result.csv").write_text("method,beta\nIVW,0.2\n")
+    (directory / "workspace/report.md").write_text("# Public result\n")
+    # A stale job must not cause a GET to rewrite the published checkpoint.
+    saved["job"] = {"status": "running", "pid": 99999999}
+    public.store.save(saved)
+    before = public.store.load(sid)
+    with TestClient(app) as bob:
+        for client in (alice, bob):
+            assert f'data-public-sessions="{sid}"' in client.get("/").text
+            assert client.get("/api/sessions").json()["sessions"][0]["session_id"] == sid
+            assert client.get(f"/api/sessions/{sid}").status_code == 200
+            assert client.get(f"/api/sessions/{sid}/artifacts/raw?summary=workspace/result.csv").text == "method,beta\nIVW,0.2\n"
+            assert client.get(f"/api/sessions/{sid}/artifacts/markdown?summary=workspace/report.md").json()["markdown"] == "# Public result\n"
+            assert client.get(f"/api/sessions/{sid}/artifacts/spreadsheet?summary=workspace/result.csv").json()["rows"] == [["IVW", "0.2"]]
+            for action in ("mr/reply", "stop", "study-setup", "fork", "scientific-report", "search/reply"):
+                assert client.post(f"/api/sessions/{sid}/{action}", json={"reply": "Change this"}).status_code == 403
+            assert client.delete(f"/api/sessions/{sid}").status_code == 403
+            assert client.get(f"/api/sessions/{sid}/artifacts/raw?summary=graph.sqlite").status_code == 403
+            assert client.get(f"/api/sessions/{sid}/artifacts/raw?summary=../.visitor-key").status_code == 403
+            assert client.get(f"/api/sessions/{sid}/artifacts/raw?summary=./memory.md").status_code == 404
+        assert public.store.load(sid) == before
+        assert not (directory / "memory.md").exists()
+        assert not (directory / "STOP").exists()
+        alice_sid = start(app, alice)
+        assert {row["session_id"] for row in alice.get("/api/sessions").json()["sessions"]} == {sid, alice_sid}
+        assert {row["session_id"] for row in bob.get("/api/sessions").json()["sessions"]} == {sid}
+        assert bob.get(f"/api/sessions/{alice_sid}").status_code == 404
+        assert bob.post(f"/api/sessions/{alice_sid}/stop").status_code == 404
+        # Publication does not copy the session into visitor stores.
+        assert not any((service.store.base / sid).exists() for service in app.state.user_services.services.values())
+        updated = dict(before, question="Updated public analysis", job=None)
+        public.store.save(updated)
+        assert bob.get(f"/api/sessions/{sid}").json()["state"]["question"] == "Updated public analysis"
+    with TestClient(create_app(**args)) as restarted:
+        assert restarted.get("/api/sessions").json()["sessions"][0]["session_id"] == sid
+        assert restarted.get(f"/api/sessions/{sid}").status_code == 200
+
+
 def test_input_integrity_is_required(tmp_path, monkeypatch):
     monkeypatch.delenv("MRCAT_DEMO_ONLINE_CACHE", raising=False)
     args = demo_fixture(tmp_path)
