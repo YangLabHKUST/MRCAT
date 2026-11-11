@@ -48,8 +48,9 @@ Reload the page after adding or removing a public example.
 Suggestions are optional; ordinary typed
 questions and follow-ups are accepted without matching template text or a fixed
 sequence. Dataset selections are limited to the supplied examples; uploads,
-forks and provider changes are unavailable. It admits one running agent turn at
-a time, up to 40 turns per UTC day (`MRCAT_DEMO_DAILY_TURNS`) and 16 user messages
+forks and provider changes are unavailable. Different sessions can run concurrently;
+each session accepts one running agent turn at a time. The demo allows up to
+40 turns per UTC day (`MRCAT_DEMO_DAILY_TURNS`) and 16 user messages
 per visitor session. `MRCAT_DEMO_PROVIDER` defaults to `deepseek`. The server pays
 for model/search calls; its environment file must remain private. Keep this
 artifact directory across restarts to preserve cookies, sessions and allowances.

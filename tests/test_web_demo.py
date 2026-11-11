@@ -155,19 +155,43 @@ def test_anonymous_ownership_survives_restart_and_blocks_bypasses(demo):
         assert len(restarted.get("/api/sessions").json()["sessions"]) == 1
 
 
-def test_global_admission_and_daily_allowance(demo, monkeypatch):
+def test_running_session_does_not_block_other_sessions_or_visitors(demo):
     app, client, _ = demo
     sid = start(app, client)
     service = service_for(app, sid)
     saved = service.store.load(sid)
     saved["job"] = {"status": "running", "pid": os.getpid()}
     service.store.save(saved)
+    before = service.store.load(sid)
+    ledger_path = app.state.user_services.base / ".admission.json"
+    ledger = json.loads(ledger_path.read_text())
+    ledger["active"] = {"store": str(service.store.base), "sid": sid}
+    ledger_path.write_text(json.dumps(ledger))
     with TestClient(app) as bob:
         bob.get("/")
         response = bob.post("/api/sessions", json={"question": app.state.user_services.catalog["steps"][0]["prompt"]})
+        assert response.status_code == 200
+        bob_sid = response.json()["session"]["session_id"]
+        bob_service = service_for(app, bob_sid)
+        bob_saved = bob_service.store.load(bob_sid)
+        bob_saved["job"] = {"status": "running", "pid": os.getpid()}
+        bob_service.store.save(bob_saved)
+        assert bob.get(f"/api/sessions/{sid}").status_code == 404
+        assert client.get(f"/api/sessions/{bob_sid}").status_code == 404
+        # Even the same visitor may start a separate session during a run.
+        other_sid = start(app, client)
+        assert other_sid not in {sid, bob_sid}
+        assert service.store.load(sid) == before
+        # Only submissions to the busy session are rejected.
+        response = client.post(f"/api/sessions/{sid}/mr/reply", json={"reply": "Run again"})
         assert response.status_code == 409
-    saved["job"] = None
-    service.store.save(saved)
+        assert service.store.load(sid) == before
+    assert "active" not in json.loads(ledger_path.read_text())
+
+
+def test_daily_allowance(demo, monkeypatch):
+    app, client, _ = demo
+    sid = start(app, client)
     monkeypatch.setenv("MRCAT_DEMO_DAILY_TURNS", "1")
     response = client.post(f"/api/sessions/{sid}/mr/reply", json={"reply": app.state.user_services.catalog["steps"][1]["prompt"]})
     assert response.status_code == 429

@@ -15,7 +15,7 @@ import time
 import jwt
 from fastapi import HTTPException
 
-from mrcat.state.store import Store, write_json
+from mrcat.state.store import write_json
 from .service import BusyError, Service
 
 COOKIE = "mrcat_demo_visitor"
@@ -98,7 +98,7 @@ class DemoVisitors:
 
     @contextmanager
     def turn(self, service, sid=None):
-        # Serialize admission across processes and retain the quota across restarts.
+        # Serialize quota accounting, not the lifetime of independent jobs.
         with self.lock, (self.base / ".admission.lock").open("a") as lock:
             fcntl.flock(lock, fcntl.LOCK_EX)
             ledger_path = self.base / ".admission.json"
@@ -106,18 +106,6 @@ class DemoVisitors:
             today = datetime.now(timezone.utc).date().isoformat()
             if ledger.get("date") != today:
                 ledger.update(date=today, turns=0)
-            active = ledger.get("active")
-            if active:
-                store = Store(active["store"])
-                saved = store.load(active["sid"])
-                job = saved.get("job") or {}
-                if job.get("status") == "running":
-                    try:
-                        os.kill(job["pid"], 0)
-                    except ProcessLookupError:
-                        pass
-                    else:
-                        raise BusyError("The demo is running an analysis. Please try again when it finishes.")
             if ledger.get("turns", 0) >= int(os.getenv("MRCAT_DEMO_DAILY_TURNS", "40")):
                 raise HTTPException(429, "Today's demo allowance has been used. Please return tomorrow.")
             if sid:
@@ -125,11 +113,8 @@ class DemoVisitors:
                 count = sum(e["type"] == "user_message" for e in saved["events"])
                 if count >= 16:
                     raise HTTPException(429, "This example has reached its interaction allowance.")
-            result = {}
-            yield result
-            ledger["turns"] = ledger.get("turns", 0) + 1
-            ledger["active"] = {"store": str(service.store.base), "sid": result["sid"]}
-            write_json(ledger_path, ledger)
+            yield
+            write_json(ledger_path, {"date": today, "turns": ledger.get("turns", 0) + 1})
 
     def close(self):
         with self.lock:
@@ -152,7 +137,7 @@ class DemoService(Service):
     def submit(self, sid, request, *, dataset=None):
         if not isinstance(request, str) or not request.strip():
             raise ValueError("A message is required")
-        with self.visitors.turn(self, sid) as admission:
+        with self.visitors.turn(self, sid):
             if sid is None:
                 saved = self.store.create(request, os.getenv("MRCAT_DEMO_PROVIDER", "deepseek"))
                 sid = saved["session_id"]
@@ -162,9 +147,7 @@ class DemoService(Service):
                     raise BusyError("A task is running. Stop it before sending a new request.")
             if dataset == "local":
                 self.attach_inputs(saved, request)
-            result = super().reply(sid, request)
-            admission["sid"] = sid
-            return result
+            return super().reply(sid, request)
 
     def attach_inputs(self, saved, request):
         directory = self.store.directory(saved["session_id"]) / "workspace/inputs"
