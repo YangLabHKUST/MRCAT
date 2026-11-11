@@ -87,6 +87,7 @@ function clearLiveDemoSetup() {
 
 function updateLiveDemo() {
   if (!LIVE_DEMO || !liveDemoCatalog) return;
+  document.getElementById("live-demo-guide").hidden = PUBLIC_DEMO_SESSIONS.has(state.currentSessionId);
   const locked = state.busy || Boolean(state.snapshot?.active_job) || isReadOnlySession();
   document.querySelectorAll("[data-demo-step]").forEach(button => { button.disabled = locked; });
   const attachment = document.getElementById("live-demo-attachment");
