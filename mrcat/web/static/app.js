@@ -394,18 +394,18 @@ function displaySessionId(value) {
 
 function statusLabel(status) {
   const map = {
-    created: "created",
-    search_running: "search running",
-    waiting_user: "waiting user",
-    brief_ready: "brief ready",
-    handoff_waiting: "handoff waiting",
+    created: "Created",
+    search_running: "Search running",
+    waiting_user: "Waiting user",
+    brief_ready: "Brief ready",
+    handoff_waiting: "Handoff waiting",
     mr_running: "MR running",
-    double_check_running: "double check running",
-    plot_running: "plot generation running",
-    completed: "completed",
+    double_check_running: "Double check running",
+    plot_running: "Plot generation running",
+    completed: "Completed",
     failed: "Turn failed",
   };
-  return map[text(status)] || text(status) || "idle";
+  return map[text(status)] || text(status).replace(/^[a-z]/, letter => letter.toUpperCase()) || "Idle";
 }
 
 function sessionStatusDescription(status) {
@@ -437,7 +437,7 @@ function setStudySetupCollapsed(collapsed) {
   els.studySetupPanel?.classList.toggle("is-collapsed", state.studySetupCollapsed);
   if (!els.studySetupToggle) return;
   const expanded = !state.studySetupCollapsed;
-  const label = expanded ? "Collapse Study Setup" : "Expand Study Setup";
+  const label = expanded ? "Collapse Study setup" : "Expand Study setup";
   els.studySetupToggle.setAttribute("aria-expanded", String(expanded));
   els.studySetupToggle.setAttribute("aria-label", label);
   els.studySetupToggle.title = label;
@@ -744,6 +744,7 @@ async function selectSession(sessionId) {
 }
 
 function newChat() {
+  if (LIVE_DEMO) clearLiveDemoSetup();
   leaveExample();
   state.currentSessionId = null;
   window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
@@ -904,7 +905,7 @@ function renderActivity(snapshot) {
   const disconnected = state.activityConnection === "reconnecting";
   panel.hidden = !activity && !(snapshot && disconnected);
   if (panel.hidden) {
-    if (snapshot) els.statusChip.textContent = snapshot.state?.status || "Ready";
+    if (snapshot) els.statusChip.textContent = statusLabel(snapshot.state?.status || "Ready");
     return;
   }
   const title = disconnected ? "Connection interrupted" : activity.title;
@@ -944,13 +945,13 @@ function applySnapshot(snapshot) {
 
 function renderHeader(snapshot) {
   const session = snapshot?.state || {};
-  els.sessionTitle.textContent = text(session.question) || (session.session_id ? "MRCAT Session" : LIVE_DEMO ? "BMI → T2D · Interactive example" : "New Chat");
+  els.sessionTitle.textContent = text(session.question) || (session.session_id ? "MRCAT session" : "New chat");
   els.sessionTitle.title = els.sessionTitle.textContent;
   els.sessionSubtitle.textContent = "";
   els.sessionSubtitle.hidden = true;
   els.sessionId.textContent = session.session_id || "";
   els.sessionIdentity.hidden = !session.session_id;
-  els.statusChip.textContent = sessionActivity(snapshot)?.title || session.status || "Ready";
+  els.statusChip.textContent = sessionActivity(snapshot)?.title || statusLabel(session.status || "Ready");
   els.statusChip.className = "status-chip";
   els.pendingText.hidden = !text(snapshot?.pending_question);
   els.pendingText.disabled = !(snapshot?.mr?.events || []).some(event => event.type === "question");
@@ -1136,11 +1137,23 @@ function buildReadablePlan(event, current, open, detailOpen, snapshot) {
       status.className = `readable-plan-status is-${tone}`;
       status.textContent = label;
       summary.append(title, status);
-      if (copy.textContent.trim() !== rawTitle.trim() || rawTitle.length > 120) {
+      // Details contain only the text after the title, preserving its Markdown.
+      const leadingText = copy.textContent.trimStart();
+      if (leadingText.startsWith(rawTitle.trim())) {
+        let remaining = copy.textContent.length - leadingText.length + rawTitle.trim().length;
+        const walker = document.createTreeWalker(copy, NodeFilter.SHOW_TEXT);
+        while (remaining > 0 && walker.nextNode()) {
+          const node = walker.currentNode;
+          const removed = Math.min(remaining, node.textContent.length);
+          node.textContent = node.textContent.slice(removed);
+          remaining -= removed;
+        }
+      }
+      if (copy.textContent.trim()) {
         detail.append(summary, copy);
         body.appendChild(detail);
       } else {
-        // A short title is already complete; do not repeat it in a disclosure.
+        // The title is complete; there is no additional detail to disclose.
         const row = document.createElement("div");
         row.className = "readable-plan-summary";
         row.append(title, status);
@@ -1205,6 +1218,7 @@ function renderConversation(snapshot) {
   const planOpen = new Map([...els.conversationFeed.querySelectorAll("details[data-plan-id]")].map(node => [node.dataset.planId, node.open]));
   const planDetailOpen = new Map([...els.conversationFeed.querySelectorAll("details[data-plan-detail]")].map(node => [node.dataset.planDetail, node.open]));
   const executionOpen = new Map([...els.conversationFeed.querySelectorAll("details[data-execution-group]")].map(node => [node.dataset.executionGroup, node.open]));
+  for (const row of els.conversationFeed.querySelectorAll(".message-report-html")) row.dispose?.();
   els.conversationFeed.replaceChildren();
   const events = snapshot?.mr?.events || [];
   const latestPlan = [...events].reverse().find(event => event.type === "plan_updated");
@@ -1236,6 +1250,8 @@ function renderConversation(snapshot) {
       appendMessage("assistant", "Report Agent · Paused", event.content || "Report interrupted.");
     } else if (event.type === "skill_loaded" && text(event.content)) {
       const row = appendMessage("assistant", `${agentLabel(event)} · Execute`, "", {kind: "skill-guide"});
+      row.dataset.agent = event.details?.agent || "";
+      row.dataset.taskId = event.details?.task_id || "";
       row.querySelector(".message-body").appendChild(createSkillLabel(text(event.content)));
     } else if (event.type === "code_execution") {
       const d = event.details;
@@ -1245,6 +1261,7 @@ function renderConversation(snapshot) {
       if (d.agent === "mr") row.classList.add("message-agent-mr");
       row.setAttribute("aria-label", `${agentLabel(event)} · Code execution`);
       row.dataset.executionId = d.execution_id;
+      row.dataset.agent = d.agent || "";
       row.dataset.taskId = d.task_id || "";
       row.dataset.tone = codeExecutionTone(d);
       const button = document.createElement("button");
@@ -1259,9 +1276,10 @@ function renderConversation(snapshot) {
       status.textContent = `Cell ${number} · ${codeExecutionStatus(d)}`;
       const view = document.createElement("span");
       view.className = "codeact-execution-view";
-      view.textContent = "View ↗";
+      view.textContent = "↗";
+      view.setAttribute("aria-hidden", "true");
       button.append(icon, status, view);
-      button.title = `View Cell ${number} in Execution Notebook`;
+      button.title = `View Cell ${number} in Execution notebook`;
       button.setAttribute("aria-label", button.title);
       button.setAttribute("aria-controls", `codeact-cell-${d.execution_id}`);
       button.addEventListener("click", () => focusCodeExecution(d.execution_id));
@@ -1279,6 +1297,7 @@ function renderConversation(snapshot) {
       const label = user ? "You" : `${agentLabel(event)} · ${kind}`;
       const row = appendMessage(user ? "user" : "assistant", label, codeactArtifactLinks(event.content || "", snapshot), {markdown: !user, kind: event.type === "final" ? "answer" : event.type === "question" ? "question" : undefined});
       if (event.type === "final") bindAnswerArtifactLinks(row, snapshot);
+      if (event.type === "final" && event.details?.agent === "report") void renderReportAnswer(row, event, snapshot);
       if (event.type === "question") row.tabIndex = -1;
       if (["final", "question"].includes(event.type) && event.details?.agent === "mr") {
         const tasks = [...(snapshot.mr?.state?.task_history || []), snapshot.mr?.state?.active_task].filter(Boolean);
@@ -1305,7 +1324,80 @@ function renderConversation(snapshot) {
   if (state.pendingUserMessage && !events.some(e => e.type === "user_message" && e.content === state.pendingUserMessage.text)) appendMessage("user", "You", state.pendingUserMessage.text);
   if (!els.conversationFeed.children.length) appendEmptyConversation(LIVE_DEMO ? "Write a question, or choose an example below and edit it before sending." : "Ask a research question or describe a coding task.");
   groupConversationExecutions(executionOpen);
+  for (const guide of els.conversationFeed.querySelectorAll(".message-skill-guide")) {
+    const next = guide.nextElementSibling;
+    const execution = next?.matches(".conversation-executions") ? next.firstElementChild : next;
+    if (!execution?.matches(".message-execution") || execution.dataset.agent !== guide.dataset.agent
+        || execution.dataset.taskId !== guide.dataset.taskId) continue;
+    guide.classList.add("has-execution");
+    const skill = guide.querySelector(".skill-label");
+    skill.title = skill.textContent;
+    guide.querySelector(".message-body").appendChild(next);
+  }
   restoreConversationScroll(scroll);
+}
+
+async function renderReportAnswer(row, event, snapshot) {
+  const path = event.content?.match(/\]\((workspace\/reports\/[A-Za-z0-9_-]+\/scientific_report\.html)\)/)?.[1];
+  if (!path || !notebookOutputFiles(snapshot).some(file => file.path === path)) return;
+  const url = artifactRawUrl(snapshot, path);
+  if (!url) return;
+  const body = row.querySelector(".message-body");
+  const controller = new AbortController();
+  let resize;
+  row.classList.add("message-report-html");
+  row.dispose = () => { controller.abort(); resize?.disconnect(); };
+  const open = buildExternalLink(url, "Open full report ↗");
+  const loading = document.createElement("p");
+  loading.className = "muted";
+  loading.textContent = "Loading report…";
+  body.replaceChildren(loading, open);
+  try {
+    const saved = snapshot.final_report;
+    let html = saved?.summary === path.replace("scientific_report.html", "final_summary.md") ? saved.html : "";
+    if (!html) {
+      const response = await fetch(url, {signal: controller.signal});
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      html = await response.text();
+    }
+    if (controller.signal.aborted || !row.isConnected) return;
+    if (!html.trim()) throw new Error("Empty report");
+    const reportDocument = new DOMParser().parseFromString(html, "text/html");
+    const policy = reportDocument.createElement("meta");
+    policy.httpEquiv = "Content-Security-Policy";
+    policy.content = "default-src 'none'; img-src data:; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none';";
+    reportDocument.head.prepend(policy);
+    for (const link of reportDocument.querySelectorAll("a[href]")) {
+      if (!link.getAttribute("href").startsWith("#")) {
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+      }
+    }
+    const frame = window.document.createElement("iframe");
+    frame.className = "report-inline-frame";
+    frame.title = "Final scientific report";
+    frame.dataset.reportPath = path;
+    // Same-origin access measures layout; report scripts remain blocked.
+    frame.setAttribute("sandbox", "allow-same-origin allow-popups allow-popups-to-escape-sandbox");
+    frame.addEventListener("load", () => {
+      if (!frame.isConnected || controller.signal.aborted) return;
+      const content = frame.contentDocument;
+      if (!content?.body) return;
+      const fit = () => {
+        const height = Math.ceil(content.documentElement.getBoundingClientRect().height);
+        if (height > 0 && frame.style.height !== `${height}px`) frame.style.height = `${height}px`;
+      };
+      resize?.disconnect();
+      resize = new ResizeObserver(fit);
+      resize.observe(content.body);
+      fit();
+    });
+    frame.srcdoc = "<!doctype html>" + reportDocument.documentElement.outerHTML;
+    body.replaceChildren(frame, open);
+  } catch (error) {
+    if (controller.signal.aborted || !row.isConnected) return;
+    loading.textContent = "Report preview unavailable.";
+  }
 }
 
 function renderNativeReport(snapshot, started, laterEvents) {
@@ -1449,7 +1541,7 @@ function parseSearchReportMarkdown(value) {
     0,
   );
   return {
-    title: title || "Search Findings",
+    title: title || "Search findings",
     query,
     introMarkdown: cleanSearchReportSectionBody(introLines),
     sections,
@@ -2631,10 +2723,10 @@ function renderSpreadsheetPreview(container, payload, options = {}) {
     wrapper.appendChild(table);
     tableHost.appendChild(wrapper);
     if (sheet.truncated || visibleRows.length < rawRows.length) {
-      const note = document.createElement("p");
-      note.className = "spreadsheet-truncated";
-      note.textContent = `Showing the first ${visibleRows.length} data rows. Download the full artifact to view all rows.`;
-      tableHost.appendChild(note);
+      const caption = document.createElement("caption");
+      caption.className = "spreadsheet-preview-label";
+      caption.textContent = `Preview · ${visibleRows.length} rows`;
+      table.prepend(caption);
     }
   };
 
@@ -2886,12 +2978,8 @@ function renderStudySetup(snapshot) {
     button.appendChild(check);
     sourcePicker.appendChild(button);
   }
-  const sourceNote = document.createElement("p");
-  sourceNote.className = "study-setup-note";
-  sourceNote.textContent = "This source is used for searches. Uploaded datasets are used directly.";
   sourceGroup.appendChild(sourceLabel);
   sourceGroup.appendChild(sourcePicker);
-  sourceGroup.appendChild(sourceNote);
   const sourceHelp = document.createElement("details");
   sourceHelp.className = "study-source-help";
   const sourceHelpTitle = document.createElement("summary");
@@ -3008,7 +3096,6 @@ function buildStudySetupSide(side, labelText, datasets, status, snapshot) {
 
   const fileLabel = document.createElement("div");
   fileLabel.className = "study-dataset-upload";
-  fileLabel.textContent = "Upload local GWAS files";
   const fileInput = document.createElement("input");
   fileInput.type = "file";
   fileInput.multiple = true;
@@ -3062,15 +3149,12 @@ function buildStudySetupSide(side, labelText, datasets, status, snapshot) {
       syncStudySetupView(snapshot);
     });
 
-    const fileNote = document.createElement("span");
-    fileNote.className = `study-dataset-source${dataset.file || dataset.fileRef ? " local" : " search"}`;
-    fileNote.textContent = dataset.file?.name
-      || (dataset.fileRef ? basename(dataset.fileRef) : "Search by trait name");
-
     const remove = document.createElement("button");
     remove.type = "button";
     remove.className = "study-dataset-remove";
-    remove.textContent = "Remove";
+    remove.textContent = "×";
+    remove.setAttribute("aria-label", `Remove ${side} dataset ${index + 1}`);
+    remove.title = "Remove dataset";
     remove.disabled = Boolean(state.busy || status.locked);
     remove.addEventListener("click", () => {
       const current = studyDatasetList(side);
@@ -3080,9 +3164,14 @@ function buildStudySetupSide(side, labelText, datasets, status, snapshot) {
       renderStudySetup(snapshot);
     });
 
-    row.appendChild(nameInput);
-    row.appendChild(fileNote);
-    row.appendChild(remove);
+    row.append(nameInput, remove);
+    const filename = dataset.file?.name || (dataset.fileRef ? basename(dataset.fileRef) : "");
+    if (filename) {
+      const fileNote = document.createElement("span");
+      fileNote.className = "study-dataset-source local";
+      fileNote.textContent = filename;
+      row.appendChild(fileNote);
+    }
     datasetList.appendChild(row);
   });
   group.appendChild(datasetList);
@@ -3090,7 +3179,9 @@ function buildStudySetupSide(side, labelText, datasets, status, snapshot) {
   const addTrait = document.createElement("button");
   addTrait.type = "button";
   addTrait.className = "study-dataset-add";
-  addTrait.textContent = "+ Add trait to search";
+  addTrait.textContent = "+";
+  addTrait.setAttribute("aria-label", `Add ${side} trait`);
+  addTrait.title = `Add ${side} trait`;
   addTrait.disabled = Boolean(state.busy || status.locked || datasets.length >= 20);
   addTrait.addEventListener("click", () => {
     studyDatasetList(side).push(emptyStudyDatasetDraft());

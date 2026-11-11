@@ -88,7 +88,13 @@ def test_free_text_start_followup_and_pending_plan_reply(demo):
     messages = [e["content"] for e in service.store.load(sid)["events"] if e["type"] == "user_message"]
     assert messages == [question, followup, revision]
     assert client.post(endpoint, json={"reply": "  "}).status_code == 400
-    assert client.post("/api/sessions", json={"question": "Another session"}).status_code == 400
+    second = client.post("/api/sessions", json={"question": "Another session"})
+    assert second.status_code == 200
+    second_sid = second.json()["session"]["session_id"]
+    assert second_sid != sid
+    assert {item["session_id"] for item in client.get("/api/sessions").json()["sessions"]} == {sid, second_sid}
+    assert service.store.load(sid)["question"] == question
+    assert service.store.load(second_sid)["question"] == "Another session"
 
 
 def test_local_example_can_start_first_with_edited_request(demo):
@@ -175,29 +181,27 @@ def test_input_integrity_is_required(tmp_path, monkeypatch):
         create_app(**args)
 
 
-@pytest.mark.parametrize("with_cache", [False, True])
-def test_online_inputs_reach_planner_without_ids_in_query(demo, tmp_path, monkeypatch, with_cache):
+@pytest.mark.parametrize("start_first", [False, True])
+def test_online_query_reaches_planner_without_preset_studies(demo, tmp_path, monkeypatch, start_first):
     _, _, args = demo
-    cache = tmp_path / "online-cache"
-    for study_id in ("ieu-b-40", "ebi-a-GCST006867"):
-        directory = cache / "opengwas" / study_id / "download-key"
-        directory.mkdir(parents=True)
-        content = b"SNP\tbeta\tse\nrs1\t0.1\t0.02\n"
-        (directory / f"{study_id}.tsv.gz").write_bytes(content)
-        (directory / ".gwas-download-complete.json").write_text(json.dumps({
-            "source": "opengwas", "study_id": study_id, "file_size": len(content),
-            "download_url": "https://example.org/private-temporary-download-token",
-            "study_metadata": {"population": "European"},
-        }))
-    if with_cache:
-        monkeypatch.setenv("MRCAT_DEMO_ONLINE_CACHE", str(cache))
+    # A leftover deployment setting must not preload studies into an online query.
+    monkeypatch.setenv("MRCAT_DEMO_ONLINE_CACHE", str(tmp_path / "obsolete-cache"))
     app = create_app(**args)
     with TestClient(app) as client:
-        sid = start(app, client)
-        prompt = app.state.user_services.catalog["steps"][1]["prompt"]
-        assert client.post(f"/api/sessions/{sid}/study-setup", data=setup_payload(app.state.user_services.catalog["steps"][1], prompt)).status_code == 200
+        client.get("/")
+        steps = app.state.user_services.catalog["steps"]
+        assert "setup" not in steps[1]
+        assert [step["id"] for step in steps if step.get("setup")] == ["local"]
+        prompt = steps[1]["prompt"]
+        if start_first:
+            response = client.post("/api/sessions", json={"question": prompt})
+            assert response.status_code == 200, response.text
+            sid = response.json()["session"]["session_id"]
+        else:
+            sid = start(app, client)
+            response = client.post(f"/api/sessions/{sid}/mr/reply", json={"reply": prompt})
+            assert response.status_code == 200, response.text
         service = service_for(app, sid)
-        assert "ieu-b-40" not in prompt and "workspace/" not in prompt
 
         def planner_setup(request):
             saved = service.store.load(sid)
@@ -206,26 +210,20 @@ def test_online_inputs_reach_planner_without_ids_in_query(demo, tmp_path, monkey
             Agent(ROOT, service.store, model=model)._plan(saved, request, "Plan the example")
             return json.loads(model.calls[0]["user"])["study_setup"]
 
-        setup = planner_setup(prompt)
-        assert "ieu-b-40" in setup["exposures"][0]["name"]
-        assert "ebi-a-GCST006867" in setup["outcomes"][0]["name"]
-        assert setup["sources"] == ["opengwas"]
-        inventory_path = service.store.directory(sid) / "workspace/inputs/online_gwas_sources.json"
-        if with_cache:
-            assert "temporary-download-token" not in inventory_path.read_text()
-            for item, row in zip(json.loads(inventory_path.read_text()), setup["exposures"] + setup["outcomes"]):
-                assert row["file_ref"] == item["file_ref"]
-                target = service.store.directory(sid) / row["file_ref"]
-                assert sha256(target.read_bytes()).hexdigest() == item["sha256"]
-                assert service.artifact(sid, item["file_ref"]) == target
-        else:
-            assert not inventory_path.exists()
-            assert all("file_ref" not in row for row in setup["exposures"] + setup["outcomes"])
+        assert planner_setup(prompt) == {}
+        directory = service.store.directory(sid)
+        assert not list((directory / "workspace/inputs").rglob("*"))
+        messages = [e["content"] for e in service.store.load(sid)["events"] if e["type"] == "user_message"]
+        assert messages[-1] == prompt
 
-        steps = app.state.user_services.catalog["steps"]
         assert client.post(f"/api/sessions/{sid}/study-setup", data=setup_payload(steps[2], steps[2]["prompt"])).status_code == 200
         local_setup = planner_setup(steps[2]["prompt"])
         assert local_setup["exposures"] == [{"name": "BMI", "file_ref": "workspace/inputs/bmi_mrapss.gz"}]
         assert local_setup["outcomes"] == [{"name": "Type 2 diabetes", "file_ref": "workspace/inputs/t2d_mrapss.gz"}]
+        for row in local_setup["exposures"] + local_setup["outcomes"]:
+            target = directory / row["file_ref"]
+            original = Path(args["demo_data_dir"]) / target.name
+            assert target.read_bytes() == original.read_bytes()
+            assert target.stat().st_ino != original.stat().st_ino
         assert client.post(f"/api/sessions/{sid}/mr/reply", json={"reply": steps[3]["prompt"]}).status_code == 200
         assert planner_setup(steps[3]["prompt"]) == local_setup

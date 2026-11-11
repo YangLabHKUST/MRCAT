@@ -15,7 +15,7 @@ description: >-
 accepts-milestones: [gwas_qc_result]
 produces-milestone: gwas_pair_prepare_result
 reusable-outputs: [mrdat_path, c_path, omega_path, exposure_label, outcome_label,
-  ancestry]
+  clumping_reference]
 ---
 
 # gwas-pair-prepare
@@ -53,7 +53,6 @@ else:
 | `formatted_outcome_path` | path | required | Verified formatted outcome study TSV. |
 | `exposure_label` | string | optional | Exposure display label. |
 | `outcome_label` | string | optional | Outcome display label. |
-| `ancestry` | string | optional | Known population or explicit user constraint; omit unknown. |
 | `M` | float | optional | Positive compatible LDSC reference SNP count; normally omitted. |
 | `h2_fix_intercept` | bool | false | Fix LDSC heritability intercept when justified. |
 | `iv_threshold` | float | 5e-5 | Exposure P-value ceiling for reusable instruments. |
@@ -67,7 +66,7 @@ else:
 
 ## Choosing inputs
 
-Both paths must be the `formatted_path` from distinct study QC results (or verified equivalent formatted tables), never raw GWAS, canonical tables, study IDs or previously clumped MRdat. Labels are optional. Preserve ancestry provenance; do not assign European ancestry merely to use a European LD panel.
+Both paths must be the `formatted_path` from distinct study QC results (or verified equivalent formatted tables), never raw GWAS, canonical tables, study IDs or previously clumped MRdat. Labels are optional. Read each study's ancestry from its selection/QC record; do not pass or infer a separate pair ancestry. Choose the reference from that evidence, not the other way around.
 
 Preserve explicit user or Plan choices of local/API clumping and reference panel. Otherwise use OpenGWAS API clumping first, with population supported by ancestry evidence and without bfile. If the API call fails and user constraints allow a reference change, retry using a local PLINK reference only after verifying population/build compatibility, readable .bed/.bim/.fam files and a usable PLINK executable. An installed EUR panel or matching build alone does not establish compatibility. Record the API failure, the local reference actually used, effective settings and retained SNP count; disclose the switch in the final report because it can change the instrument set and estimates. If no compatible fallback is available, report the blocker. Ordinary resource selection belongs within this execution; add a separate investigation only when reference applicability changes the scientific plan.
 
@@ -121,5 +120,5 @@ selection passed or that populations are equivalent.
 
 On success, `result["outputs"]["gwas_pair_prepare_result"]` holds the data described below.
 
-`mrdat_path`, `c_path`, `omega_path` feed MR-APSS; `mrdat_path` also feeds other local MR estimators. Keep all three from the same preparation. Read actual thresholds, SNP counts, LD reference and warnings; do not interpret successful preparation as a causal finding.
+`mrdat_path`, `c_path`, `omega_path` feed MR-APSS; `mrdat_path` also feeds other local MR estimators. Keep all three from the same preparation. Read actual thresholds, SNP counts, LD reference and warnings; do not interpret successful preparation as a causal finding. `clumping_reference` records the actual reference used: `population` for API clumping, or `bfile` for local PLINK. The summary also records the LDSC reference. Compare these references with the separate upstream study ancestry records when interpreting compatibility.
 

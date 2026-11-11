@@ -42,18 +42,27 @@ const assert = require('node:assert/strict');
     await send('What do these findings mean?');
     assert.deepEqual(await page.evaluate(() => state.snapshot.state.study_setup), {});
     for (const [id, message] of [
-      ['online', 'Run MR with the selected online data and explain the estimates.'],
+      ['online', 'Run MR using online GWAS data and explain the estimates.'],
       ['local', 'Analyze these local files with IVW first.'],
       ['followup', 'Compare the local results using MR-APSS.'],
     ]) {
+      if (id === 'online') await choose('local');
       await choose(id);
+      if (id === 'online') {
+        assert.equal(await page.locator('#live-demo-attachment').isVisible(), false);
+        assert.equal(await page.evaluate(() => liveDemoSelection), null);
+      }
+      const submission = page.waitForRequest(request => request.method() === 'POST');
       await send(message, 'waiting_user');
+      const posted = await submission;
       assert.equal(await page.evaluate(() => state.currentSessionId), sid);
       if (id === 'local' || id === 'followup') {
         assert.equal(await page.evaluate(() => state.snapshot.state.study_setup.exposures[0].file_ref), 'workspace/inputs/bmi_mrapss.gz');
       }
       if (id === 'online') {
-        assert.match(await page.evaluate(() => state.snapshot.state.study_setup.exposures[0].name), /ieu-b-40/);
+        assert.deepEqual(await page.evaluate(() => state.snapshot.state.study_setup), {});
+        assert.equal(new URL(posted.url()).pathname, `/api/sessions/${sid}/mr/reply`);
+        assert.equal(posted.postDataJSON().reply, message);
       }
       await send('Yes, go ahead.');
       await page.reload();
@@ -65,6 +74,19 @@ const assert = require('node:assert/strict');
     await page.setViewportSize({width: 390, height: 844});
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
     assert.equal(await page.locator('#reply-input').isVisible(), true);
+    await page.setViewportSize({width: 1440, height: 1000});
+    await choose('local');
+    await page.locator('#new-chat-button').click();
+    assert.equal(await page.evaluate(() => state.currentSessionId), null);
+    assert.equal(await page.locator('#live-demo-attachment').isVisible(), false);
+    await send('Explain MR assumptions in a new conversation.');
+    const secondSid = await page.evaluate(() => state.currentSessionId);
+    assert.notEqual(secondSid, sid);
+    assert.equal(await page.evaluate(() => state.sessions.length), 2);
+    await page.evaluate(sid => selectSession(sid), sid);
+    await page.waitForFunction(sid => state.snapshot?.state.session_id === sid, sid);
+    assert.equal(await page.locator('.codeact-cell').count() > 0, true);
+    console.log('PASS: New chat creates a separate session and preserves the previous session');
     const other = await browser.newContext();
     const visitor = await other.newPage();
     await visitor.goto(url);

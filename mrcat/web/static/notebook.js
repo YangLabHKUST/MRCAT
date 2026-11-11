@@ -5,7 +5,7 @@ const notebook = {
   cells: new Map(),
   focusedExecutionId: "",
   focusCleanup: null,
-  collapsedCells: new Set(),
+  executionGroup: null,
   resources: new Map(),
   fileOwners: new Map(),
   revision: 0,
@@ -22,12 +22,12 @@ function notebookElement(tag, className = "", label = "") {
 
 function resetExecutionNotebook() {
   notebook.focusCleanup?.();
-  disposeQcExplorers(els.notebookOutput);
+  disposeNotebookExplorers(els.notebookOutput);
   notebook.session = "";
   notebook.task = "";
   notebook.focusedExecutionId = "";
   notebook.cells.clear();
-  notebook.collapsedCells.clear();
+  notebook.executionGroup = null;
   notebook.resources.clear();
   notebook.fileOwners.clear();
   notebook.revision += 1;
@@ -155,6 +155,9 @@ function focusCodeExecution(executionId) {
 function focusNotebookElement(target) {
   notebook.focusCleanup?.();
   const host = els.notebookOutput;
+  for (let node = target.parentElement; node && node !== host; node = node.parentElement) {
+    if (node.tagName === "DETAILS") node.open = true;
+  }
   const executionId = target.closest(".codeact-cell")?.dataset.executionId || "";
   notebook.focusedExecutionId = executionId;
   for (const [id, entry] of notebook.cells) entry.node.classList.toggle("is-selected", id === executionId);
@@ -245,7 +248,7 @@ function notebookFileOwners(events) {
 function notebookFileCellLink(owner) {
   const button = notebookElement("button", "codeact-file-owner", `Cell ${owner.number}`);
   button.type = "button";
-  button.setAttribute("aria-label", `View Cell ${owner.number} in Execution Notebook`);
+  button.setAttribute("aria-label", `View Cell ${owner.number} in Execution notebook`);
   button.addEventListener("click", () => focusCodeExecution(owner.executionId));
   return button;
 }
@@ -416,7 +419,7 @@ function buildNotebookWebSearch(file, snapshot, payload) {
   if (typeof payload.answer !== "string" || !payload.answer.trim()) throw new Error("Search answer is missing.");
   const body = payload.answer;
   const report = parseSearchReportMarkdown(body) || {
-    title: "Search Findings", introMarkdown: "", sections: [{heading: "Findings", markdown: body}],
+    title: "Search findings", introMarkdown: "", sections: [{heading: "Findings", markdown: body}],
     mainSectionCount: 1, referenceCount: 0,
   };
   report.query = text(payload.query);
@@ -635,6 +638,7 @@ function buildCodeExecutionCell(event, index, files, owners, snapshot, events) {
     cell.appendChild(output);
   }
   const execution = notebookDisclosure("Execution details", `execution:${d.execution_id}`);
+  execution.open = tone === "running" || tone === "failed";
   execution.classList.add("codeact-execution-details");
   const executionMeta = [d.language,
     {search: "Search Agent", mr: "MR Agent", report: "Report Agent"}[d.agent], d.task_id].filter(Boolean);
@@ -700,7 +704,7 @@ function renderExecutionNotebook() {
     let entry = previous.get(event.details.execution_id);
     if (!entry || entry.signature !== cellSignature) {
       const detailsState = new Map([...(entry?.node.querySelectorAll("details[data-detail]") || [])].map(node => [node.dataset.detail, node.open]));
-      if (entry) disposeQcExplorers(entry.node);
+      if (entry) disposeNotebookExplorers(entry.node);
       const node = buildCodeExecutionCell(event, index, cellFiles, owners, snapshot, events);
       for (const detail of node.querySelectorAll("details[data-detail]")) if (detailsState.has(detail.dataset.detail)) detail.open = detailsState.get(detail.dataset.detail);
       entry = {node, signature: cellSignature};
@@ -708,7 +712,22 @@ function renderExecutionNotebook() {
     entry.node.classList.toggle("is-selected", notebook.focusedExecutionId === event.details.execution_id);
     notebook.cells.set(event.details.execution_id, entry); children.push(entry.node);
   }
-  for (const [id, entry] of previous) if (!notebook.cells.has(id)) disposeQcExplorers(entry.node);
+  const processCells = children.filter(cell => !cell.querySelector(".codeact-results, .codeact-data, .codeact-figures"));
+  if (taskView && processCells.length) {
+    // Keep one disclosure mounted so streaming updates preserve the user's choice.
+    notebook.executionGroup ||= notebookDisclosure("", "execution-steps");
+    const group = notebook.executionGroup;
+    group.classList.add("codeact-execution-group");
+    const summary = group.querySelector(":scope > summary");
+    summary.textContent = `Execution steps (${processCells.length})`;
+    const keep = new Set([summary, ...processCells]);
+    for (const node of [...group.children]) if (!keep.has(node)) node.remove();
+    processCells.forEach((node, index) => {
+      if (group.children[index + 1] !== node) group.insertBefore(node, group.children[index + 1] || null);
+    });
+    children.splice(0, children.length, group, ...children.filter(node => !processCells.includes(node)));
+  }
+  for (const [id, entry] of previous) if (!notebook.cells.has(id)) disposeNotebookExplorers(entry.node);
   const remaining = taskView ? outputFiles.filter(file => !owners.has(file.path)) : outputFiles;
   if (remaining.length) {
     const section = taskView
@@ -761,17 +780,6 @@ function renderExecutionNotebook() {
   for (const node of [...host.children]) if (!keep.has(node)) node.remove();
   children.forEach((node, index) => { if (host.children[index] !== node) host.insertBefore(node, host.children[index] || null); });
   host.scrollTop = previousScroll;
-}
-
-function setNotebookCellCollapsed(cell, collapsed) {
-  if (collapsed) notebook.collapsedCells.add(cell.dataset.cellKey);
-  else notebook.collapsedCells.delete(cell.dataset.cellKey);
-  cell.classList.toggle("is-collapsed", collapsed);
-  cell.querySelector(".notebook-cell-body").hidden = collapsed;
-  const toggle = cell.querySelector(".notebook-cell-toggle");
-  toggle.setAttribute("aria-expanded", String(!collapsed));
-  toggle.setAttribute("aria-label", collapsed ? "Expand cell" : "Collapse cell");
-  toggle.title = collapsed ? "Expand cell" : "Collapse cell";
 }
 
 function notebookPngPath(path) {
@@ -984,6 +992,7 @@ function buildNotebookFigure(plot, snapshot) {
 }
 
 function scrollToLatestNotebookCell() {
-  const cells = els.notebookOutput.querySelectorAll(".codeact-cell");
-  (cells[cells.length - 1] || els.notebookOutput.lastElementChild)?.scrollIntoView({block: "start", behavior: "smooth"});
+  const latest = [...notebook.cells.keys()].at(-1);
+  if (latest) focusCodeExecution(latest);
+  else els.notebookOutput.lastElementChild?.scrollIntoView({block: "start", behavior: "smooth"});
 }

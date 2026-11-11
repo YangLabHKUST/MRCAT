@@ -184,7 +184,6 @@ if (!is.finite(clump_p)) clump_p <- 0.999
 bfile <- resolve_bfile_prefix(payload$bfile)
 plink_bin <- resolve_path(payload$plink_bin)
 clump_mode <- if (nzchar(bfile)) "local_plink" else "api"
-pair_ancestry <- compact(payload$ancestry)
 pop <- resolve_clumping_pop(bfile, payload$pop)
 
 if (identical(clump_mode, "local_plink")) {
@@ -240,7 +239,6 @@ adjusted_threshold_values <- if ("Threshold" %in% names(clumped)) suppressWarnin
 adjusted_thresholds <- sort(unique(adjusted_threshold_values[is.finite(adjusted_threshold_values)]))
 adjusted_threshold <- if (length(adjusted_thresholds) == 1) adjusted_thresholds[[1]] else NULL
 threshold_text <- ifelse(is.null(adjusted_threshold), "null", adjusted_threshold)
-pair_ancestry_text <- ifelse(nzchar(pair_ancestry), pair_ancestry, "unknown")
 log_step(
   "MRdat$Threshold for downstream selection-bias correction=", threshold_text,
   "; this is not a clump threshold and is ignored by methods that do not consume it."
@@ -267,8 +265,7 @@ result <- list(
   omega_path = normalizePath(omega_path, winslash = "/", mustWork = FALSE),
   ldsc_result_path = normalizePath(ldsc_result_path, winslash = "/", mustWork = FALSE),
   exposure_label = compact(payload$exposure_label),
-  outcome_label = compact(payload$outcome_label),
-  ancestry = pair_ancestry
+  outcome_label = compact(payload$outcome_label)
 )
 
 record_path <- file.path(execution_dir, "reports", "gwas_pair_prepare_record.json")
@@ -289,17 +286,15 @@ clumping_reference_summary <- if (identical(clump_mode, "local_plink")) {
 }
 reference_usage_summary <- paste0(
   mrcat_ld_reference_summary(clumping_reference), " ",
-  "Reference usage: pair_ancestry=", pair_ancestry_text, ". ",
   clumping_reference_summary, " ",
   "LDSC background estimation independently used ldscore_dir=", ldscore_dir, ". ",
   "Final interpretation must compare both the clumping population/reference ",
-  "and LDSC reference with pair_ancestry and report any mismatch as a limitation."
+  "and LDSC reference with the study ancestry in upstream selection/QC records; report documented mismatches."
 )
 
 rendered <- list(
   summary = paste0(
-    "Parameters used: pair_ancestry=", pair_ancestry_text,
-    ", ldscore_dir=", ldscore_dir,
+    "Parameters used: ldscore_dir=", ldscore_dir,
     ", M=", ifelse(is.null(M_value), "null", M_value),
     ", h2_fix_intercept=", h2_fix_intercept,
     ", iv_threshold=", iv_threshold,

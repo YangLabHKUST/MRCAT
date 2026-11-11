@@ -39,7 +39,7 @@ def test_recording_export_redacts_private_paths_and_preserves_source(tmp_path):
     target = tmp_path / "public"
     module.export(root, run, target, [env])
     tutorial = (target / "tutorial.md").read_text()
-    for heading in ("### 1. Install", "### 2. Configure a model", "### 3. Start and try a question"):
+    for heading in ("### 1. Install", "### 2. Configure a model", "### 3. Configure OpenGWAS access", "### 4. Start and try a question"):
         assert heading in tutorial
     assert "mrcat-web --port 17869" in tutorial
     assert "\n## Using the workspace\n" not in tutorial

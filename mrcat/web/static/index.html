@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>MRCAT</title>
-    <link rel="stylesheet" href="/static/styles.css?v=clean-3236dd2cd52b" />
+    <link rel="stylesheet" href="/static/styles.css?v=execution-group-ec7c25f53e13" />
   </head>
   <body>
     <main class="app-shell">
@@ -14,7 +14,7 @@
         </header>
 
         <section class="sidebar-tools">
-          <button id="new-chat-button" class="primary-button" type="button">New Chat</button>
+          <button id="new-chat-button" class="primary-button" type="button">New chat</button>
           <button id="result4-example-button" class="example-entry" type="button"
             title="Explore a completed analysis · No API key needed">Examples <span aria-hidden="true">↗</span></button>
         </section>
@@ -59,7 +59,11 @@
       <section class="workspace study-setup-collapsed">
         <header class="workspace-head">
           <div>
-            <h2 id="session-title">No session selected</h2>
+            <h2 id="session-title">New chat</h2>
+            <div id="session-identity" class="session-identity" hidden>
+              <span>Session ID</span>
+              <code id="session-id"></code>
+            </div>
             <p id="session-subtitle">Start a question or select an MRCAT session.</p>
           </div>
           <div class="workspace-actions">
@@ -67,10 +71,6 @@
             <details class="session-actions">
               <summary aria-label="Session actions" title="Session actions">•••</summary>
               <div class="session-actions-menu">
-                <div id="session-identity" class="session-identity" hidden>
-                  <span>Session ID</span>
-                  <code id="session-id"></code>
-                </div>
                 <button id="fork-session-button" type="button" disabled
                   title="Copy this session and its files. Continue independently while preserving the original.">Continue in a copy</button>
               </div>
@@ -92,8 +92,8 @@
               type="button"
               aria-controls="study-setup-content"
               aria-expanded="false"
-              aria-label="Expand Study Setup"
-              title="Expand Study Setup"
+              aria-label="Expand Study setup"
+              title="Expand Study setup"
             >
               <span aria-hidden="true">›</span>
             </button>
@@ -106,7 +106,7 @@
           data-study-setup-resizer
           role="separator"
           aria-orientation="vertical"
-          aria-label="Resize Study Setup panel"
+          aria-label="Resize Study setup panel"
           aria-valuemin="240"
           aria-valuemax="560"
           aria-valuenow="304"
@@ -145,7 +145,7 @@
           <article class="panel notebook-panel" aria-labelledby="notebook-title">
             <div class="panel-head notebook-head">
               <div class="notebook-head-main">
-                <h3 id="notebook-title">Execution Notebook</h3>
+                <h3 id="notebook-title">Execution notebook</h3>
                 <div class="notebook-view-tabs" role="tablist" aria-label="Execution views">
                   <button id="notebook-task-tab" class="notebook-view-tab active" type="button" role="tab" aria-selected="true" aria-controls="notebook-task-view">Task</button>
                   <button id="notebook-builder-tab" class="notebook-view-tab" type="button" role="tab" aria-selected="false" aria-controls="notebook-builder-view" tabindex="-1">
@@ -165,11 +165,11 @@
 
     <script src="/static/primary-scatter.js?v=mrcat-readable-20261029"></script>
     <script src="/static/replication-forest.js?v=mrcat-readable-20261029"></script>
-    <script src="/static/qc-explorer.js?v=mrcat-readable-20261029"></script>
-    <script src="/static/mrapss-explorer.js?v=workflow-ui-20261110"></script>
-    <script src="/static/notebook.js?v=clean-ad0a0499d891"></script>
+    <script src="/static/qc-explorer.js?v=plot-39703fd6b6ba"></script>
+    <script src="/static/mrapss-explorer.js?v=less-4750c2fda1da"></script>
+    <script src="/static/notebook.js?v=execution-group-0d390c91e537"></script>
     <script src="/static/examples.js?v=clean-088fc94a0463"></script>
     <script src="/static/live-demo.js?v=editable-examples-20261110"></script>
-    <script src="/static/app.js?v=clean-5accfe7f5c25"></script>
+    <script src="/static/app.js?v=demo-sessions-afbc3a0ac498"></script>
   </body>
 </html>

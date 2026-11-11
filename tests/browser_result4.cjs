@@ -29,8 +29,15 @@ const assert = require('node:assert/strict');
     assert.equal(await page.locator('#new-chat-button').isVisible(), false);
     const expected = await page.evaluate(() => state.example.snapshot.mr.events.filter(e => e.type === 'code_execution').length);
     assert.equal(await page.locator('.codeact-cell').count(), expected);
-    await page.locator('.codeact-execution-details > summary').first().click();
-    assert.ok((await page.locator('.codeact-code').first().innerText()).length > 0);
+    assert.equal(await page.locator('.notebook-file-name:visible').count(), 0, 'Default notebook hides original filenames');
+    assert.equal(await page.locator('.codeact-result > .notebook-file').count(), 0, 'No duplicate raw result files');
+    const executionSteps = page.locator('.codeact-execution-group');
+    assert.equal(await executionSteps.evaluate(node => node.open), false);
+    await executionSteps.locator(':scope > summary').click();
+    const executionDetails = page.locator('.codeact-execution-details').first();
+    if (!await executionDetails.evaluate(node => node.open)) await executionDetails.locator(':scope > summary').click();
+    assert.equal(await executionDetails.locator('.codeact-code').isVisible(), true);
+    assert.ok((await executionDetails.locator('.codeact-code').innerText()).length > 0);
     const counts = [];
     for (let i = 1; i <= 3; i++) {
       await page.locator('#example-navigation button').nth(i).click();

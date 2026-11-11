@@ -103,7 +103,7 @@ def test_pvalue_bounds_and_simulation_resolution(tmp_path):
     assert result["simulations"] == [1481, 14441, 241, 10000]
 
 
-@pytest.mark.parametrize("entrypoint", ["mr_presso", "analysis_sensitivity"])
+@pytest.mark.parametrize("entrypoint", ["mr_presso", "analysis_sensitivity", "analysis_sensitivity_timeout"])
 def test_public_tools_match_unmodified_package_result(tmp_path, monkeypatch, entrypoint):
     monkeypatch.setenv("RSCRIPT_BIN", RSCRIPT)
     source = tmp_path / "MRdat.tsv"
@@ -132,10 +132,32 @@ def test_public_tools_match_unmodified_package_result(tmp_path, monkeypatch, ent
         assert primary["outputs"]["status"] == "ok", primary
         response = tools.analysis_sensitivity(
             primary_result_record_path=primary["outputs"]["mr_primary_result"]["result_record_path"],
+            mr_presso_timeout_seconds=0.001 if entrypoint.endswith("_timeout") else 300,
             nb_distribution=100, detailed_plot_max_instruments=1, output_dir=tmp_path / entrypoint)
         assert response["outputs"]["status"] == "ok", response
         record = response["outputs"]["mr_sensitivity_result"]
         actual = record["mr_presso"]
+        if entrypoint.endswith("_timeout"):
+            assert actual["status"] == "unavailable"
+            assert "time limit" in actual["reason"]
+            assert actual["nb_distribution_used"] == 241
+            assert actual["outlier_status"] == "not_tested"
+            for key in ("global_pval", "global_rss", "detected", "outlier_count", "raw_beta",
+                        "corrected_beta", "distortion_pval", "distortion_detected", "raw_result_path"):
+                assert actual[key] is None
+            assert record["heterogeneity"]
+            assert record["pleiotropy"]["pval"] is not None
+            assert record["leave_one_out"]["most_influential_snp"]
+            assert record["steiger"]["status"] == "unavailable"
+            for name in ("heterogeneity", "pleiotropy", "single_snp", "leave_one_out"):
+                assert Path(record["reports"][name]).is_file()
+            assert "mr_presso" not in record["reports"]
+            assert {p["plot_id"] for p in record["plot_manifest"]["plots"]} == {"sensitivity_funnel"}
+            assert all(Path(a["path"]).is_file() for a in response["artifacts"])
+            assert "mr_presso_status=unavailable" in response["summary"]
+            assert hashlib.sha256(source.read_bytes()).hexdigest() == digest
+            return
+        assert actual["status"] == "ok"
         raw_path = actual["raw_result_path"]
         count, snps = actual["outlier_count"], actual["outlier_snps"]
         global_p, distortion_p = actual["global_pval"], actual["distortion_pval"]

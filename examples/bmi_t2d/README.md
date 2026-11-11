@@ -36,15 +36,6 @@ into the visitor's session and populates the existing Study setup fields. No upl
 or visitor API key is required. Text and selected data use the existing session/reply
 and Study setup APIs, respectively; the user's edited message is preserved.
 
-Optionally set `MRCAT_DEMO_ONLINE_CACHE` to the `cache/gwas-download` directory of
-the previous online BMI/T2D run. The server checks its completion markers and
-copies the pre-QC downloads for `ieu-b-40` and `ebi-a-GCST006867` when Task 1's
-online suggestion is sent with its dataset selection. It supplies an inventory with checksums and study IDs,
-without temporary signed download URLs. The request still requires online
-metadata verification and fresh QC, pair preparation, MR fitting and plotting.
-Cached downloads do not imply that the online and local branches use the same
-studies or should produce identical estimates.
-
 Publish only this dedicated service through the desired tunnel. Signed,
 HTTP-only visitor cookies keep session stores separate and allow continuation
 in the same browser for seven days. Suggestions are optional; ordinary typed
@@ -100,9 +91,9 @@ Ask:
 
 > Run MR for BMI and type 2 diabetes using online GWAS data. Show the results and plots.
 
-The hosted demo supplies its selected studies and any cached input files through
-Study setup. The planner receives these alongside the short request, verifies the
-studies online and can reuse the downloaded inputs before QC.
+The hosted demo sends this as a regular chat request. The agent searches for
+online GWAS candidates and selects suitable studies before analysis. This
+suggestion does not attach files or preselect study IDs.
 
 Inspect the proposed datasets and plan, then confirm. Keep the selected study IDs,
 source links, selection thresholds and LD reference with your results.

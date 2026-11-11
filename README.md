@@ -32,7 +32,7 @@ See the [BMI → T2D tutorial](examples/bmi_t2d/README.md) for example questions
 Requires Linux, Conda and Git. The environment installs Python 3.11 and R.
 
 ```bash
-git clone https://github.com/77JULIE/MRCAT.git
+git clone https://github.com/YangLabHKUST/MRCAT.git
 cd MRCAT
 conda env create -f environment.yml
 conda activate mrcat
@@ -61,7 +61,28 @@ DEEPSEEK_MODEL=deepseek-flash
 Keep `.env` private. See [model configuration](docs/configuration.md#choose-a-provider)
 for other providers, model limits and troubleshooting.
 
-### 3. Start and try a question
+### 3. Configure OpenGWAS access
+
+For OpenGWAS study searches, authenticated downloads and online LD clumping,
+sign in to the [OpenGWAS account page](https://api.opengwas.io/profile/) and
+generate a JWT. Set it in the same `.env` file:
+
+```dotenv
+OPENGWAS_JWT=your_opengwas_token_here
+```
+
+Paste only the token, without a `Bearer ` prefix. This is separate from your
+model API key. Tokens currently expire after 14 days; generate a replacement,
+update `.env` and restart MRCAT when needed
+([OpenGWAS authentication](https://api.opengwas.io/api/)).
+
+Local GWAS files can still require this token if the analysis uses online LD
+clumping. A workflow using local inputs and local PLINK clumping, with no
+OpenGWAS requests, does not need it. Viewing the included recording does not
+need it either. See [OpenGWAS configuration](docs/configuration.md#opengwas)
+for details and troubleshooting.
+
+### 4. Start and try a question
 
 ```bash
 mrcat-web --port 17869

@@ -42,6 +42,7 @@ else:
 | --- | --- | --- | --- |
 | `primary_result_record_path` | path | required | Inner primary MR result record; not outer response. |
 | `nb_distribution` | int | 1000 | Requested minimum MR-PRESSO simulations; increased when needed so instrument count / simulations < signif_threshold. Actual count is recorded. |
+| `mr_presso_timeout_seconds` | float | 300 | Elapsed-time budget for MR-PRESSO alone. On timeout or package error, preserve the other diagnostics and report MR-PRESSO as unavailable. Keep this below the enclosing execution timeout. |
 | `signif_threshold` | float | 0.05 | MR-PRESSO significance cutoff. |
 | `seed` | int | 1234 | Random seed. |
 | `detailed_plot_max_instruments` | int | 100 | Detailed-plot limit; statistics still use all selected SNPs. |
@@ -100,7 +101,31 @@ approximately independent. Summed R-squared at or above one is rejected.
 
 On success, `result["outputs"]["mr_sensitivity_result"]` holds the data described below.
 
-Contains diagnostics, plot manifest and a reusable `result_record_path`. Heterogeneity, Egger intercept, single-SNP/leave-one-out and MR-PRESSO outputs concern the same primary instrument set; distinguish unavailable diagnostics from reassuring negative tests.
+Contains diagnostics, plot manifest and a reusable `result_record_path`. Heterogeneity, Egger intercept, single-SNP/leave-one-out and MR-PRESSO outputs concern the same primary instrument set; distinguish unavailable diagnostics from reassuring negative tests. Overall `status="ok"` means the suite saved its results, not that every diagnostic completed. Check `mr_presso.status` and `steiger.status` separately.
+
+## MR-PRESSO timeout recovery
+
+Standard diagnostic tables and plots are saved before MR-PRESSO runs. If its
+time budget expires or the package raises an error, `mr_presso.status` is
+`unavailable`, `reason` contains the error, and test statistics, detection flags
+and outlier count are null. No MR-PRESSO plot or raw fit is produced. Report
+the missing diagnostic explicitly and continue the remaining planned methods;
+do not claim that all sensitivity checks passed.
+For an unavailable result, `nb_distribution_used` records the simulation count
+passed to the package, not a count of simulations completed before the error.
+
+Do not retry this suite merely to clear an unavailable MR-PRESSO result or
+replace it with custom diagnostic code. Preserve the completed primary fit,
+instrument set, standard diagnostics and their plots. If the user separately
+requests completion of MR-PRESSO, plan that computation with adequate resources.
+`nb_distribution` is a minimum, not a cap: the actual count is
+`max(nb_distribution, ceiling(nsnp / signif_threshold) + 1)`. For 468 SNPs at
+0.05, both requests of 100 and 1000 use 9361 simulations. Lowering the request
+does not reduce that workload; never lower the statistical resolution to make
+a timeout disappear. Use the documented parameters only, not invented aliases
+such as `mr_presso_simulations` or `mr_presso_nb_distribution`.
+
+## MR-PRESSO result checks
 
 MR-PRESSO outliers come from the package's `Outliers Indices`, mapped to the
 exact fitted rows. `mr_presso.outlier_status` distinguishes `not_tested`,
@@ -181,6 +206,9 @@ not independent causal confirmations.
 - For MR-PRESSO report global test, outlier identities/count, raw and corrected
   estimates and distortion test when available. Do not select the corrected
   result because it is more significant or call outliers proven pleiotropic.
+  First check `mr_presso.status`: `unavailable` with a timeout/error reason means
+  the computation did not complete. Null P values and counts are not negative
+  tests. The global-test interpretation below applies only to completed fits.
   SNP-specific outlier testing requires `OUTLIERtest=TRUE` and the MR-PRESSO
   global P value below `signif_threshold`, not a significant causal-effect P
   value. Report that global P value together with `mr_presso.outlier_status`.

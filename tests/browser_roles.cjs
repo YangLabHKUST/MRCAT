@@ -43,7 +43,7 @@ const assert = require('node:assert/strict');
     await page.waitForSelector('.notebook-search-results .gwas-search-shortlist-table');
     assert.match(await page.locator('.notebook-search-results').innerText(),/fixture-cad/);
     assert.match(await page.locator('.notebook-search-results').innerText(),/Supplemental coronary atherosclerosis/);
-    assert.match(await page.locator('.codeact-cell').innerText(),/Search Agent/);
+    assert.match(await page.locator('.codeact-execution-details > .muted').textContent(),/Search Agent/);
     assert.equal(await page.locator('.codeact-cell').count(),1);
     assert.equal(await page.locator('details[data-current-plan="true"]').count(),0);
     assert.equal(await page.evaluate(()=>state.snapshot.mr.state.active_task),null);

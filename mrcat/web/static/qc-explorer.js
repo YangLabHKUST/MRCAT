@@ -23,8 +23,8 @@ function loadQcPlotly() {
   return qcPlotlyPromise;
 }
 
-function disposeQcExplorers(root) {
-  root?.querySelectorAll(".qc-explorer").forEach((host) => host.dispose?.());
+function disposeNotebookExplorers(root) {
+  root?.querySelectorAll(".qc-explorer, .mrapss-explorer").forEach((host) => host.dispose?.());
 }
 
 function qcNumber(value) {

@@ -120,6 +120,12 @@ if (nrow(selected) < 4) write_failure("insufficient_instruments", "at least four
 
 nb_distribution <- suppressWarnings(as.integer(payload$nb_distribution)[1])
 if (length(nb_distribution) == 0 || !is.finite(nb_distribution) || nb_distribution < 1) nb_distribution <- 1000L
+mr_presso_timeout_seconds <- payload$mr_presso_timeout_seconds
+if (is.null(mr_presso_timeout_seconds)) mr_presso_timeout_seconds <- 300
+if (!is.numeric(mr_presso_timeout_seconds) || length(mr_presso_timeout_seconds) != 1L ||
+    !is.finite(mr_presso_timeout_seconds) || mr_presso_timeout_seconds <= 0) {
+  write_failure("invalid_mr_presso_timeout", "mr_presso_timeout_seconds must be a positive finite number.")
+}
 signif_threshold <- suppressWarnings(as.numeric(payload$signif_threshold)[1])
 if (length(signif_threshold) == 0 || !is.finite(signif_threshold) || signif_threshold <= 0 || signif_threshold >= 1) signif_threshold <- 0.05
 seed <- suppressWarnings(as.integer(payload$seed)[1])
@@ -204,82 +210,16 @@ leave_one_out <- list(
   direction_reversed = direction_reversed
 )
 
-selected_df <- as.data.frame(selected)
-selected_labels <- as.character(selected_df$SNP)
-rownames(selected_df) <- make.unique(selected_labels)
-mr_presso_check_input(selected_df)
-nb_used <- mr_presso_simulations(nrow(selected_df), nb_distribution, signif_threshold)
-log_step("Running MR-PRESSO: requested simulations=", nb_distribution, "; NbDistribution=", nb_used, "; SignifThreshold=", signif_threshold, "; seed=", seed, ".")
-presso_fit <- tryCatch(
-  MRPRESSO::mr_presso(
-    BetaOutcome = "b.out",
-    BetaExposure = "b.exp",
-    SdOutcome = "se.out",
-    SdExposure = "se.exp",
-    OUTLIERtest = TRUE,
-    DISTORTIONtest = TRUE,
-    data = selected_df,
-    NbDistribution = nb_used,
-    SignifThreshold = signif_threshold,
-    seed = seed
-  ),
-  error = function(e) write_failure("mr_presso_failed", conditionMessage(e))
-)
-
-presso_raw_path <- normalize_path(file.path(execution_dir, "reports", "sensitivity_mr_presso_raw.rds"))
-saveRDS(presso_fit, presso_raw_path)
-presso <- tryCatch(mr_presso_extract(presso_fit, selected_df, signif_threshold),
-                   error = function(e) write_failure("mr_presso_result_invalid", conditionMessage(e)))
-main_df <- presso_fit[["Main MR results"]]
-raw_beta <- num_or_null(main_df[["Causal Estimate"]][main_df[["MR Analysis"]] == "Raw"])
-corrected_beta <- num_or_null(main_df[["Causal Estimate"]][main_df[["MR Analysis"]] == "Outlier-corrected"])
-outlier_snps <- presso$outlier_snps
-global_pval <- presso$global_pval
-global_rss <- presso$global_rss
-distortion_pval <- presso$distortion_pval
-mr_presso <- list(
-  global_pval = global_pval,
-  global_rss = global_rss,
-  detected = presso$global_detected,
-  outlier_status = presso$outlier_status,
-  outlier_count = presso$outlier_count,
-  outlier_snps = as.list(outlier_snps),
-  raw_beta = raw_beta,
-  corrected_beta = corrected_beta,
-  distortion_pval = distortion_pval,
-  distortion_detected = presso$distortion_detected,
-  nb_distribution_requested = nb_distribution,
-  nb_distribution_used = nb_used,
-  raw_result_path = presso_raw_path
-)
-
 reports <- list(
   heterogeneity = normalize_path(file.path(execution_dir, "reports", "sensitivity_heterogeneity.tsv")),
   pleiotropy = normalize_path(file.path(execution_dir, "reports", "sensitivity_pleiotropy.tsv")),
   leave_one_out = normalize_path(file.path(execution_dir, "reports", "sensitivity_leave_one_out.tsv")),
-  single_snp = normalize_path(file.path(execution_dir, "reports", "sensitivity_single_snp.tsv")),
-  mr_presso = normalize_path(file.path(execution_dir, "reports", "sensitivity_mr_presso.tsv"))
+  single_snp = normalize_path(file.path(execution_dir, "reports", "sensitivity_single_snp.tsv"))
 )
 data.table::fwrite(heterogeneity_df, reports$heterogeneity, sep = "\t", quote = FALSE, na = "NA")
 data.table::fwrite(pleiotropy_df, reports$pleiotropy, sep = "\t", quote = FALSE, na = "NA")
 data.table::fwrite(leave_one_out_df, reports$leave_one_out, sep = "\t", quote = FALSE, na = "NA")
 data.table::fwrite(single_snp_df, reports$single_snp, sep = "\t", quote = FALSE, na = "NA")
-report_value <- function(value) if (is.null(value) || length(value) == 0) NA_character_ else as.character(value[[1]])
-presso_report <- data.table::data.table(
-  metric = c("global_rss", "global_pval", "outlier_status", "outlier_count", "outlier_snps", "raw_beta", "corrected_beta", "distortion_pval", "nb_distribution_used"),
-  value = c(
-    report_value(global_rss),
-    report_value(global_pval),
-    presso$outlier_status,
-    report_value(presso$outlier_count),
-    paste(outlier_snps, collapse = ","),
-    report_value(raw_beta),
-    report_value(corrected_beta),
-    report_value(distortion_pval),
-    as.character(nb_used)
-  )
-)
-data.table::fwrite(presso_report, reports$mr_presso, sep = "\t", quote = FALSE, na = "NA")
 reports <- c(reports, steiger$reports)
 
 plots <- list()
@@ -335,30 +275,127 @@ if (nrow(selected) <= detailed_plot_max_instruments) {
   )
 }
 
-is_outlier <- seq_len(nrow(selected_df)) %in% presso$outlier_indices
-presso_plot_path <- file.path(execution_dir, "plots", "sensitivity_presso_outlier.png")
-png(presso_plot_path, width = 2100, height = 1500, res = 300)
-x <- selected_df$b.exp
-y <- selected_df$b.out
-plot(x, y, type = "n", xlab = "SNP-exposure effect", ylab = "SNP-outcome effect", main = "MR-PRESSO outlier plot")
-abline(h = 0, v = 0, col = "grey85")
-points(x, y, pch = 19, col = ifelse(is_outlier, "#D55E00", "#333333"))
-if (!is.null(raw_beta) && is.finite(raw_beta)) abline(a = 0, b = raw_beta, col = "#333333", lwd = 2)
-if (!is.null(corrected_beta) && is.finite(corrected_beta)) abline(a = 0, b = corrected_beta, col = "#0072B2", lwd = 2, lty = 2)
-legend("topleft", legend = c("Instrument", "Outlier", "Raw estimate", "Corrected estimate"), pch = c(19, 19, NA, NA), lty = c(NA, NA, 1, 2), col = c("#333333", "#D55E00", "#333333", "#0072B2"), bty = "n")
-dev.off()
-presso_plot <- normalize_path(presso_plot_path)
 
-plots <- append(plots, list(
-  list(plot_id = "sensitivity_presso_outlier", path = presso_plot, title = "MR-PRESSO outlier plot", source = "mr_sensitivity_result", explanation_path = plot_explanation_path("sensitivity_presso_outlier"))
-))
+report_value <- function(value) if (is.null(value) || length(value) == 0) NA_character_ else as.character(value[[1]])
+selected_df <- as.data.frame(selected)
+selected_labels <- as.character(selected_df$SNP)
+rownames(selected_df) <- make.unique(selected_labels)
+mr_presso_check_input(selected_df)
+nb_used <- mr_presso_simulations(nrow(selected_df), nb_distribution, signif_threshold)
+log_step("Running MR-PRESSO: requested simulations=", nb_distribution, "; NbDistribution=", nb_used, "; SignifThreshold=", signif_threshold, "; seed=", seed, ".")
+run_presso <- function() {
+  on.exit(setTimeLimit(cpu = Inf, elapsed = Inf, transient = FALSE))
+  setTimeLimit(elapsed = mr_presso_timeout_seconds, transient = TRUE)
+  MRPRESSO::mr_presso(
+    BetaOutcome = "b.out",
+    BetaExposure = "b.exp",
+    SdOutcome = "se.out",
+    SdExposure = "se.exp",
+    OUTLIERtest = TRUE,
+    DISTORTIONtest = TRUE,
+    data = selected_df,
+    NbDistribution = nb_used,
+    SignifThreshold = signif_threshold,
+    seed = seed
+  )
+}
+presso_error <- NULL
+presso_fit <- tryCatch(run_presso(), error = function(e) {
+  presso_error <<- conditionMessage(e)
+  NULL
+})
+mr_presso <- list(
+  status = "unavailable",
+  reason = presso_error,
+  global_pval = NULL, global_rss = NULL, detected = NULL,
+  outlier_status = "not_tested", outlier_count = NULL, outlier_snps = list(),
+  raw_beta = NULL, corrected_beta = NULL,
+  distortion_pval = NULL, distortion_detected = NULL,
+  nb_distribution_requested = nb_distribution,
+  nb_distribution_used = nb_used,
+  timeout_seconds = mr_presso_timeout_seconds,
+  raw_result_path = NULL
+)
+presso_artifacts <- list()
+if (!is.null(presso_fit)) {
+  presso_raw_path <- normalize_path(file.path(execution_dir, "reports", "sensitivity_mr_presso_raw.rds"))
+  saveRDS(presso_fit, presso_raw_path)
+  presso <- tryCatch(mr_presso_extract(presso_fit, selected_df, signif_threshold),
+                     error = function(e) write_failure("mr_presso_result_invalid", conditionMessage(e)))
+  main_df <- presso_fit[["Main MR results"]]
+  raw_beta <- num_or_null(main_df[["Causal Estimate"]][main_df[["MR Analysis"]] == "Raw"])
+  corrected_beta <- num_or_null(main_df[["Causal Estimate"]][main_df[["MR Analysis"]] == "Outlier-corrected"])
+  outlier_snps <- presso$outlier_snps
+  global_pval <- presso$global_pval
+  global_rss <- presso$global_rss
+  distortion_pval <- presso$distortion_pval
+  mr_presso <- list(
+    status = "ok",
+    reason = NULL,
+    timeout_seconds = mr_presso_timeout_seconds,
+    global_pval = global_pval,
+    global_rss = global_rss,
+    detected = presso$global_detected,
+    outlier_status = presso$outlier_status,
+    outlier_count = presso$outlier_count,
+    outlier_snps = as.list(outlier_snps),
+    raw_beta = raw_beta,
+    corrected_beta = corrected_beta,
+    distortion_pval = distortion_pval,
+    distortion_detected = presso$distortion_detected,
+    nb_distribution_requested = nb_distribution,
+    nb_distribution_used = nb_used,
+    raw_result_path = presso_raw_path
+  )
+
+  reports$mr_presso <- normalize_path(file.path(execution_dir, "reports", "sensitivity_mr_presso.tsv"))
+  presso_report <- data.table::data.table(
+    metric = c("global_rss", "global_pval", "outlier_status", "outlier_count", "outlier_snps", "raw_beta", "corrected_beta", "distortion_pval", "nb_distribution_used"),
+    value = c(
+      report_value(global_rss),
+      report_value(global_pval),
+      presso$outlier_status,
+      report_value(presso$outlier_count),
+      paste(outlier_snps, collapse = ","),
+      report_value(raw_beta),
+      report_value(corrected_beta),
+      report_value(distortion_pval),
+      as.character(nb_used)
+    )
+  )
+  data.table::fwrite(presso_report, reports$mr_presso, sep = "\t", quote = FALSE, na = "NA")
+
+  is_outlier <- seq_len(nrow(selected_df)) %in% presso$outlier_indices
+  presso_plot_path <- file.path(execution_dir, "plots", "sensitivity_presso_outlier.png")
+  png(presso_plot_path, width = 2100, height = 1500, res = 300)
+  x <- selected_df$b.exp
+  y <- selected_df$b.out
+  plot(x, y, type = "n", xlab = "SNP-exposure effect", ylab = "SNP-outcome effect", main = "MR-PRESSO outlier plot")
+  abline(h = 0, v = 0, col = "grey85")
+  points(x, y, pch = 19, col = ifelse(is_outlier, "#D55E00", "#333333"))
+  if (!is.null(raw_beta) && is.finite(raw_beta)) abline(a = 0, b = raw_beta, col = "#333333", lwd = 2)
+  if (!is.null(corrected_beta) && is.finite(corrected_beta)) abline(a = 0, b = corrected_beta, col = "#0072B2", lwd = 2, lty = 2)
+  legend("topleft", legend = c("Instrument", "Outlier", "Raw estimate", "Corrected estimate"), pch = c(19, 19, NA, NA), lty = c(NA, NA, 1, 2), col = c("#333333", "#D55E00", "#333333", "#0072B2"), bty = "n")
+  dev.off()
+  presso_plot <- normalize_path(presso_plot_path)
+
+  plots <- append(plots, list(
+    list(plot_id = "sensitivity_presso_outlier", path = presso_plot, title = "MR-PRESSO outlier plot", source = "mr_sensitivity_result", explanation_path = plot_explanation_path("sensitivity_presso_outlier"))
+  ))
+
+  presso_artifacts <- list(list(path = presso_raw_path, kind = "rds", summary = "Unmodified MR-PRESSO package result"))
+} else {
+  log_step("MR-PRESSO unavailable: ", presso_error, ". Preserving other diagnostics.")
+}
 
 summary_text <- paste0(
-  "analysis-sensitivity completed: instruments=", nrow(selected),
+  "analysis-sensitivity results saved: instruments=", nrow(selected),
   "; heterogeneity_tests=", length(heterogeneity),
   "; egger_intercept_p=", ifelse(is.null(egger_pval), "NA", egger_pval),
-  "; mr_presso_outlier_status=", presso$outlier_status,
-  "; mr_presso_outliers=", report_value(presso$outlier_count),
+  "; mr_presso_status=", mr_presso$status,
+  "; mr_presso_reason=", report_value(mr_presso$reason),
+  "; mr_presso_outlier_status=", mr_presso$outlier_status,
+  "; mr_presso_outliers=", report_value(mr_presso$outlier_count),
   "; mr_presso_simulations_requested=", nb_distribution,
   "; mr_presso_simulations_used=", nb_used,
   "; steiger=", steiger$result$status,
@@ -387,11 +424,11 @@ rendered <- list(
   outputs = list(status = "ok", mr_sensitivity_result = result),
   details = list(result_status = "ok", failure_class = NULL),
   artifacts = c(
-    list(list(path = result$result_record_path, kind = "json", summary = "MR sensitivity result record"),
-         list(path = presso_raw_path, kind = "rds", summary = "Unmodified MR-PRESSO package result")),
+    list(list(path = result$result_record_path, kind = "json", summary = "MR sensitivity result record")),
+    presso_artifacts,
     lapply(names(reports), function(name) list(path = reports[[name]], kind = "tsv", summary = paste(name, "sensitivity report"))),
     lapply(plots, function(plot) list(path = plot$path, kind = "png", summary = plot$title))
   )
 )
 jsonlite::write_json(rendered, output_json, auto_unbox = TRUE, pretty = TRUE, null = "null", na = "null", digits = NA)
-log_step("Completed successfully.")
+log_step("Saved sensitivity results; MR-PRESSO status=", mr_presso$status, ".")

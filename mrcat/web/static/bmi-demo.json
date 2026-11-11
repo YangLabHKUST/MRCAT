@@ -11,23 +11,7 @@
       "id": "online",
       "label": "Online GWAS",
       "description": "Select online studies, review the plan, then calculate MR results and plots.",
-      "prompt": "Run MR for BMI and type 2 diabetes using online GWAS data. Show the results and plots.",
-      "setup": {
-        "exposures": [
-          {
-            "name": "BMI (OpenGWAS ieu-b-40)"
-          }
-        ],
-        "outcomes": [
-          {
-            "name": "Type 2 diabetes (OpenGWAS ebi-a-GCST006867)"
-          }
-        ],
-        "methods": [],
-        "sources": [
-          "opengwas"
-        ]
-      }
+      "prompt": "Run MR for BMI and type 2 diabetes using online GWAS data. Show the results and plots."
     },
     {
       "id": "local",

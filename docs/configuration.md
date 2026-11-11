@@ -81,6 +81,35 @@ All three values above are placeholders. Replace them with the endpoint's actual
 credentials, API URL and model ID, then use `mrcat --provider custom`.
 Do not select a different provider in the web menu and expect it to use these values.
 
+## OpenGWAS
+
+OpenGWAS credentials are separate from model credentials. To use its API for
+study searches, authenticated downloads or online LD clumping:
+
+1. Sign in to the [OpenGWAS account page](https://api.opengwas.io/profile/).
+2. Generate a JWT and set `OPENGWAS_JWT=your_opengwas_token_here` in your
+   existing `.env`. Paste only the token, without a `Bearer ` prefix.
+3. Restart MRCAT after adding or replacing the token.
+
+MRCAT loads this variable from `.env` and passes its environment to Python
+and R execution processes. You do not need a separate `.Renviron` entry for
+R code launched by MRCAT. If you already set `OPENGWAS_JWT` in the shell, update
+or unset that value too: exported variables take priority over `.env`.
+
+Without this token, the OpenGWAS search source reports that authentication is
+required; model access alone does not enable it. Local GWAS inputs may still
+need the token when using online LD clumping. To avoid OpenGWAS requests for
+clumping, supply a local PLINK executable (`plink_bin`) and a compatible LD
+reference panel prefix (`bfile`). Viewing the included recording requires no
+token.
+
+The [OpenGWAS API documentation](https://api.opengwas.io/api/) currently specifies
+a 14-day token lifetime. For `401 Unauthorized`, check for a missing, expired or
+invalid token; generate a replacement, update `.env` and restart MRCAT. For
+`429 Too Many Requests`, wait for the allowance to reset as indicated by the
+response; generating a new token does not reset the allowance. Keep the token
+private and out of Git.
+
 ## Model limits
 
 The template includes the following capacities:
@@ -106,6 +135,27 @@ not required for the quick start. Configure search-service credentials separatel
 if a selected search backend requires them; model connectivity alone does not
 verify every external data service.
 
+## Accessing a remote server
+
+`mrcat-web` listens on `127.0.0.1` by default. If you run it on a remote server,
+that address refers to the server; entering it in your laptop's browser does
+not connect to the server.
+
+Start MRCAT on the server, then run this command in a terminal on your own computer:
+
+```bash
+ssh -N -L 17869:127.0.0.1:17869 USER@SERVER
+```
+
+Replace `USER@SERVER` with your SSH login and server address. Keep both MRCAT
+and the SSH connection running, then open `http://127.0.0.1:17869` in your
+computer's browser. The SSH connection forwards that local port to MRCAT on
+the server. If local port 17869 is already in use, choose another local port,
+for example `-L 17870:127.0.0.1:17869`, and open `http://127.0.0.1:17870`.
+
+For an existing shared deployment, use its web address instead. See the
+[deployment guide](multi_user.md) to set up shared access.
+
 ## Where settings and outputs live
 
 Run commands from the repository root for the quick start. By default, the
@@ -118,7 +168,7 @@ Sessions are stored under `runtime_artifacts/` in the current directory.
 Choose another location with:
 
 ```bash
-mrcat-web --port 7869 --artifact-dir /absolute/path/to/sessions
+mrcat-web --port 17869 --artifact-dir /absolute/path/to/sessions
 ```
 
 Checkpoint state owns workflow progress; JSON/Markdown and trace files are
@@ -132,7 +182,7 @@ using the standalone downloader, export this variable in the shell or pass
 ```bash
 export MRCAT_DATABASE_DIR=/absolute/path/to/database
 python scripts/download_database.py --from-dir /path/to/database-bundles
-mrcat-web --port 7869
+mrcat-web --port 17869
 ```
 
 Keep `.env`, API keys, private sessions and raw input data out of Git. The

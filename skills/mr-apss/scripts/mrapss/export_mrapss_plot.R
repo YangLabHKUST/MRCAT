@@ -35,6 +35,6 @@ export_mrapss_plot <- function(plot, fit, path) {
   stopifnot(all(is.finite(points$x)), all(is.finite(points$y)))
   sidecar <- sub("\\.png$", ".plot.json", path)
   jsonlite::write_json(list(kind = "mrapss", width = width * dpi, height = height * dpi,
-    points = points), sidecar, auto_unbox = TRUE, na = "null", digits = NA)
+    points = points), sidecar, auto_unbox = TRUE, null = "null", na = "null", digits = NA)
   sidecar
 }

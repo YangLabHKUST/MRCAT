@@ -39,29 +39,6 @@ class DemoVisitors:
             if digest.hexdigest() != item["sha256"]:
                 raise ValueError(f"Demo input checksum mismatch: {item['filename']}")
         self.inventory = inventory
-        self.online_cache = []
-        cache_root = os.getenv("MRCAT_DEMO_ONLINE_CACHE")
-        if cache_root:
-            for study_id in ("ieu-b-40", "ebi-a-GCST006867"):
-                markers = list((Path(cache_root) / "opengwas" / study_id).glob("*/.gwas-download-complete.json"))
-                if len(markers) != 1:
-                    raise ValueError(f"Expected one completed download cache for {study_id}")
-                marker = json.loads(markers[0].read_text())
-                source = markers[0].parent / f"{study_id}.tsv.gz"
-                if marker.get("study_id") != study_id or not source.is_file() or source.stat().st_size != marker.get("file_size"):
-                    raise ValueError(f"Incomplete download cache for {study_id}")
-                digest = sha256()
-                with source.open("rb") as stream:
-                    for chunk in iter(lambda: stream.read(1024 * 1024), b""):
-                        digest.update(chunk)
-                self.online_cache.append((source, {
-                    "source": "opengwas", "study_id": study_id,
-                    "source_page": f"https://opengwas.io/datasets/{study_id}",
-                    "file_ref": f"workspace/inputs/online/{study_id}.tsv.gz",
-                    "file_size": source.stat().st_size, "sha256": digest.hexdigest(),
-                    "study_metadata": marker.get("study_metadata", {}),
-                    "note": "Previously downloaded GWAS summary statistics, before QC, harmonization or instrument selection. Verify study metadata against the online source.",
-                }))
         key_path = self.base / ".visitor-key"
         try:
             with key_path.open("x") as output:
@@ -149,54 +126,17 @@ class DemoService(Service):
             raise ValueError("A message is required")
         with self.visitors.turn(self, sid) as admission:
             if sid is None:
-                if any(self.store.base.glob("session_*")):
-                    raise ValueError("Continue your existing conversation from the Sessions list.")
                 saved = self.store.create(request, os.getenv("MRCAT_DEMO_PROVIDER", "deepseek"))
                 sid = saved["session_id"]
             else:
                 saved = self.reconcile(self.store.load(sid))
                 if (saved.get("job") or {}).get("status") == "running":
                     raise BusyError("A task is running. Stop it before sending a new request.")
-            if dataset == "online":
-                self.attach_online_inputs(saved, request)
-            elif dataset == "local":
+            if dataset == "local":
                 self.attach_inputs(saved, request)
             result = super().reply(sid, request)
             admission["sid"] = sid
             return result
-
-    def attach_online_inputs(self, saved, request):
-        directory = self.store.directory(saved["session_id"])
-        datasets = {
-            "ieu-b-40": {"name": "BMI (OpenGWAS ieu-b-40)"},
-            "ebi-a-GCST006867": {"name": "Type 2 diabetes (OpenGWAS ebi-a-GCST006867)"},
-        }
-        for source, item in self.visitors.online_cache:
-            target = directory / item["file_ref"]
-            target.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(source, target)
-            datasets[item["study_id"]]["file_ref"] = item["file_ref"]
-        request = (
-            request
-            + " Use the two studies in this study setup. Verify their metadata and suitability online; "
-            "report any problem before changing datasets. "
-        )
-        if self.visitors.online_cache:
-            write_json(directory / "workspace/inputs/online_gwas_sources.json",
-                       [item for _, item in self.visitors.online_cache])
-            request += (
-                "The supplied file_ref paths are session-relative, previously downloaded GWAS inputs before QC. "
-                "Reuse these files; their provenance and checksums are in workspace/inputs/online_gwas_sources.json."
-            )
-        else:
-            request += "Download these studies after verification; no cached files are attached."
-        saved["study_setup"] = {
-            "exposures": [datasets["ieu-b-40"]],
-            "outcomes": [datasets["ebi-a-GCST006867"]],
-            "analysis_request": request,
-            "methods": [], "sources": ["opengwas"],
-        }
-        self.store.save(saved)
 
     def attach_inputs(self, saved, request):
         directory = self.store.directory(saved["session_id"]) / "workspace/inputs"

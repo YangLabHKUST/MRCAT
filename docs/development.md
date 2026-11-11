@@ -38,7 +38,7 @@ its existing artifact and database paths.
 The GitHub `main` branch has a separate public release history. Publish a reviewed
 source tree as a child of the current GitHub `main`; do not force-push the private
 development history or merge it into the public repository. The `github` remote
-points to `https://github.com/77JULIE/MRCAT.git`.
+points to `https://github.com/YangLabHKUST/MRCAT.git`.
 
 After committing the intended changes and passing the checks below, publish from
 this checkout with a clean working tree:
