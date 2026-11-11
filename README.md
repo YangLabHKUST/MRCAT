@@ -4,7 +4,7 @@
 
 **An AI assistant for Mendelian randomization**
 
-[Quick start](#quick-start) · [Demo](#demo) · [Paper experiments](#paper-experiments) · [Documentation](#documentation)
+[Quick start](#quick-start) · [Demo](#demo) · [Paper experiments](#paper-experiments)
 
 </div>
 
@@ -86,15 +86,3 @@ The prepared reference archives are not yet publicly downloadable; see
 
 - **Experiment inputs:** [10.5281/zenodo.24056307](https://doi.org/10.5281/zenodo.24056307)
 - **Agent run records and benchmark scores:** [10.5281/zenodo.24123092](https://doi.org/10.5281/zenodo.24123092)
-
-## Documentation
-
-[Configuration](docs/configuration.md) · [Data preparation](docs/data.md) ·
-[Skills](docs/skills.md) · [Architecture](docs/architecture.md) ·
-[Shared deployment](docs/multi_user.md) · [Development](docs/development.md)
-
-## License and citation
-
-Licensed under [BSD-3-Clause](LICENSE); see [THIRD_PARTY.md](THIRD_PARTY.md) for
-third-party terms. Use [CITATION.cff](CITATION.cff) for software citation metadata
-and record the commit used for an analysis.
