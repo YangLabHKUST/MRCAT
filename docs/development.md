@@ -124,9 +124,7 @@ This snippet does not supply example data or perform upstream preparation.
 
 ## README screenshot
 
-`docs/assets/mrcat-workspace.png` is a browser screenshot of the included,
-sanitized Result 4 recording in the frontend published with commit `87f7c82`.
-It shows a recorded analysis, not a newly executed workflow. Capture updates
-from the reviewed example only; never use private user sessions or credential
-screens. Keep the read-only status visible and do not alter scientific results
-for presentation. The original large GWAS files are not needed to view it.
+`docs/assets/mrcat-workspace.png` is the author-supplied screenshot used in the
+cover letter. It shows study setup, the analysis plan and interactive results
+for BMI and type 2 diabetes. The original PNG is copied without resizing or
+recompression. It is an interface illustration, not the bundled Result 4 recording.

@@ -12,9 +12,9 @@ MRCAT searches for GWAS studies, prepares exposure and outcome data, runs MR
 analyses and diagnostics, and writes reports from the saved results. Review the
 plan, inspect code and plots, and ask follow-up questions in one workspace.
 
-[![MRCAT workspace showing a recorded analysis](docs/assets/mrcat-workspace.png)](docs/assets/mrcat-workspace.png)
+[![MRCAT workspace showing a BMI–type 2 diabetes analysis](docs/assets/mrcat-workspace.png)](docs/assets/mrcat-workspace.png)
 
-*The workspace displaying the included read-only analysis example.*
+*The MRCAT workspace showing study setup, an analysis plan and interactive results for BMI and type 2 diabetes.*
 
 ## Demo
 
